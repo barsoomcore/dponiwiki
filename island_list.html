@@ -1,0 +1,15 @@
+{% extends "dponiwiki/base.html" %}
+{% block title %}Some of the Islands...{% endblock %}
+{% block content %}
+	{% if heading %}
+		<h3>{{ heading }}</h3>
+	{% endif %}
+	<ul id="island-list">
+	{% for island in island_list %}
+		<li><a href=" {{ island.get_absolute_url }}">{{ island.name }}</a></li>
+	{% endfor %}
+	</ul>
+	<form action="{% url public-create %}" method="post">
+		<input type="submit" value="Create" />
+	</form>
+{% endblock %}

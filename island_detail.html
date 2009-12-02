@@ -1,0 +1,28 @@
+{% extends "dponiwiki/base.html" %}
+{% block title %}{{ island.name }}{% endblock %}
+{% block content %}
+	<h1>{{ island.name }}</h1>
+	{% if island.summary %}
+		<div id="island-summary" style="float: right">
+			{{island.summary}}
+		</div>
+	{% endif %}
+	<div id="island-body">
+		{{ island.content }}
+		<p class="small">Updated {{ island.modified }}</p>
+		<a href="{% url public-island-update island.slug %}">Edit!</a>
+	</div>
+	<div id="island-components">
+		{% for component in island.components.all %}
+		<h3>{{ component.name }}</h3>
+		<div class="component-assign">
+			<p><a href="{% url component-assign component.slug %}">Assign</a></p>
+		</div>
+		<p>{{ component.content }}</p>
+		<div class="component-edit">
+			<p><a href="{% url public-component-update island.slug, component.slug %}">Edit Component</a></p>
+		</div>
+		{% endfor %}
+		<p><a href="{% url public-component-create island.slug %}">Add Component!</a></p>
+	</div>
+{% endblock %}

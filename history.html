@@ -1,0 +1,7 @@
+{% extends "dponiwiki/base.html" %}
+{% block title %}History{% endblock %}
+{% block content %}
+	{% for change in changes %}
+		<p>{{ change.modified|date:"M d, Y" }}; {{ change.comment }}; {{ change.old_name }}; {{ change.revision }}</p>
+	{% endfor %}
+{% endblock %}

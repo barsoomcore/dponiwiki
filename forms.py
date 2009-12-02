@@ -1,0 +1,17 @@
+from django import forms
+from models import WikiComponent, Island, IslandComponent
+
+class WikiComponentForm(forms.ModelForm):
+	class Meta:
+		model = WikiComponent
+
+
+class IslandForm(WikiComponentForm):
+	class Meta:
+		model = Island
+		exclude = ('slug', 'created','modified', 'components')
+
+class IslandComponentForm(WikiComponentForm):
+	class Meta:
+		model = IslandComponent
+		exclude = ('slug', 'created', 'modified')

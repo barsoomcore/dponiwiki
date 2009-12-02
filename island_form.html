@@ -1,0 +1,18 @@
+{% extends "dponiwiki/base.html" %}
+{% block title %}Create A New Island!{% endblock %}
+{% block content %}
+	<form action="" method="post">
+	
+	
+		{{ form.name }}
+		{{ form.owner.errors }}
+		{{ form.owner }}
+		{{ form.content }}
+		{{ form.comment }}
+		{{ form.summary }}
+		{{ form.iscanonical }}
+		
+		
+		<input type="submit" value="Save" />
+	</form>
+{% endblock %}
