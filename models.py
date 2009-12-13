@@ -31,6 +31,9 @@ class WikiComponent(models.Model):
 	modified = models.DateTimeField(auto_now=True, blank=True)
 	comment = models.CharField(max_length=50)
 	
+	class Meta:
+		ordering = ['-modified']
+	
 	def __unicode__(self):
 		return u'%s' % (self.name)
 	
@@ -124,9 +127,6 @@ class Island(WikiComponent):
 	components = models.ManyToManyField('IslandComponent', related_name='host_islands',blank=True)
 	iscanonical = models.BooleanField(default=True, blank=True)
 	
-	class Meta:
-		ordering = ['modified']
-	
 	@permalink
 	def get_absolute_url(self):
 		return('island-detail', (), {'slug': self.slug})
@@ -142,9 +142,6 @@ class IslandComponent(WikiComponent):
 			for object in host_island_objects[1:]:
 				island_names = island_names + ", " + object.name
 		return island_names
-	
-	class Meta:
-		ordering = ['modified']
 	
 	@permalink
 	def get_absolute_url(self):

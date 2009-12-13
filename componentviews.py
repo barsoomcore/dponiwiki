@@ -12,6 +12,7 @@ from dponisetting.dponiwiki.models import Island, IslandComponent
 
 # This bad boy was adapted from django.views.generic.create_update
 # Needed to update the host island for the component as it saved
+# Obviously we need to create a WRAPPER rather than copy-paste the whole function
 
 def create_component(request, slug, model=None, template_name=None,
         template_loader=loader, extra_context=None, post_save_redirect=None,
@@ -46,7 +47,8 @@ def create_component(request, slug, model=None, template_name=None,
 	apply_extra_context(extra_context, c)
 	return HttpResponse(t.render(c))
 
-	
+# likewise, here, create a wrapper instead of repeating the function.
+
 def update_component(request, islandslug, componentslug, form_class):
 	component = IslandComponent.objects.get(slug__exact=componentslug)
 	if request.method == "POST":
