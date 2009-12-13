@@ -1,0 +1,13 @@
+{% extends 'dponiwiki/base.html' %}
+
+{% block title %}
+    Changes in {{ island.name }}
+{% endblock %}
+
+{% block content %}
+	<h1> <a href="{% url island-detail slug %}"> {{ article_name }} </a> </h1>
+    {% if changeset.old_title %}
+        <h2> {{ changeset.old_title }} </h2>
+    {% endif %}
+    {{ changeset.display_diff|safe }}
+{% endblock %}

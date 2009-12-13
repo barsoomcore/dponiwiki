@@ -18,9 +18,9 @@ urlpatterns += patterns('dponisetting.dponiwiki.utilityviews',
 	url(r'^search/(?P<component_type>[-\w]+)/$', 'search', name='search'),
 	url(r'^user/$', 'by_user', name='island-user'),
     url(r'^(?P<type>[-\w]+)/history/(?P<slug>[-\w]+)/$', 'item_history', name='item_history'),
-    url(r'^accounts/register/$', 'register'),
-    url(r'^history/(?P<slug>[-\w]+)/(?P<type>[-\w]+)/revert/$', 'revert_to_revision', name='wiki_revert_to_revision'),
-
+    url(r'^accounts/register/$', 'register', name="register"),
+	url(r'^history/(?P<slug>[-\w]+)/(?P<type>[-\w]+)/revert/$', 'revert_to_revision', name='wiki_revert_to_revision'),
+	url(r'^history/(?P<slug>[-\w]+)/(?P<type>[-\w]+)/changeset/(?P<revision>[-\w]+)/$', 'view_changeset', name='wiki_changeset'),
 )
 
 urlpatterns += patterns('dponisetting.dponiwiki.componentviews',

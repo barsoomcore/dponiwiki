@@ -35,6 +35,17 @@ class WikiComponent(models.Model):
 		return u'%s' % (self.name)
 	
 	def save(self, latest_comment=None, editor=None):
+	
+		# first capture data from the previous version so as to make revisions possible
+		
+		try:
+			old_version = WikiComponent.objects.filter(slug= self.slug)[0]
+			old_content = old_version.content
+		except IndexError:
+			old_content = ''
+		
+		# clear out self.comment so next time we edit this component, the comment field
+		# is empty
 		
 		if latest_comment == None:
 			latest_comment = self.comment
@@ -46,7 +57,7 @@ class WikiComponent(models.Model):
         # code below from:
         # http://www.revolunet.com/snippets/snippet/automatic-and-unique-slug-field
 		if not self.slug:
-			self.slug = slugify(self.name) 
+			self.slug = slugify(self.name)
 		
 		while True:
 			try:
@@ -60,8 +71,9 @@ class WikiComponent(models.Model):
 					self.slug += '-2'
 			else:
 				break
+		# thanks!
 		#
-		#
+		
 		try:
 			latest_change = ChangeSet.objects.filter(component=self).order_by('-revision')[0]
 			new_revision_number = latest_change.revision+1
@@ -70,7 +82,7 @@ class WikiComponent(models.Model):
 		
 		# prep the new revision
 		this_change = self.new_revision(
-			self.content, 
+			old_content, 
 			self.name, 
 			latest_comment, 
 			editor,
@@ -88,7 +100,7 @@ class WikiComponent(models.Model):
 
 	def new_revision(self, old_content, old_name, comment, owner, revision):
 		'''Create a new ChangeSet with the old content.'''
-
+		
 		content_diff = diff(self.content, old_content)
 
 		cs = ChangeSet.objects.create(
@@ -180,12 +192,12 @@ class ChangeSet(models.Model):
 	def __unicode__(self):
 		return u'#%s' % self.revision
 
-	@models.permalink
+	@permalink
 	def get_absolute_url(self):
-		return ('wiki_changeset', (),
-                {'slug': self.component.slug,
-                 'name': self.component.name,
-                 'revision': self.revision})
+		source_item = Island.objects.filter(slug=self.component.slug)
+		type = source_item[0].__class__.__name__
+		return ('wiki_changeset', (), {'type': type, 'slug': self.component.slug, 'revision': self.revision})
+		#		return ('wiki_changeset', (), {'slug': 'test-slug', 'type': 'test-type', 'revision': 'test-revision'})
 
 
 	def is_anonymous_change(self):

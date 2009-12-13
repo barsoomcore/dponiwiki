@@ -3,8 +3,9 @@ from django.db.models import Q
 from django import forms
 from django.http import HttpResponseRedirect
 from django.contrib.auth.forms import UserCreationForm
+from django.template import RequestContext
 
-from dponisetting.dponiwiki.models import Island, IslandComponent
+from dponisetting.dponiwiki.models import Island, IslandComponent, ChangeSet
 
 def canonical(request, canonicity):
 	island_list = Island.objects.filter(iscanonical=canonicity)
@@ -72,6 +73,30 @@ def revert_to_revision(request, slug, type):
         return HttpResponseRedirect(url)
 
     return HttpResponseNotAllowed(['POST'])
+
+def view_changeset(request, type, slug, revision,
+                   template_name='changeset.html',
+                   *args, **kw):
+
+    if request.method == "GET":
+        article_args = {'component__slug': slug}
+
+        changeset = get_object_or_404(
+            ChangeSet.objects.all().select_related(),
+            revision=int(revision),
+            **article_args)
+
+        article = changeset.component
+
+        template_params = {'article': article,
+                           'article_name': article.name,
+                           'changeset': changeset,
+                           'slug': slug}
+
+        return render_to_response('dponiwiki/changeset.html',
+                                  template_params,
+                                  context_instance=RequestContext(request))
+    return HttpResponseNotAllowed(['GET'])
     
     
 def register(request):
