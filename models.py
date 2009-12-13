@@ -111,15 +111,10 @@ class WikiComponent(models.Model):
 			revision=revision,
 			content_diff=content_diff)
 
-#		if None not in (notification, self.owner):
-#			notification.send([self.owner], "wiki_article_edited",
-#						{'article': self, 'user': owner})
-
 		return cs
 
 	def revert_to(self, revision, owner=None):
-		""" Revert the article to a previuos state, by revision number.
-		"""
+		""" Revert the article to a previuos state, by revision number."""
 		changeset = self.changeset_set.get(revision=revision)
 		
 		changeset.reapply(owner)
@@ -184,9 +179,11 @@ class ChangeSet(models.Model):
 			"""
 			return self.filter(revision__gt=int(revision))
 
-
 	class Meta:
 		get_latest_by  = 'modified'
+		
+		# doesn't seem like this is getting used properly
+		
 		ordering = ('-revision',)
 
 	def __unicode__(self):
@@ -194,21 +191,26 @@ class ChangeSet(models.Model):
 
 	@permalink
 	def get_absolute_url(self):
+	
+		# this is only going to work if we're viewing an Island's history
+		# need a solution that will work for both Island and IslandComponent
+		# Also, not sure why self.component.__class__.__name__ returns "WikiComponent"
+		
 		source_item = Island.objects.filter(slug=self.component.slug)
 		type = source_item[0].__class__.__name__
 		return ('wiki_changeset', (), {'type': type, 'slug': self.component.slug, 'revision': self.revision})
-		#		return ('wiki_changeset', (), {'slug': 'test-slug', 'type': 'test-type', 'revision': 'test-revision'})
 
 
 	def is_anonymous_change(self):
 		return self.editor is None
 
 	def reapply(self, editor):
-		""" Return the component to this revision.
-        """
+		""" Return the component to this revision."""
 
 		# XXX Would be better to exclude reverted revisions
 		#     and revisions previous/next to reverted ones
+		# curious we don't use QuerySet.all_later as defined above
+		
 		next_changes = self.component.changeset_set.filter(
 			revision__gt=self.revision).order_by('-revision')
 
@@ -233,14 +235,10 @@ class ChangeSet(models.Model):
 #		component.markup = changeset.old_markup
 		component.save(latest_comment="Reverted to revision #%s" % self.revision, editor=editor)
 
-#		component.new_revision(
-#			old_content=old_content, old_name=old_name,
-#			comment="Reverted to revision #%s" % self.revision, owner=editor)
 		self.save()
 
 	def save(self, force_insert=False, force_update=False):
-		""" Saves the component with a new revision.
-		"""
+		""" Saves the component with a new revision."""
 		
 		if self.id is None:
 			try:
@@ -252,8 +250,7 @@ class ChangeSet(models.Model):
 		super(ChangeSet, self).save(force_insert, force_update)
 
 	def display_diff(self):
-		''' Returns a HTML representation of the diff.
-		'''
+		''' Returns a HTML representation of the diff.'''
 
 		# well, it *will* be the old content
 		old_content = self.component.content
