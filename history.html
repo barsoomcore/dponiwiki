@@ -1,7 +1,43 @@
 {% extends "dponiwiki/base.html" %}
 {% block title %}History{% endblock %}
 {% block content %}
-	{% for change in changes %}
-		<p>{{ change.modified|date:"M d, Y" }}; {{ change.comment }}; {{ change.old_name }}; {{ change.revision }}</p>
-	{% endfor %}
+
+<form action="{% url wiki_revert_to_revision item.slug, "island"  %}" method="post">
+	<table>
+    	<tr class="tbheader">
+	  		<th>At</th>
+	  		<th>User</th>
+	  		<th>Comment</th>
+	  		<th>Revert</th>
+    	</tr>
+    	{% for change in changes %}
+			<tr class="{% cycle 'tbodd' 'tbeven' %}">
+				<td><a href="{{ change.get_absolute_url }}">
+					{{ change.modified|date:"M d, Y" }}</a>
+				</td>
+				<td>
+					{{ change.owner }}
+				</td>
+				<td>
+					{% if change.comment %}<i>'{{ change.comment}}'</i> {% endif %}
+				</td>
+				<td>{{ change.revision }}</td>
+				<td>
+					{% if forloop.first %}
+						Current revision
+					{% else %}
+						<input id="id_revision" name="revision"
+						{% ifequal forloop.counter 2 %}checked{% endifequal %}
+						type="radio" value="{{ change.revision }}">
+					{% endif %}
+				</td>
+			</tr>
+    	{% endfor %}
+	</table>
+	{% ifnotequal changes.count 1 %}
+		<input type="submit" value="Revert">
+	{% endifnotequal %}
+
+</form>
+
 {% endblock %}

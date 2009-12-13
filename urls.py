@@ -15,10 +15,12 @@ urlpatterns = patterns('',
 
 urlpatterns += patterns('dponisetting.dponiwiki.utilityviews',
 	url(r'^canonical/(?P<canonicity>[-\w]+)/$', 'canonical', name='island-canonical'),
-	url(r'^search/$', 'search', name='island-search'),
+	url(r'^search/(?P<component_type>[-\w]+)/$', 'search', name='search'),
 	url(r'^user/$', 'by_user', name='island-user'),
     url(r'^(?P<type>[-\w]+)/history/(?P<slug>[-\w]+)/$', 'item_history', name='item_history'),
     url(r'^accounts/register/$', 'register'),
+    url(r'^history/(?P<slug>[-\w]+)/(?P<type>[-\w]+)/revert/$', 'revert_to_revision', name='wiki_revert_to_revision'),
+
 )
 
 urlpatterns += patterns('dponisetting.dponiwiki.componentviews',
@@ -34,5 +36,7 @@ urlpatterns += patterns('django.views.generic.create_update',
 
 urlpatterns += patterns('django.views.generic.list_detail',
 	url(r'^island/(?P<slug>[-\w]+)/$', 'object_detail', island_dict, name='island-detail'),
-	url(r'^$', 'object_list', island_dict, name='wiki-home'),
+	url(r'^component/(?P<slug>[-\w]+)/$', 'object_detail', component_dict, name='component-detail'), 
+	url(r'^islands/$', 'object_list', island_dict, name='island-list'),
+	url(r'^components/$', 'object_list', component_dict, name='component-list'),
 )

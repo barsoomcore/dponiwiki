@@ -1,0 +1,15 @@
+{% extends "dponiwiki/base.html" %}
+{% block title %}{{ component.name }}{% endblock %}
+{% block content %}
+	<h1>{{ component.name }}</h1>
+	<div id="islandcomponent-body">
+		{{ component.content }}
+		<p>Islands this component is used in:</p>
+		<ul id="islandcomponent-list">
+			{% for island in component.host_islands.all %}
+			<li><a href="{{ island.get_absolute_url}}">{{ island.name }}</a></li>
+			{% endfor %}
+		</ul>
+		<p class="small">Updated {{ component.modified }}</p>
+	</div>
+{% endblock %}

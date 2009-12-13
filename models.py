@@ -34,10 +34,14 @@ class WikiComponent(models.Model):
 	def __unicode__(self):
 		return u'%s' % (self.name)
 	
-	def save(self):
+	def save(self, latest_comment=None, editor=None):
 		
-		latest_comment = self.comment
+		if latest_comment == None:
+			latest_comment = self.comment
 		self.comment = ''
+		
+		if editor == None:
+			editor = self.owner
         
         # code below from:
         # http://www.revolunet.com/snippets/snippet/automatic-and-unique-slug-field
@@ -58,13 +62,19 @@ class WikiComponent(models.Model):
 				break
 		#
 		#
+		try:
+			latest_change = ChangeSet.objects.filter(component=self).order_by('-revision')[0]
+			new_revision_number = latest_change.revision+1
+		except IndexError:
+			new_revision_number = 1
 		
 		# prep the new revision
 		this_change = self.new_revision(
 			self.content, 
 			self.name, 
 			latest_comment, 
-			self.owner
+			editor,
+			new_revision_number
 		)
 		this_change.save()
 
@@ -76,7 +86,7 @@ class WikiComponent(models.Model):
 		except IndexError:
 			return ChangeSet.objects.none()
 
-	def new_revision(self, old_content, old_name, comment, owner):
+	def new_revision(self, old_content, old_name, comment, owner, revision):
 		'''Create a new ChangeSet with the old content.'''
 
 		content_diff = diff(self.content, old_content)
@@ -86,6 +96,7 @@ class WikiComponent(models.Model):
 			owner=owner,
 			comment=comment,
 			old_name=old_name,
+			revision=revision,
 			content_diff=content_diff)
 
 #		if None not in (notification, self.owner):
@@ -98,7 +109,20 @@ class WikiComponent(models.Model):
 		""" Revert the article to a previuos state, by revision number.
 		"""
 		changeset = self.changeset_set.get(revision=revision)
+		
 		changeset.reapply(owner)
+
+class Island(WikiComponent):
+	summary = models.TextField(blank=True)
+	components = models.ManyToManyField('IslandComponent', related_name='host_islands',blank=True)
+	iscanonical = models.BooleanField(default=True, blank=True)
+	
+	class Meta:
+		ordering = ['modified']
+	
+	@permalink
+	def get_absolute_url(self):
+		return('island-detail', (), {'slug': self.slug})
 
 		
 class IslandComponent(WikiComponent):
@@ -118,18 +142,6 @@ class IslandComponent(WikiComponent):
 	@permalink
 	def get_absolute_url(self):
 		return("component-detail", (), {'slug': self.slug})
-
-class Island(WikiComponent):
-	summary = models.TextField(blank=True)
-	components = models.ManyToManyField(IslandComponent, related_name='host_islands',blank=True)
-	iscanonical = models.BooleanField(default=True, blank=True)
-	
-	class Meta:
-		ordering = ['modified']
-	
-	@permalink
-	def get_absolute_url(self):
-		return('island-detail', (), {'slug': self.slug})
 
 # Model below taken from Wiki-App
 
@@ -179,7 +191,7 @@ class ChangeSet(models.Model):
 	def is_anonymous_change(self):
 		return self.editor is None
 
-	def reapply(self, editor_ip, editor):
+	def reapply(self, editor):
 		""" Return the component to this revision.
         """
 
@@ -201,33 +213,29 @@ class ChangeSet(models.Model):
 			changeset.save()
 
 		old_content = component.content
-		old_title = component.title
-		old_markup = component.markup
+		old_name = component.name
+#		old_markup = component.markup
 
 		component.content = content
-		component.title = changeset.old_title
-		component.markup = changeset.old_markup
-		component.save()
+		component.name = changeset.old_name
+#		component.markup = changeset.old_markup
+		component.save(latest_comment="Reverted to revision #%s" % self.revision, editor=editor)
 
-		component.new_revision(
-			old_content=old_content, old_title=old_title,
-			old_markup=old_markup,
-			comment="Reverted to revision #%s" % self.revision)
-
+#		component.new_revision(
+#			old_content=old_content, old_name=old_name,
+#			comment="Reverted to revision #%s" % self.revision, owner=editor)
 		self.save()
-
-		if None not in (notification, self.owner):
-			notification.send([self.owner], "wiki_revision_reverted",
-                              {'revision': self, 'component': self.component})
 
 	def save(self, force_insert=False, force_update=False):
 		""" Saves the component with a new revision.
 		"""
+		
 		if self.id is None:
 			try:
-				self.revision = ChangeSet.objects.filter(
-					component=self.component).latest().revision + 1
-			except self.DoesNotExist:
+				latest_revision = ChangeSet.objects.filter(
+					component=self.component).order_by('-revision')[0]
+				self.revision = latest_revision.revision + 1
+			except IndexError:
 				self.revision = 1
 		super(ChangeSet, self).save(force_insert, force_update)
 

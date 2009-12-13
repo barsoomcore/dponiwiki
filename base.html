@@ -12,13 +12,16 @@
 			#island-body { background: #ccc; padding: 2%; }
 			#island-list { background: #ccc; padding: 1% 1% 1% 4%; }
 			#island-list li {margin: .5em 0; }
+			#islandcomponent-body { background: #ccc; padding: 2%; }
+			#islandcomponent-list { background: #ccc; padding: 1% 1% 1% 4%; }
+			#islandcomponent-list li {margin: .5em 0; }
 			#content { max-width: 600px }
 		</style>
 	</head>
 	<body>
 		<div id="header">
-			<form action="{% url island-search %}" method="get">
-				<a href="{% url wiki-home %}">Home</a> &bull;
+			<form action="{% url search 'Island' %}" method="get">
+				<a href="{% url island-list %}">Home</a> &bull;
 				<label for="q">Search:</label> <input type="text" name="q" /> &bull;
 			</form>
 			<a href="{% url island-canonical "True" %}">Canonical Islands</a>
