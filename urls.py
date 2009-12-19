@@ -15,7 +15,7 @@ urlpatterns = patterns('',
 
 urlpatterns += patterns('dponisetting.dponiwiki.utilityviews',
 	url(r'^canonical/(?P<canonicity>[-\w]+)/$', 'canonical', name='island-canonical'),
-	url(r'^search/(?P<component_type>[-\w]+)/$', 'search', name='search'),
+	url(r'^search/(?P<type>[-\w]+)/$', 'search', name='search'),
 	url(r'^user/$', 'by_user', name='island-user'),
     url(r'^(?P<type>[-\w]+)/history/(?P<slug>[-\w]+)/$', 'item_history', name='item_history'),
     url(r'^accounts/register/$', 'register', name="register"),
@@ -24,8 +24,8 @@ urlpatterns += patterns('dponisetting.dponiwiki.utilityviews',
 )
 
 urlpatterns += patterns('dponisetting.dponiwiki.componentviews',
-	url(r'^island/(?P<slug>[-\w]+)/create-component/$', 'create_component', component_form_dict, name='public-component-create', ),
-	url(r'^island/(?P<islandslug>[-\w]+)/update-component/(?P<componentslug>[-\w]+)/$', 'update_component', component_form_dict, name='public-component-update', ),
+	url(r'^Island/(?P<slug>[-\w]+)/create-component/$', 'create_component', component_form_dict, name='public-component-create', ),
+	url(r'^Island/(?P<islandslug>[-\w]+)/update-component/(?P<componentslug>[-\w]+)/$', 'update_component', component_form_dict, name='public-component-update', ),
 	url(r'^assign-component/(?P<slug>[-\w]+)/$', 'assign_component', name='component-assign', ),
 )
 
@@ -35,8 +35,8 @@ urlpatterns += patterns('django.views.generic.create_update',
 )
 
 urlpatterns += patterns('django.views.generic.list_detail',
-	url(r'^island/(?P<slug>[-\w]+)/$', 'object_detail', island_dict, name='island-detail'),
-	url(r'^component/(?P<slug>[-\w]+)/$', 'object_detail', component_dict, name='component-detail'), 
+	url(r'^Island/(?P<slug>[-\w]+)/$', 'object_detail', island_dict, name='island-detail'),
+	url(r'^IslandComponent/(?P<slug>[-\w]+)/$', 'object_detail', component_dict, name='component-detail'), 
 	url(r'^islands/$', 'object_list', island_dict, name='island-list'),
 	url(r'^components/$', 'object_list', component_dict, name='component-list'),
 )

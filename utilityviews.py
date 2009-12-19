@@ -16,18 +16,18 @@ def canonical(request, canonicity):
 	return render_to_response("dponiwiki/island_list.html", locals())
 
 	
-def search(request, component_type):
+def search(request, type):
 	if 'q' in request.GET:
 		term = request.GET['q']
 		
-		# really think there ought to be a way of simply casting component_type to
-		#    be interpreted as the class directly, instead of this if statement.
-		if component_type == "Island":
-			island_list = Island.objects.filter(Q(name__contains=term) | Q(summary__contains=term))
-		elif component_type == "Component":
-			island_list = IslandComponent.objects.filter(Q(name__contains=term) | Q(content__contains=term))
+		try:
+			class_type = globals()[type]
+		except KeyError:
+			return HttpResponseRedirect('/dponiwiki/islands/')
+
+		island_list = class_type.objects.filter(Q(name__contains=term) | Q(summary__contains=term))
 		
-		heading = "Search Results: All " +component_type + "s containing the term \"" + term + "\""
+		heading = "Search Results: All " + type + "s containing the term \"" + term + "\""
 			
 	return render_to_response("dponiwiki/island_list.html", locals())
 
@@ -46,53 +46,50 @@ def by_user(request):
 
 def item_history(request, slug, type, template_name='history.html'):
 
-    if request.method == 'GET':
-    
-    	# again, having no real idea how to get directly from type to a class name
-    	# this is a different solution, but surely there's something better
-    	
-    	types = dict({'island': 'Island', 'component': 'IslandComponent'})
-    	class_type = globals()[types[type]]
+	if request.method == 'GET':
+		
+		try:
+			class_type = globals()[type]
+		except KeyError:
+			return HttpResponseRedirect('/dponiwiki/islands/')
 
-        item = get_object_or_404(class_type, slug=slug)
-        changes = item.changeset_set.all().order_by('-revision')
+		item = get_object_or_404(class_type, slug=slug)
+		changes = item.changeset_set.all().order_by('-revision')
 
 		# not sure if template_params is better than locals(), as above.
 		# should probably choose one or the other, anyway.
 		
-        template_params = {'item': item,
+		template_params = {'item': item,
                            'changes': changes}
 
-        return render_to_response('dponiwiki/history.html',
+		return render_to_response('dponiwiki/history.html',
                                   template_params)
 
-    return HttpResponseNotAllowed(['GET'])
+	return HttpResponseNotAllowed(['GET'])
 
 
 def revert_to_revision(request, slug, type):
 
-    if request.method == 'POST':
-    
-    	# okay, now that I'm doing this twice I should pull it out and
-    	#    make it into a function I guess. Still think there must be a
-    	# simpler solution
-    	
-    	types = dict({'island': 'Island', 'component': 'IslandComponent'})
-    	class_type = globals()[types[type]]
+	if request.method == 'POST':
+		
+		try:
+			class_type = globals()[type]
+		except KeyError:
+			return HttpResponseRedirect('/dponiwiki/islands/')
 
-        item = get_object_or_404(class_type, slug=slug)
+		item = get_object_or_404(class_type, slug=slug)
 
-        revision = int(request.POST['revision'])
+		revision = int(request.POST['revision'])
 
-        item.revert_to(revision)
+		item.revert_to(revision)
         
         # obviously this is a terrible solution
         
-        url = '/dponiwiki/' + type + '/history/' + slug
+		url = '/dponiwiki/' + type + '/history/' + slug
         
-        return HttpResponseRedirect(url)
+		return HttpResponseRedirect(url)
 
-    return HttpResponseNotAllowed(['POST'])
+	return HttpResponseNotAllowed(['POST'])
 
 def view_changeset(request, type, slug, revision,
                    template_name='changeset.html',
@@ -102,19 +99,18 @@ def view_changeset(request, type, slug, revision,
     
     	# no idea why this is being done this way
     	# don't really know what's happening so leave it until I have time to review
-    	# also, get rid of the "article" terminology left over from wiki-app
     	
-        article_args = {'component__slug': slug}
+        component_args = {'component__slug': slug}
 
         changeset = get_object_or_404(
             ChangeSet.objects.all().select_related(),
             revision=int(revision),
-            **article_args)
+            **component_args)
 
-        article = changeset.component
+        component = changeset.component
 
-        template_params = {'article': article,
-                           'article_name': article.name,
+        template_params = {'component': component,
+                           'component_name': component.name,
                            'changeset': changeset,
                            'slug': slug}
 
