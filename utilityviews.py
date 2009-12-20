@@ -31,6 +31,7 @@ def search(request, type):
 		elif class_type == IslandComponent:
 			component_list = class_type.objects.filter(Q(name__contains=term) | Q(content__contains=term))
 			url = "dponiwiki/islandcomponent_list.html"
+			type = "Island Component"
 		
 		heading = "Search Results: All " + type + "s containing the term \"" + term + "\""
 			

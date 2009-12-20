@@ -11,8 +11,7 @@ from django.db.models.signals import post_save
 from tagging.fields import TagField
 from tagging.models import Tag
 
-from wiki.utils import get_ct
-from wiki.models import diff, QuerySetManager, NonRemovedArticleManager, NonRevertedChangeSetManager
+from wiki.models import diff, QuerySetManager, NonRevertedChangeSetManager
 
 # Google Diff Match Patch library
 # http://code.google.com/p/google-diff-match-patch
@@ -117,9 +116,8 @@ class WikiComponent(models.Model):
 		return cs
 
 	def revert_to(self, revision, owner=None):
-		""" Revert the article to a previuos state, by revision number."""
+		""" Revert the article to a previous state, by revision number."""
 		changeset = self.changeset_set.get(revision=revision)
-		
 		changeset.reapply(owner)
 
 class Island(WikiComponent):
