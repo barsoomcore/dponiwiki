@@ -95,31 +95,31 @@ def view_changeset(request, type, slug, revision,
                    template_name='changeset.html',
                    *args, **kw):
 
-    if request.method == "GET":
+	if request.method == "GET":
     
-    	# no idea why this is being done this way
-    	# don't really know what's happening so leave it until I have time to review
-    	
-        component_args = {'component__slug': slug}
+		# no idea why this is being done this way
+		# don't really know what's happening so leave it until I have time to review
 
-        changeset = get_object_or_404(
+		component_args = {'component__slug': slug}
+
+		changeset = get_object_or_404(
             ChangeSet.objects.all().select_related(),
             revision=int(revision),
             **component_args)
 
-        component = changeset.component
+		component = changeset.component
 
-        template_params = {'component': component,
+		template_params = {'component': component,
                            'component_name': component.name,
                            'changeset': changeset,
                            'slug': slug}
 
 		# don't know what the RequestContext() is doing here
 		
-        return render_to_response('dponiwiki/changeset.html',
+		return render_to_response('dponiwiki/changeset.html',
                                   template_params,
                                   context_instance=RequestContext(request))
-    return HttpResponseNotAllowed(['GET'])
+	return HttpResponseNotAllowed(['GET'])
     
     
 def register(request):

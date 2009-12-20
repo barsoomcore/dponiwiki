@@ -24,9 +24,10 @@ urlpatterns += patterns('dponisetting.dponiwiki.utilityviews',
 )
 
 urlpatterns += patterns('dponisetting.dponiwiki.componentviews',
-	url(r'^Island/(?P<slug>[-\w]+)/create-component/$', 'create_component', component_form_dict, name='public-component-create', ),
-	url(r'^Island/(?P<islandslug>[-\w]+)/update-component/(?P<componentslug>[-\w]+)/$', 'update_component', component_form_dict, name='public-component-update', ),
+	url(r'^Island/(?P<slug>[-\w]+)/create-component/$', 'create_component_wrapper', component_form_dict, name='public-component-create', ),
+	url(r'^Island/(?P<islandslug>[-\w]+)/update-component/(?P<componentslug>[-\w]+)/$', 'update_component_wrapper', component_form_dict, name='public-component-update', ),
 	url(r'^assign-component/(?P<slug>[-\w]+)/$', 'assign_component', name='component-assign', ),
+	url(r'^assign-new-component/(?P<islandslug>[-\w]+)/(?P<componentslug>[-\w]+)/$', 'assign_new_component', name='assign-new-component', ),
 )
 
 urlpatterns += patterns('django.views.generic.create_update',
