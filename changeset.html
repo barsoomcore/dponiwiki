@@ -1,4 +1,5 @@
 {% extends 'dponiwiki/base.html' %}
+{% load markup %}
 
 {% block title %}
     Changes in {{ component.name }}
@@ -9,5 +10,5 @@
     {% if changeset.old_title %}
         <h2> {{ changeset.old_title }} </h2>
     {% endif %}
-    {{ changeset.display_diff|safe }}
+    {{ changeset.display_diff|safe|textile }}
 {% endblock %}
