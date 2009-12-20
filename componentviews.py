@@ -1,12 +1,5 @@
-from django.shortcuts import render_to_response, get_object_or_404
-from django.forms.models import ModelFormMetaclass, ModelForm
-from django.template import RequestContext, loader
-from django.http import Http404, HttpResponse, HttpResponseRedirect
-from django.core.exceptions import ObjectDoesNotExist, ImproperlyConfigured
-from django.utils.translation import ugettext
-from django.contrib.auth.views import redirect_to_login
-from django.views.generic.create_update import get_model_and_form_class, apply_extra_context, redirect, create_object, update_object
-from django import forms
+from django.shortcuts import render_to_response
+from django.views.generic.create_update import create_object, update_object
 
 from dponisetting.dponiwiki.models import Island, IslandComponent
 
@@ -28,7 +21,8 @@ def assign_new_component(request, islandslug, componentslug):
 
 
 def update_component_wrapper(request, islandslug, componentslug, *args, ** kwargs):
-	return update_object(request, slug=componentslug, post_save_redirect='/dponiwiki/Island/'+islandslug, *args, **kwargs)
+	return update_object(request, slug=componentslug, 
+		post_save_redirect='/dponiwiki/Island/' + islandslug, *args, **kwargs)
 
 	
 def assign_component(request, slug):

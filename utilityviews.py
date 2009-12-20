@@ -24,12 +24,17 @@ def search(request, type):
 			class_type = globals()[type]
 		except KeyError:
 			return HttpResponseRedirect('/dponiwiki/islands/')
-
-		island_list = class_type.objects.filter(Q(name__contains=term) | Q(summary__contains=term))
+		
+		if class_type == Island:
+			island_list = class_type.objects.filter(Q(name__contains=term) | Q(summary__contains=term))
+			url = "dponiwiki/island_list.html"
+		elif class_type == IslandComponent:
+			component_list = class_type.objects.filter(Q(name__contains=term) | Q(content__contains=term))
+			url = "dponiwiki/islandcomponent_list.html"
 		
 		heading = "Search Results: All " + type + "s containing the term \"" + term + "\""
 			
-	return render_to_response("dponiwiki/island_list.html", locals())
+	return render_to_response(url, locals())
 
 
 def by_user(request):
@@ -90,6 +95,7 @@ def revert_to_revision(request, slug, type):
 		return HttpResponseRedirect(url)
 
 	return HttpResponseNotAllowed(['POST'])
+
 
 def view_changeset(request, type, slug, revision,
                    template_name='changeset.html',
