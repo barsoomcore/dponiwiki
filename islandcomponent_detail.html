@@ -1,9 +1,10 @@
 {% extends "dponiwiki/base.html" %}
+{% load markup %}
 {% block title %}{{ component.name }}{% endblock %}
 {% block content %}
 	<h1>{{ component.name }}</h1>
 	<div id="islandcomponent-body">
-		{{ component.content }}
+		{{ component.content|textile }}
 		<p>Islands this component is used in:</p>
 		<ul id="islandcomponent-list">
 			{% for island in component.host_islands.all %}
