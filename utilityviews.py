@@ -4,6 +4,8 @@ from django import forms
 from django.http import HttpResponseRedirect
 from django.contrib.auth.forms import UserCreationForm
 from django.template import RequestContext
+from django.core.urlresolvers import reverse
+from django.contrib.auth.views import logout
 
 from dponisetting.dponiwiki.models import Island, IslandComponent, ChangeSet
 
@@ -136,7 +138,11 @@ def register(request):
 		form = UserCreationForm(data=request.POST)
 		if form.is_valid():
 			new_user = form.save()
-			return HttpResponseRedirect('/dponiwiki/')
+			return HttpResponseRedirect(reverse('island-list'))
 		else: form = UserCreationForm()
 		
 	return render_to_response('registration/register.html', { 'form' : form })
+
+def logout_view(request):
+	logout(request)
+	return HttpResponseRedirect(reverse('island-list'))

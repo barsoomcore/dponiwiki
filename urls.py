@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import *
-from django.contrib.auth.views import login, logout
+from django.contrib.auth.views import login
 from dponisetting.dponiwiki.models import Island, IslandComponent
 from dponiwiki.forms import IslandForm, IslandComponentForm
 
@@ -9,8 +9,7 @@ island_form_dict = { 'form_class': IslandForm }
 component_form_dict = { 'form_class': IslandComponentForm }
 
 urlpatterns = patterns('',
-    url(r'^accounts/login/$',  login, {'template_name': 'registration/login.html'}),
-    url(r'^accounts/logout/$', logout),
+    url(r'^accounts/login/$',  login, {'template_name': 'registration/login.html'}, name='login'),
 )
 
 urlpatterns += patterns('dponisetting.dponiwiki.utilityviews',
@@ -21,6 +20,7 @@ urlpatterns += patterns('dponisetting.dponiwiki.utilityviews',
     url(r'^accounts/register/$', 'register', name="register"),
 	url(r'^history/(?P<slug>[-\w]+)/(?P<type>[-\w]+)/revert/$', 'revert_to_revision', name='wiki_revert_to_revision'),
 	url(r'^history/(?P<slug>[-\w]+)/(?P<type>[-\w]+)/changeset/(?P<revision>[-\w]+)/$', 'view_changeset', name='wiki_changeset'),
+    url(r'^accounts/logout/$', 'logout_view', name='logout'),
 )
 
 urlpatterns += patterns('dponisetting.dponiwiki.componentviews',
