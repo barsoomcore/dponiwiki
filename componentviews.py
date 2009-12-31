@@ -1,7 +1,7 @@
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.views.generic.create_update import create_object, update_object
 
-from dponisetting.dponiwiki.models import Island, IslandComponent
+from dponisetting.dponiwiki.models import Island, IslandComponent, ComponentOrder
 
 
 def create_component_wrapper(request, slug, *args, **kwargs):
@@ -14,10 +14,19 @@ def assign_new_component(request, islandslug, componentslug):
 	# called in create_component_wrapper to finish the job of assigning the new component
 	island = Island.objects.get(slug__exact=islandslug)
 	new_component = IslandComponent.objects.get(slug__exact=componentslug)
+	new_order_order = 1
 	if island:
-		island.components.add(new_component)
-	
-	return render_to_response("dponiwiki/island_detail.html", locals())
+		current_order = ComponentOrder.objects.filter(island__exact=island).order_by('order')
+		if current_order:
+			for item in current_order:
+				if item.order == new_order_order:
+					new_order_order = new_order_order + 1
+					
+#		island.components.add(new_component)
+		new_order = ComponentOrder(island=island, component=new_component, order=new_order_order)
+		new_order.save()
+		
+	return redirect("/dponiwiki/Island/" + islandslug)
 
 
 def update_component_wrapper(request, islandslug, componentslug, *args, ** kwargs):

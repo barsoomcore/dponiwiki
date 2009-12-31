@@ -35,8 +35,11 @@ urlpatterns += patterns('django.views.generic.create_update',
 	url(r'^update-island/(?P<slug>[-\w]+)/$', 'update_object', island_form_dict, name='public-island-update' ),
 )
 
+urlpatterns += patterns('dponisetting.dponiwiki.islandviews',
+	url(r'^Island/(?P<slug>[-\w]+)/$', 'display_island', island_dict, name='island-detail'),
+)
+
 urlpatterns += patterns('django.views.generic.list_detail',
-	url(r'^Island/(?P<slug>[-\w]+)/$', 'object_detail', island_dict, name='island-detail'),
 	url(r'^IslandComponent/(?P<slug>[-\w]+)/$', 'object_detail', component_dict, name='component-detail'), 
 	url(r'^islands/$', 'object_list', island_dict, name='island-list'),
 	url(r'^components/$', 'object_list', component_dict, name='component-list'),

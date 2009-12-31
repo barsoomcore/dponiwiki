@@ -122,7 +122,7 @@ class WikiComponent(models.Model):
 
 class Island(WikiComponent):
 	summary = models.TextField(blank=True)
-	components = models.ManyToManyField('IslandComponent', related_name='host_islands',blank=True)
+	components = models.ManyToManyField('IslandComponent', related_name='host_islands',blank=True, through='ComponentOrder')
 	iscanonical = models.BooleanField(default=True, blank=True)
 	
 	@permalink
@@ -144,6 +144,13 @@ class IslandComponent(WikiComponent):
 	@permalink
 	def get_absolute_url(self):
 		return("component-detail", (), {'slug': self.slug})
+
+
+class ComponentOrder(models.Model):
+	island = models.ForeignKey(Island)
+	component = models.ForeignKey(IslandComponent)
+	order = models.IntegerField()
+
 
 # Model below taken from Wiki-App
 
