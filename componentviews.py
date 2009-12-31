@@ -22,9 +22,9 @@ def assign_new_component(request, islandslug, componentslug):
 				if item.order == new_order_order:
 					new_order_order = new_order_order + 1
 					
-#		island.components.add(new_component)
 		new_order = ComponentOrder(island=island, component=new_component, order=new_order_order)
 		new_order.save()
+		island.save(latest_comment="Added Component " + new_component.name)
 		
 	return redirect("/dponiwiki/Island/" + islandslug)
 
@@ -40,7 +40,16 @@ def assign_component(request, slug):
 	if request.method == "POST":
 		for new_island in request.POST.values():
 			new_island = Island.objects.get(slug__exact=new_island)
-			component.host_islands.add(new_island)
+			current_order = ComponentOrder.objects.filter(island__exact=new_island).order_by('order')
+			new_order_order = 1
+			if current_order:
+				for item in current_order:
+					if item.order == new_order_order:
+						new_order_order = new_order_order + 1
+					
+			new_order = ComponentOrder(island=new_island, component=component, order=new_order_order)
+			new_order.save()
+			new_island.save(latest_comment="Added Component " + component.name)
 		
 	host_islands_list = component.host_islands.all()
 	

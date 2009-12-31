@@ -10,7 +10,7 @@
 	{% endif %}
 	<div id="island-body">
 		{{ island.content|textile }}
-		<p class="small">Updated {{ island.modified }}</p>
+		<p class="small">Updated: {{ island.modified|date:"N d, P" }}</p>
 		<a href="{% url public-island-update island.slug %}">Edit!</a>
 	</div>
 	<div id="island-components">
