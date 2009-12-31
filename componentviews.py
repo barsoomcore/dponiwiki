@@ -14,7 +14,7 @@ def assign_new_component(request, islandslug, componentslug):
 	# called in create_component_wrapper to finish the job of assigning the new component
 	island = Island.objects.get(slug__exact=islandslug)
 	new_component = IslandComponent.objects.get(slug__exact=componentslug)
-	new_order_order = 1
+	new_order_order = 1 #there could be a better name for this.
 	if island:
 		current_order = ComponentOrder.objects.filter(island__exact=island).order_by('order')
 		if current_order:
