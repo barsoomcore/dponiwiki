@@ -20,6 +20,7 @@
 			<p><a href="{% url component-assign component.slug %}">Assign</a></p>
 		</div>
 		<p>{{ component.content|textile }}</p>
+		<p>{{ component.tags }}</p>
 		<p>Order: {{ component.order }}</p>
 		<div class="component-edit">
 			<p><a href="{% url public-component-update island.slug, component.slug %}">Edit Component</a></p>

@@ -5,8 +5,6 @@ from dponiwiki.forms import IslandForm, IslandComponentForm
 
 island_dict = { 'queryset': Island.objects.all(), 'template_object_name': 'island' }
 component_dict = { 'queryset': IslandComponent.objects.all(), 'template_object_name': 'component' }
-island_form_dict = { 'form_class': IslandForm }
-component_form_dict = { 'form_class': IslandComponentForm }
 
 urlpatterns = patterns('',
     url(r'^accounts/login/$',  login, {'template_name': 'registration/login.html'}, name='login'),
@@ -24,19 +22,15 @@ urlpatterns += patterns('dponisetting.dponiwiki.utilityviews',
 )
 
 urlpatterns += patterns('dponisetting.dponiwiki.componentviews',
-	url(r'^Island/(?P<slug>[-\w]+)/create-component/$', 'create_component_wrapper', component_form_dict, name='public-component-create', ),
-	url(r'^Island/(?P<islandslug>[-\w]+)/update-component/(?P<componentslug>[-\w]+)/$', 'update_component_wrapper', component_form_dict, name='public-component-update', ),
+	url(r'^Island/(?P<islandslug>[-\w]+)/create-component/$', 'update_component', name='public-component-create', ),
+	url(r'^Island/(?P<islandslug>[-\w]+)/update-component/(?P<componentslug>[-\w]+)/$', 'update_component', name='public-component-update', ),
 	url(r'^assign-component/(?P<slug>[-\w]+)/$', 'assign_component', name='component-assign', ),
-	url(r'^assign-new-component/(?P<islandslug>[-\w]+)/(?P<componentslug>[-\w]+)/$', 'assign_new_component', name='assign-new-component', ),
-)
-
-urlpatterns += patterns('django.views.generic.create_update',
-	url(r'^create-island/$', 'create_object', island_form_dict, name='public-create'),
-	url(r'^update-island/(?P<slug>[-\w]+)/$', 'update_object', island_form_dict, name='public-island-update' ),
 )
 
 urlpatterns += patterns('dponisetting.dponiwiki.islandviews',
 	url(r'^Island/(?P<slug>[-\w]+)/$', 'display_island', island_dict, name='island-detail'),
+	url(r'^create-island/$', 'update_island', name='public-create'),
+	url(r'^update-island/(?P<slug>[-\w]+)/$', 'update_island', name='public-island-update' ),
 )
 
 urlpatterns += patterns('django.views.generic.list_detail',

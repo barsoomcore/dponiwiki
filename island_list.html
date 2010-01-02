@@ -9,7 +9,9 @@
 		<li><a href=" {{ island.get_absolute_url }}">{{ island.name }}</a></li>
 	{% endfor %}
 	</ul>
-	<form action="{% url public-create %}" method="post">
-		<input type="submit" value="Create" />
-	</form>
+	{% if user.is_authenticated %}
+		
+		<h3><a href="{% url public-create %}">Create!</a></h3>
+		
+	{% endif %}
 {% endblock %}

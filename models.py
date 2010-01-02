@@ -24,7 +24,7 @@ dmp = diff_match_patch()
 class WikiComponent(models.Model):
 	name = models.CharField(max_length = 100)
 	slug = models.SlugField(max_length = 100, unique=True)
-	owner = models.ForeignKey(User)
+	owner = models.ForeignKey(User, editable=False)
 	content = models.TextField()
 	created = models.DateTimeField(auto_now_add=True, blank=True)
 	modified = models.DateTimeField(auto_now=True, blank=True)
@@ -123,7 +123,7 @@ class WikiComponent(models.Model):
 class Island(WikiComponent):
 	summary = models.TextField(blank=True)
 	components = models.ManyToManyField('IslandComponent', related_name='host_islands',blank=True, through='ComponentOrder')
-	iscanonical = models.BooleanField(default=True, blank=True)
+	iscanonical = models.BooleanField(default=False, blank=True)
 	
 	@permalink
 	def get_absolute_url(self):
@@ -131,6 +131,8 @@ class Island(WikiComponent):
 
 		
 class IslandComponent(WikiComponent):
+
+	tags = TagField()
 	
 	def host_islands_list(self):
 		host_island_objects = self.host_islands.all()

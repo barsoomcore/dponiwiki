@@ -15,7 +15,7 @@ def canonical(request, canonicity):
 		heading = "Canonical Islands"
 	else:
 		heading = "Non-Canonical Islands"
-	return render_to_response("dponiwiki/island_list.html", locals())
+	return render_to_response("dponiwiki/island_list.html", locals(), context_instance=(RequestContext(request)))
 
 	
 def search(request, type):
@@ -37,7 +37,7 @@ def search(request, type):
 		
 		heading = "Search Results: All " + type + "s containing the term \"" + term + "\""
 			
-	return render_to_response(url, locals())
+	return render_to_response(url, locals(), context_instance=(RequestContext(request)))
 
 
 def by_user(request):
@@ -49,7 +49,7 @@ def by_user(request):
 		island_list = Island.objects.filter(owner__username__iexact=owner)
 		heading = "All Islands Owned By \"" + owner + "\""
 	
-	return render_to_response("dponiwiki/island_list.html", locals())
+	return render_to_response("dponiwiki/island_list.html", locals(), context_instance=(RequestContext(request)))
 
 
 def item_history(request, slug, type, template_name='history.html'):
@@ -71,7 +71,7 @@ def item_history(request, slug, type, template_name='history.html'):
                            'changes': changes}
 
 		return render_to_response('dponiwiki/history.html',
-                                  template_params)
+                                  template_params, context_instance=(RequestContext(request)))
 
 	return HttpResponseNotAllowed(['GET'])
 
@@ -89,7 +89,7 @@ def revert_to_revision(request, slug, type):
 
 		revision = int(request.POST['revision'])
 
-		item.revert_to(revision)
+		item.revert_to(revision, request.user)
         
         # obviously this is a terrible solution
         

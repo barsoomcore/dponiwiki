@@ -1,39 +1,13 @@
 from django.shortcuts import render_to_response, redirect
 from django.views.generic.create_update import create_object, update_object
+from django.contrib.auth.decorators import login_required
+from django.template import RequestContext
+from django.http import HttpResponseRedirect
 
-from dponisetting.dponiwiki.models import Island, IslandComponent, ComponentOrder
+from forms import IslandComponentForm
+from models import Island, IslandComponent, ComponentOrder
 
-
-def create_component_wrapper(request, slug, *args, **kwargs):
-	# this little trick lets us assign the newly created component to its host island
-	assign_url = "/dponiwiki/assign-new-component/" + slug
-	return create_object(request, post_save_redirect = assign_url + "/%(slug)s", *args, **kwargs)
-
-
-def assign_new_component(request, islandslug, componentslug):
-	# called in create_component_wrapper to finish the job of assigning the new component
-	island = Island.objects.get(slug__exact=islandslug)
-	new_component = IslandComponent.objects.get(slug__exact=componentslug)
-	new_order_order = 1 #there could be a better name for this.
-	if island:
-		current_order = ComponentOrder.objects.filter(island__exact=island).order_by('order')
-		if current_order:
-			for item in current_order:
-				if item.order == new_order_order:
-					new_order_order = new_order_order + 1
-					
-		new_order = ComponentOrder(island=island, component=new_component, order=new_order_order)
-		new_order.save()
-		island.save(latest_comment="Added Component " + new_component.name)
-		
-	return redirect("/dponiwiki/Island/" + islandslug)
-
-
-def update_component_wrapper(request, islandslug, componentslug, *args, ** kwargs):
-	return update_object(request, slug=componentslug, 
-		post_save_redirect='/dponiwiki/Island/' + islandslug, *args, **kwargs)
-
-	
+@login_required
 def assign_component(request, slug):
 	component = IslandComponent.objects.get(slug__exact=slug)
 	islands_list = Island.objects.exclude(components__id__exact=component.id)
@@ -49,8 +23,53 @@ def assign_component(request, slug):
 					
 			new_order = ComponentOrder(island=new_island, component=component, order=new_order_order)
 			new_order.save()
-			new_island.save(latest_comment="Added Component " + component.name)
+			new_island.save(latest_comment="Added Component " + component.name, editor=request.user)
 		
 	host_islands_list = component.host_islands.all()
 	
 	return render_to_response("dponiwiki/islandcomponent_assign.html", locals())
+
+@login_required
+def update_component(request, islandslug=None, componentslug=None):
+	try:
+		island = Island.objects.get(slug__exact=islandslug)
+	except Island.DoesNotExist:
+		island = None
+	try:
+		component = IslandComponent.objects.get(slug__exact=componentslug)
+	except IslandComponent.DoesNotExist:
+		component = None
+	
+	if request.method == 'POST':
+		form = IslandComponentForm(request.POST, instance=component)
+		if form.is_valid():
+			component = form.save(commit=False)
+			if componentslug == None:
+				component.owner = request.user
+			component.save(editor=request.user)
+			
+			if island:
+				if component not in island.components.all():
+					current_order = ComponentOrder.objects.filter(island__exact=island).order_by('order')
+					new_order_order = 1
+					if current_order:
+						for item in current_order:
+							if item.order == new_order_order:
+								new_order_order = new_order_order + 1
+					
+					new_order = ComponentOrder(island=island, component=component, order=new_order_order)
+					new_order.save()
+					island.save(latest_comment="Added Component " + component.name, editor=request.user)
+				
+				else:
+					island.save(latest_comment="Updated Component " + component.name, editor=request.user)
+				
+				return HttpResponseRedirect(island.get_absolute_url())
+			
+			else:
+				return HttpResponseRedirect(component.get_absolute_url())
+	
+	else:
+		form = IslandComponentForm(instance=component)
+	
+	return render_to_response('dponiwiki/islandcomponent_form.html', {'form': form}, context_instance=RequestContext(request))

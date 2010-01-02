@@ -9,7 +9,7 @@ class WikiComponentForm(forms.ModelForm):
 class IslandForm(WikiComponentForm):
 	class Meta:
 		model = Island
-		exclude = ('slug', 'created','modified', 'components')
+		exclude = ('slug', 'created', 'modified', 'components', 'iscanonical')
 
 class IslandComponentForm(WikiComponentForm):
 	class Meta:
