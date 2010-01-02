@@ -15,6 +15,9 @@
 	</div>
 	<div id="island-components">
 		{% for component in components %}
+		{% if component.is_box %}
+		<div style="border:solid black 1px">
+		{% endif %}
 		<h3>{{ component.name }}</h3>
 		<div class="component-assign">
 			<p><a href="{% url component-assign component.slug %}">Assign</a></p>
@@ -25,6 +28,9 @@
 		<div class="component-edit">
 			<p><a href="{% url public-component-update island.slug, component.slug %}">Edit Component</a></p>
 		</div>
+		{% if component.is_box %}
+		</div>
+		{% endif %}
 		{% endfor %}
 		<p><a href="{% url public-component-create island.slug %}">Add Component!</a></p>
 		<p><a href="{% url item_history type="Island" slug=island.slug %}">View History</a></p>

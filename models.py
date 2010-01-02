@@ -133,6 +133,7 @@ class Island(WikiComponent):
 class IslandComponent(WikiComponent):
 
 	tags = TagField()
+	is_box = models.BooleanField(default=False)
 	
 	def host_islands_list(self):
 		host_island_objects = self.host_islands.all()
