@@ -27,7 +27,7 @@ def assign_component(request, slug):
 		
 	host_islands_list = component.host_islands.all()
 	
-	return render_to_response("dponiwiki/islandcomponent_assign.html", locals())
+	return render_to_response("templates/islandcomponent_assign.html", locals())
 
 @login_required
 def update_component(request, islandslug=None, componentslug=None):
@@ -48,6 +48,11 @@ def update_component(request, islandslug=None, componentslug=None):
 				component.owner = request.user
 			component.save(editor=request.user)
 			
+			host_islands = component.host_islands.all()
+			latest_changeset = component.latest_changeset()
+			for host_island in host_islands:
+				host_island.save(latest_comment="Updated Component " + component.name + ": " + latest_changeset.comment, editor=request.user)
+			
 			if island:
 				if component not in island.components.all():
 					current_order = ComponentOrder.objects.filter(island__exact=island).order_by('order')
@@ -61,9 +66,6 @@ def update_component(request, islandslug=None, componentslug=None):
 					new_order.save()
 					island.save(latest_comment="Added Component " + component.name, editor=request.user)
 				
-				else:
-					island.save(latest_comment="Updated Component " + component.name, editor=request.user)
-				
 				return HttpResponseRedirect(island.get_absolute_url())
 			
 			else:
@@ -72,4 +74,25 @@ def update_component(request, islandslug=None, componentslug=None):
 	else:
 		form = IslandComponentForm(instance=component)
 	
-	return render_to_response('dponiwiki/islandcomponent_form.html', {'form': form}, context_instance=RequestContext(request))
+	return render_to_response('templates/islandcomponent_form.html', {'form': form}, context_instance=RequestContext(request))
+
+@login_required
+def move_component(request, islandslug, componentslug):
+	island = Island.objects.get(slug__exact=islandslug)
+	component = IslandComponent.objects.get(slug__exact=componentslug)
+	current_order = ComponentOrder.objects.filter(island__exact=island).order_by('order')
+	
+	if request.method == 'POST':
+		new_component_position = int(request.POST.values()[0])
+		for item in current_order:
+			if item.component == component:
+				item.order = new_component_position
+				item.save()
+			else:
+				print item.order
+				print new_component_position
+				if item.order >= new_component_position:
+					item.order = item.order + 1
+					item.save()
+	
+	return HttpResponseRedirect(island.get_absolute_url())

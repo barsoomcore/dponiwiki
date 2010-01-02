@@ -15,7 +15,7 @@ def canonical(request, canonicity):
 		heading = "Canonical Islands"
 	else:
 		heading = "Non-Canonical Islands"
-	return render_to_response("dponiwiki/island_list.html", locals(), context_instance=(RequestContext(request)))
+	return render_to_response("templates/island_list.html", locals(), context_instance=(RequestContext(request)))
 
 	
 def search(request, type):
@@ -29,10 +29,10 @@ def search(request, type):
 		
 		if class_type == Island:
 			island_list = class_type.objects.filter(Q(name__contains=term) | Q(summary__contains=term))
-			url = "dponiwiki/island_list.html"
+			url = "templates/island_list.html"
 		elif class_type == IslandComponent:
 			component_list = class_type.objects.filter(Q(name__contains=term) | Q(content__contains=term))
-			url = "dponiwiki/islandcomponent_list.html"
+			url = "templates/islandcomponent_list.html"
 			type = "Island Component"
 		
 		heading = "Search Results: All " + type + "s containing the term \"" + term + "\""
@@ -49,7 +49,7 @@ def by_user(request):
 		island_list = Island.objects.filter(owner__username__iexact=owner)
 		heading = "All Islands Owned By \"" + owner + "\""
 	
-	return render_to_response("dponiwiki/island_list.html", locals(), context_instance=(RequestContext(request)))
+	return render_to_response("templates/island_list.html", locals(), context_instance=(RequestContext(request)))
 
 
 def item_history(request, slug, type, template_name='history.html'):
@@ -70,7 +70,7 @@ def item_history(request, slug, type, template_name='history.html'):
 		template_params = {'item': item,
                            'changes': changes}
 
-		return render_to_response('dponiwiki/history.html',
+		return render_to_response('templates/history.html',
                                   template_params, context_instance=(RequestContext(request)))
 
 	return HttpResponseNotAllowed(['GET'])
@@ -125,7 +125,7 @@ def view_changeset(request, type, slug, revision,
 
 		# don't know what the RequestContext() is doing here
 		
-		return render_to_response('dponiwiki/changeset.html',
+		return render_to_response('templates/changeset.html',
                                   template_params,
                                   context_instance=RequestContext(request))
 	return HttpResponseNotAllowed(['GET'])

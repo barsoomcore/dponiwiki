@@ -4,8 +4,9 @@ from dponisetting.dponiwiki.models import Island, IslandComponent
 from dponiwiki.forms import IslandForm, IslandComponentForm
 
 island_dict = { 'queryset': Island.objects.all(), 'template_object_name': 'island' }
-component_dict = { 'queryset': IslandComponent.objects.all(), 'template_object_name': 'component' }
-
+island_list_dict = { 'queryset': Island.objects.all(), 'template_name': 'templates/island_list.html', 'template_object_name': 'island' }
+component_dict = { 'queryset': IslandComponent.objects.all(), 'template_name': 'templates/islandcomponent_detail.html', 'template_object_name': 'component' }
+component_list_dict = { 'queryset': IslandComponent.objects.all(),'template_name': 'templates/islandcomponent_list.html', 'template_object_name': 'component' }
 urlpatterns = patterns('',
     url(r'^accounts/login/$',  login, {'template_name': 'registration/login.html'}, name='login'),
 )
@@ -25,6 +26,7 @@ urlpatterns += patterns('dponisetting.dponiwiki.componentviews',
 	url(r'^Island/(?P<islandslug>[-\w]+)/create-component/$', 'update_component', name='public-component-create', ),
 	url(r'^Island/(?P<islandslug>[-\w]+)/update-component/(?P<componentslug>[-\w]+)/$', 'update_component', name='public-component-update', ),
 	url(r'^assign-component/(?P<slug>[-\w]+)/$', 'assign_component', name='component-assign', ),
+	url(r'^Island/(?P<islandslug>[-\w]+)/move-component/(?P<componentslug>[-\w]+)/$', 'move_component', name='move_component', ),
 )
 
 urlpatterns += patterns('dponisetting.dponiwiki.islandviews',
@@ -35,6 +37,6 @@ urlpatterns += patterns('dponisetting.dponiwiki.islandviews',
 
 urlpatterns += patterns('django.views.generic.list_detail',
 	url(r'^IslandComponent/(?P<slug>[-\w]+)/$', 'object_detail', component_dict, name='component-detail'), 
-	url(r'^islands/$', 'object_list', island_dict, name='island-list'),
-	url(r'^components/$', 'object_list', component_dict, name='component-list'),
+	url(r'^islands/$', 'object_list', island_list_dict, name='island-list'),
+	url(r'^components/$', 'object_list', component_list_dict, name='component-list'),
 )
