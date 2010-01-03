@@ -20,7 +20,8 @@
 		{% endif %}
 		<div class="component-functions">
 			<p><a href="{% url component-assign component.slug %}">Assign</a> :: 
-			<a href="{% url public-component-update island.slug, component.slug %}">Edit </a>
+			<a href="{% url public-component-update island.slug, component.slug %}">Edit </a> :: 
+			<a href="{% url remove_component island.slug, component.slug %}">Remove</a>
 		<form style="display: inline" action="{% url move_component island.slug component.slug %}" method="POST">
 			<select name="order_change">
 				{% for component in components %}

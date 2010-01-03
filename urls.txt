@@ -56,6 +56,7 @@ urlpatterns += patterns('dponisetting.dponiwiki.componentviews',
 	url(r'^Island/(?P<islandslug>[-\w]+)/update-component/(?P<componentslug>[-\w]+)/$', 'update_component', name='public-component-update', ),
 	url(r'^assign-component/(?P<slug>[-\w]+)/$', 'assign_component', name='component-assign', ),
 	url(r'^Island/(?P<islandslug>[-\w]+)/move-component/(?P<componentslug>[-\w]+)/$', 'move_component', name='move_component', ),
+	url(r'^Island/(?P<islandslug>[-\w]+)/remove-component/(?P<componentslug>[-\w]+)/$', 'remove_component', name='remove_component', ),
 )
 
 urlpatterns += patterns('dponisetting.dponiwiki.islandviews',

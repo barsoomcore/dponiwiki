@@ -96,3 +96,11 @@ def move_component(request, islandslug, componentslug):
 					item.save()
 	
 	return HttpResponseRedirect(island.get_absolute_url())
+
+@login_required
+def remove_component(request, islandslug, componentslug):
+	island = Island.objects.get(slug__exact=islandslug)
+	component = IslandComponent.objects.get(slug__exact=componentslug)
+	ComponentOrder.objects.filter(island__exact=island).filter(component__exact=component).delete()
+	
+	return HttpResponseRedirect(island.get_absolute_url())
