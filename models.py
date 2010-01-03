@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.db import models, IntegrityError
@@ -11,15 +12,31 @@ from django.db.models.signals import post_save
 from tagging.fields import TagField
 from tagging.models import Tag
 
-from wiki.models import diff, QuerySetManager, NonRevertedChangeSetManager
-
 # Google Diff Match Patch library
 # http://code.google.com/p/google-diff-match-patch
 from diff_match_patch import diff_match_patch
 
+# following batch of models taken from wiki-app
+
 # We dont need to create a new one everytime
 dmp = diff_match_patch()
 
+def diff(txt1, txt2):
+	"""Create a 'diff' from txt1 to txt2."""
+	patch = dmp.patch_make(txt1, txt2)
+	return dmp.patch_toText(patch)
+
+# Avoid boilerplate defining our own querysets
+class QuerySetManager(models.Manager):
+	def get_query_set(self):
+		return self.model.QuerySet(self.model)
+
+class NonRevertedChangeSetManager(QuerySetManager):
+	def get_default_queryset(self):
+		super(NonRevertedChangeSetManager, self).get_query_set().filter(
+				reverted=False)
+
+# thanks to the wiki-app crew for those items!
 
 class WikiComponent(models.Model):
 	name = models.CharField(max_length = 100)
@@ -275,3 +292,4 @@ class ChangeSet(models.Model):
 
 		diffs = dmp.diff_main(old_content, next_rev_content)
 		return dmp.diff_prettyHtml(diffs)
+
