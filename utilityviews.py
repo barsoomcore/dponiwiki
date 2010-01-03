@@ -141,7 +141,7 @@ def register(request):
 			return HttpResponseRedirect(reverse('island-list'))
 		else: form = UserCreationForm()
 		
-	return render_to_response('registration/register.html', { 'form' : form })
+	return render_to_response('templates/register.html', { 'form' : form })
 
 def logout_view(request):
 	logout(request)

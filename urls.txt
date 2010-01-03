@@ -1,0 +1,71 @@
+# Below is the full url.py that is placed in the project directory ABOVE
+# the dponiwiki directory
+
+from django.conf.urls.defaults import *
+from django.contrib.auth.views import login
+from dponisetting.dponiwiki.models import Island, IslandComponent
+from dponiwiki.forms import IslandForm, IslandComponentForm
+
+island_dict = { 
+	'queryset': Island.objects.all(), 
+	'template_object_name': 'island' 
+}
+island_list_dict = { 
+	'queryset': Island.objects.all(), 
+	'template_name': 'templates/island_list.html', 
+	'template_object_name': 'island' 
+}
+component_dict = { 
+	'queryset': IslandComponent.objects.all(), 
+	'template_name': 'templates/islandcomponent_detail.html', 
+	'template_object_name': 'component' 
+}
+component_list_dict = { 
+	'queryset': IslandComponent.objects.all(),
+	'template_name': 'templates/islandcomponent_list.html', 
+	'template_object_name': 'component' 
+}
+
+# Uncomment the next two lines to enable the admin:
+from django.contrib import admin
+admin.autodiscover()
+
+urlpatterns = patterns('',
+    # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
+    # to INSTALLED_APPS to enable admin documentation:
+    # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
+
+    # Uncomment the next line to enable the admin:
+    url(r'^admin/(.*)', admin.site.root),
+    url(r'^accounts/login/$',  login, {'template_name': 'templates/login.html'}, name='login'),
+)
+
+urlpatterns += patterns('dponisetting.dponiwiki.utilityviews',
+	url(r'^canonical/(?P<canonicity>[-\w]+)/$', 'canonical', name='island-canonical'),
+	url(r'^search/(?P<type>[-\w]+)/$', 'search', name='search'),
+	url(r'^user/$', 'by_user', name='island-user'),
+    url(r'^(?P<type>[-\w]+)/history/(?P<slug>[-\w]+)/$', 'item_history', name='item_history'),
+    url(r'^accounts/register/$', 'register', name="register"),
+	url(r'^history/(?P<slug>[-\w]+)/(?P<type>[-\w]+)/revert/$', 'revert_to_revision', name='wiki_revert_to_revision'),
+	url(r'^history/(?P<slug>[-\w]+)/(?P<type>[-\w]+)/changeset/(?P<revision>[-\w]+)/$', 'view_changeset', name='wiki_changeset'),
+    url(r'^accounts/logout/$', 'logout_view', name='logout'),
+)
+
+urlpatterns += patterns('dponisetting.dponiwiki.componentviews',
+	url(r'^Island/(?P<islandslug>[-\w]+)/create-component/$', 'update_component', name='public-component-create', ),
+	url(r'^Island/(?P<islandslug>[-\w]+)/update-component/(?P<componentslug>[-\w]+)/$', 'update_component', name='public-component-update', ),
+	url(r'^assign-component/(?P<slug>[-\w]+)/$', 'assign_component', name='component-assign', ),
+	url(r'^Island/(?P<islandslug>[-\w]+)/move-component/(?P<componentslug>[-\w]+)/$', 'move_component', name='move_component', ),
+)
+
+urlpatterns += patterns('dponisetting.dponiwiki.islandviews',
+	url(r'^Island/(?P<slug>[-\w]+)/$', 'display_island', island_dict, name='island-detail'),
+	url(r'^create-island/$', 'update_island', name='public-create'),
+	url(r'^update-island/(?P<slug>[-\w]+)/$', 'update_island', name='public-island-update' ),
+)
+
+urlpatterns += patterns('django.views.generic.list_detail',
+	url(r'^IslandComponent/(?P<slug>[-\w]+)/$', 'object_detail', component_dict, name='component-detail'), 
+	url(r'^islands/$', 'object_list', island_list_dict, name='island-list'),
+	url(r'^components/$', 'object_list', component_list_dict, name='component-list'),
+)
