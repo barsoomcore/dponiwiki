@@ -15,6 +15,11 @@ island_list_dict = {
 	'template_name': 'templates/island_list.html', 
 	'template_object_name': 'island' 
 }
+island_canonical_list_dict = { 
+	'queryset': Island.objects.filter(iscanonical=True), 
+	'template_name': 'templates/island_list.html', 
+	'template_object_name': 'island' 
+}
 component_dict = { 
 	'queryset': IslandComponent.objects.all(), 
 	'template_name': 'templates/islandcomponent_detail.html', 
@@ -67,6 +72,6 @@ urlpatterns += patterns('dponisetting.dponiwiki.islandviews',
 
 urlpatterns += patterns('django.views.generic.list_detail',
 	url(r'^IslandComponent/(?P<slug>[-\w]+)/$', 'object_detail', component_dict, name='component-detail'), 
-	url(r'^islands/$', 'object_list', island_list_dict, name='island-list'),
+	url(r'^islands/$', 'object_list', island_canonical_list_dict, name='island-list'),
 	url(r'^components/$', 'object_list', component_list_dict, name='component-list'),
 )
