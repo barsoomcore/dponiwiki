@@ -7,14 +7,16 @@
 	</head>
 	<body>
 		<div id="header">
-			<form action="{% url search 'Island' %}" method="get">
-				<a href="{% url island-list %}">Home</a> &bull;
-				<label for="q">Search:</label> <input type="text" name="q" /> &bull;
-			</form>
-			<a href="{% url island-canonical "True" %}">Canonical Islands</a>
-			<form action="{% url island-user %}" method="get">
+			<form action="{% url island-user %}" method="get" style="float:right" >
 				<label for="q">Search by username:</label> <input type="text" name="q" />
 			</form>
+			<form action="{% url search 'IslandComponent' %}" method="get" style="float:right" >
+				<label for="q">Search Components:</label> <input type="text" name="q" /> &nbsp; 
+			</form>
+			<form action="{% url search 'Island' %}" method="get" style="float:right" >
+				<label for="q">Search Islands:</label> <input type="text" name="q" /> &nbsp; 
+			</form>
+			<p style="margin-top:0"><a href="{% url island-list %}">Home</a></p>
 			<p>{% if user.is_authenticated %}Welcome, {{ user.username }}. <a href="{% url logout %}">Logout</a>
 			{% else %}
 			<a href="{% url login %}?next={{request.path}}">Login</a>	or <a href="{% url register %}">Register</a>

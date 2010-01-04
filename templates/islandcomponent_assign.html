@@ -1,13 +1,16 @@
 {% extends "templates/base.html" %}
 {% block title %}Assign Component!{% endblock %}
 {% block content %}
-	<p>Assign me!</p>
-	<h1>{{ component.name }}</h1>
+	<h1><a href="{% url component-detail component.slug %}">{{ component.name }}</a></h1>
 	
 	<h2>Islands already using this component:</h2>
+	{% if host_islands_list %}
 	{% for island in host_islands_list %}
 	<p><a href="{% url island-detail island.slug %}">{{ island.name }}</a></p>
 	{% endfor %}
+	{% else %}
+	<p>This component is not used in any islands.</p>
+	{% endif %}
 	
 	<h2>Islands you might want to add this component to:</h2>
 	<form action="{% url component-assign component.slug %}" method="post">
