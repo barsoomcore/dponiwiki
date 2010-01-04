@@ -10,7 +10,7 @@ from models import Island, IslandComponent, ComponentOrder
 @login_required
 def assign_component(request, slug):
 	component = IslandComponent.objects.get(slug__exact=slug)
-	islands_list = Island.objects.exclude(components__id__exact=component.id)
+	islands_list = Island.objects.filter(owner__exact=component.owner).exclude(components__id__exact=component.id)
 	if request.method == "POST":
 		for new_island in request.POST.values():
 			new_island = Island.objects.get(slug__exact=new_island)
