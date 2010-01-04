@@ -74,7 +74,7 @@ def update_component(request, islandslug=None, componentslug=None):
 	else:
 		form = IslandComponentForm(instance=component)
 	
-	return render_to_response('templates/islandcomponent_form.html', {'form': form}, context_instance=RequestContext(request))
+	return render_to_response('templates/islandcomponent_form.html', locals(), context_instance=RequestContext(request))
 
 @login_required
 def move_component(request, islandslug, componentslug):

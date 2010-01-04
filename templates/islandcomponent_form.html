@@ -1,5 +1,11 @@
 {% extends "templates/base.html" %}
-{% block title %}Create A New Component!{% endblock %}
+{% block title %}
+	{% if component %}
+	Edit "{{ component.name }}"
+	{% else %}
+	Create A New Component!
+	{% endif %}
+{% endblock %}
 {% block content %}
 
 	<form action="" method="post">
@@ -16,11 +22,6 @@
    			<td>{{ form.content }}</td>
    			<td>Put the meat of your component here. You can use <a href="http://textile.thresholdstate.com/">Textile</a> markup here to style your content: use "_underscores_" for italics, or "*asterixes*" for bold. "h1." will produce a heading of level one, and if you enclose the URL of an image in exclamation points "!imageurl!" the image will display in your content.</td>
    		</tr>
-   		<tr><td colspan="3">{{ form.comment.errors }}</td></tr>
-   		<tr><td><label for="id_comment">Comment:</label></td>
-   			<td>{{ form.comment }}</td>
-   			<td>You must include a comment so we know what you're thinking. Yes, you have to be thinking.</td>
-   		</tr>
    		<tr><td colspan="3">{{ form.tags.errors }}</td></tr>
    		<tr><td><label for="id_tags">Tags:</label></td>
    			<td>{{ form.tags }}</td>
@@ -30,6 +31,11 @@
    		<tr><td><label for="id_is_box">Use Box Style:</label></td>
    			<td>{{ form.is_box }}</td>
    			<td>If you want your component to display as a separate box aside from the main content of the island it's part of, check this box.</td>
+   		</tr>
+   		<tr><td colspan="3">{{ form.comment.errors }}</td></tr>
+   		<tr><td><label for="id_comment">Comment:</label></td>
+   			<td>{{ form.comment }}</td>
+   			<td>You must include a comment so we know what you're thinking. Yes, you have to be thinking.</td>
    		</tr>
    		
 		</table>

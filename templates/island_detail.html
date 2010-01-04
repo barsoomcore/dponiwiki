@@ -2,42 +2,46 @@
 {% load markup %}
 {% block title %}{{ island.name }}{% endblock %}
 {% block content %}
+	<div class="functions">
+		<p><a href="{% url public-island-update island.slug %}">Edit!</a></p>
+	</div>
 	<h1>{{ island.name }}</h1>
 	{% if island.iscanonical %}
+	<p id="canonicitynote">This island is a canonical part of the DINO-PIRATES OF NINJA ISLAND setting. You can still edit it, but aware that the admins may revert your changes if they don't align with the overall vision of the setting.</p>
 	{% else %}
-	<p class="canonictynote">NOTE: This island is not a "canonical" part of the DINO-PIRATES OF NINJA ISLAND setting. That means it doesn't show up on the main page of the setting. But it DOES show up in searches and in the "Assigned-To" lists for components. If you think this island SHOULD be canonical, please contact the setting administrators and maybe they'll agree with you.<p> 
-	{% endif %}
-	{% if island.summary %}
-		<div id="island-summary" style="float: right">
-			{{island.summary}}
-		</div>
+	<p id="canonicitynote">NOTE: This island is not a "canonical" part of the DINO-PIRATES OF NINJA ISLAND setting. That means it doesn't show up on the main page of the setting. But it DOES show up in searches and in the "Assigned-To" lists for components. If you think this island SHOULD be canonical, please contact the setting administrators and maybe they'll agree with you.<p> 
 	{% endif %}
 	<div id="island-body">
+		{% if island.summary %}
+		<div id="island-summary">
+			<h4>Summary</h4>
+			{{ island.summary|textile }}
+		</div>
+		{% endif %}
 		{{ island.content|textile }}
 		<p class="small">Updated: {{ island.modified|date:"N d, P" }}</p>
-		<a href="{% url public-island-update island.slug %}">Edit!</a>
 	</div>
 	<div id="island-components">
 		{% for component in components %}
 		{% if component.is_box %}
 		<div class="box">
 		{% endif %}
-		<div class="component-functions">
+		<div class="functions">
 			<p><a href="{% url component-assign component.slug %}">Assign</a> :: 
 			<a href="{% url public-component-update island.slug, component.slug %}">Edit </a> :: 
-			<a href="{% url remove_component island.slug, component.slug %}">Remove</a>
-		<form style="display: inline" action="{% url move_component island.slug component.slug %}" method="POST">
-			<select name="order_change">
+			<a href="{% url remove_component island.slug, component.slug %}">Remove</a></p>
+			<form style="display: inline" action="{% url move_component island.slug component.slug %}" method="POST">
+				<select name="order_change">
 				{% for component in components %}
 					<option value="{{ component.order }}" label="{{ component.name }}" />
 				{% endfor %}
-			</select>
-			<input type="submit" value="Move" />
-		</form>
+				</select>
+				<input type="submit" value="Move" />
+			</form>
 		</div>
 		<h3><a href="{% url component-detail component.slug %}">{{ component.name }}</a></h3>
 		<p>{{ component.content|textile }}</p>
-		<p>{{ component.tags }}</p>	
+		<p class="component-tags">Tags: {{ component.tags }} </p>	
 		{% if component.is_box %}
 		</div>
 		{% endif %}
