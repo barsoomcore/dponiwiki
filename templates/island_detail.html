@@ -3,6 +3,10 @@
 {% block title %}{{ island.name }}{% endblock %}
 {% block content %}
 	<h1>{{ island.name }}</h1>
+	{% if island.iscanonical %}
+	{% else %}
+	<p class="canonictynote">NOTE: This island is not a "canonical" part of the DINO-PIRATES OF NINJA ISLAND setting. That means it doesn't show up on the main page of the setting. But it DOES show up in searches and in the "Assigned-To" lists for components. If you think this island SHOULD be canonical, please contact the setting administrators and maybe they'll agree with you.<p> 
+	{% endif %}
 	{% if island.summary %}
 		<div id="island-summary" style="float: right">
 			{{island.summary}}

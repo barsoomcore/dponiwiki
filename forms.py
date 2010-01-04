@@ -7,6 +7,8 @@ class WikiComponentForm(forms.ModelForm):
 
 
 class IslandForm(WikiComponentForm):
+	content = forms.CharField(
+				widget=forms.Textarea(attrs={'rows':'20'}))
 	class Meta:
 		model = Island
 		exclude = ('slug', 'created', 'modified', 'components', 'iscanonical')
