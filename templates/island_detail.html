@@ -27,10 +27,10 @@
 		<div class="box">
 		{% endif %}
 		<div class="functions">
-			<p><a href="{% url component-assign component.slug %}">Assign</a> :: 
-			<a href="{% url public-component-update island.slug, component.slug %}">Edit </a> :: 
-			<a href="{% url remove_component island.slug, component.slug %}">Remove</a></p>
 			<form style="display: inline" action="{% url move_component island.slug component.slug %}" method="POST">
+			<a href="{% url component-assign component.slug %}">Assign</a> :: 
+			<a href="{% url public-component-update island.slug, component.slug %}">Edit </a> :: 
+			<a href="{% url remove_component island.slug, component.slug %}">Remove</a>
 				<select name="order_change">
 				{% for component in components %}
 					<option value="{{ component.order }}" label="{{ component.name }}" />

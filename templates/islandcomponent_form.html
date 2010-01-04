@@ -42,4 +42,12 @@
 		
 		<input type="submit" value="Save" />
 	</form>
+	
+	{% if island %}
+	<p><a href="{% url island-detail island.slug %}">Back</a></p>
+	{% else %}
+		{% if component %}
+		<p><a href="{% url component-detail component.slug %}">Back</a></p>
+		{% endif %}
+	{% endif %}
 {% endblock %}

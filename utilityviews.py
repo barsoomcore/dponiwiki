@@ -46,10 +46,26 @@ def by_user(request):
 		
 		# good enough for Islands but what about IslandComponents?
 		
-		island_list = Island.objects.filter(owner__username__iexact=owner)
-		heading = "All Islands Owned By \"" + owner + "\""
+		island_list = Island.objects.filter(owner__username__exact=owner)
+		component_list = IslandComponent.objects.filter(owner__username__exact=owner)
+		island_header = ''
+		component_header = ''
+		conjunction = ''
+		if island_list:
+			island_header = "Islands"
+		if component_list:
+			component_header = "Components"
+		if component_header and island_header:
+			conjunction = " and "
+		
+		if not component_header and not island_header:
+			heading = owner + " hasn't created any islands or components yet."
+		else:
+			heading = "All " + island_header + conjunction + component_header + " Owned By \"" + owner + "\""
+		
+		template_params = {'heading': heading, 'island_list': island_list, 'component_list': component_list, 'owner': owner}
 	
-	return render_to_response("templates/island_list.html", locals(), context_instance=(RequestContext(request)))
+	return render_to_response("templates/island_list.html", template_params, context_instance=(RequestContext(request)))
 
 
 def item_history(request, slug, type, template_name='history.html'):
@@ -122,8 +138,6 @@ def view_changeset(request, type, slug, revision,
                            'component_name': component.name,
                            'changeset': changeset,
                            'slug': slug}
-
-		# don't know what the RequestContext() is doing here
 		
 		return render_to_response('templates/changeset.html',
                                   template_params,
