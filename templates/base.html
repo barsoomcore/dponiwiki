@@ -7,13 +7,13 @@
 	</head>
 	<body>
 		<div id="header">
-			<form action="{% url island-user %}" method="get" style="float:right" >
+			<form action="{% url island-user %}" method="get" class="searchbox" >
 				<label for="q">Search by username:</label> <input type="text" name="q" />
 			</form>
-			<form action="{% url search 'IslandComponent' %}" method="get" style="float:right" >
+			<form action="{% url search 'IslandComponent' %}" method="get" class="searchbox" >
 				<label for="q">Search Components:</label> <input type="text" name="q" /> &nbsp; 
 			</form>
-			<form action="{% url search 'Island' %}" method="get" style="float:right" >
+			<form action="{% url search 'Island' %}" method="get" class="searchbox" >
 				<label for="q">Search Islands:</label> <input type="text" name="q" /> &nbsp; 
 			</form>
 			<p style="margin-top:0"><a href="{% url island-list %}">Home</a></p>
