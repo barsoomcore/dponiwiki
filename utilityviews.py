@@ -8,6 +8,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.views import logout
 
 from dponisetting.dponiwiki.models import Island, IslandComponent, ChangeSet
+from dponisetting.dponiwiki.forms import UserCreationFormExtended
 
 def canonical(request, canonicity):
 	island_list = Island.objects.filter(iscanonical=canonicity)
@@ -40,30 +41,30 @@ def search(request, type):
 	return render_to_response(url, locals(), context_instance=(RequestContext(request)))
 
 
-def by_user(request):
+def by_user(request, user=None):
 	if 'q' in request.GET:
 		owner = request.GET['q']
+	elif user:
+		owner = user
 		
-		# good enough for Islands but what about IslandComponents?
-		
-		island_list = Island.objects.filter(owner__username__exact=owner)
-		component_list = IslandComponent.objects.filter(owner__username__exact=owner)
-		island_header = ''
-		component_header = ''
-		conjunction = ''
-		if island_list:
-			island_header = "Islands"
-		if component_list:
-			component_header = "Components"
-		if component_header and island_header:
-			conjunction = " and "
-		
-		if not component_header and not island_header:
-			heading = owner + " hasn't created any islands or components yet."
-		else:
-			heading = "All " + island_header + conjunction + component_header + " Owned By \"" + owner + "\""
-		
-		template_params = {'heading': heading, 'island_list': island_list, 'component_list': component_list, 'owner': owner}
+	island_list = Island.objects.filter(owner__username__exact=owner)
+	component_list = IslandComponent.objects.filter(owner__username__exact=owner)
+	island_header = ''
+	component_header = ''
+	conjunction = ''
+	if island_list:
+		island_header = "Islands"
+	if component_list:
+		component_header = "Components"
+	if component_header and island_header:
+		conjunction = " and "
+	
+	if not component_header and not island_header:
+		heading = owner + " hasn't created any islands or components yet."
+	else:
+		heading = "All " + island_header + conjunction + component_header + " Owned By \"" + owner + "\""
+	
+	template_params = {'heading': heading, 'island_list': island_list, 'component_list': component_list, 'owner': owner}
 	
 	return render_to_response("templates/island_list.html", template_params, context_instance=(RequestContext(request)))
 
@@ -146,16 +147,16 @@ def view_changeset(request, type, slug, revision,
     
     
 def register(request):
-	form = UserCreationForm()
+	form = UserCreationFormExtended()
 	
 	if request.method == 'POST':
-		form = UserCreationForm(data=request.POST)
+		form = UserCreationFormExtended(data=request.POST)
 		if form.is_valid():
 			new_user = form.save()
 			return HttpResponseRedirect(reverse('island-list'))
-		else: form = UserCreationForm()
+		else: form = UserCreationFormExtended()
 		
-	return render_to_response('templates/register.html', { 'form' : form })
+	return render_to_response('templates/registration/registration_form.html', { 'form' : form })
 
 def logout_view(request):
 	logout(request)

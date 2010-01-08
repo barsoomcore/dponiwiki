@@ -1,0 +1,7 @@
+Hi there! Thanks for signing up to help create DINO-PIRATES OF NINJA ISLAND!
+
+You can get started within {{ expiration_days }} days, if you like. Use this key:
+
+{{ activation_key }}
+
+Click on {{ site.domain }} to activate!

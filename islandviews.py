@@ -22,7 +22,13 @@ def display_island(request, slug, *args, **kwargs):
 			setattr(component, 'order', order.order)
 			ordered_components.append(component)
 		ordered_components.sort(key=operator.attrgetter('order'))
-	extra_context={'components': ordered_components}
+		
+		reorder_list = {}
+		if len(ordered_components) > 1:
+			for component in ordered_components:
+				reorder_list[component.order] = component.name
+		
+	extra_context={'components': ordered_components, 'reorder_list': reorder_list}
 	queryset = Island.objects.all()
 	
 	return object_detail(request, queryset, template_name='templates/island_detail.html', template_object_name='island', extra_context=extra_context, slug=slug)

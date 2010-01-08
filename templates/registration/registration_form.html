@@ -1,0 +1,28 @@
+{% extends "templates/base.html" %}
+
+{% block title %}Create an account{% endblock %}
+
+{% block content %}
+	<h1>Create an account</h1>
+	<form action="." method="post">
+		{% if form.errors %}
+			<p class="error">Please correct the errors below.</p>
+		{% endif %}
+
+		{{ form.username.errors }}
+		<label for="id_username">Username:</label> {{ form.username }}
+        
+		{{ form.email.errors }}
+		<label for="id_email">Email:</label> {{ form.email }}
+
+		{{ form.password1.errors }}
+		<label for="id_password1">Password: {{ form.password1 }}
+
+		{{ field.password2.errors }}
+		<label for="id_password2">Password (again): {{ form.password2 }}
+
+		<input type="submit" value="Create the account" />
+	</form>
+      
+	<p>Note that you will have to login manually after creating your account. Don't forget your password!</p>
+{% endblock %}

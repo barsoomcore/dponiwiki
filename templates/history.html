@@ -2,6 +2,8 @@
 {% block title %}History{% endblock %}
 {% block content %}
 
+<h1><a href="{{ item.get_absolute_url }}">{{ item.name }}</a></h1>
+
 <form action="{% url wiki_revert_to_revision item.slug, "Island"  %}" method="post">
 	<table>
     	<tr class="tbheader">

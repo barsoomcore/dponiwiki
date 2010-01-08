@@ -27,7 +27,7 @@ def assign_component(request, slug):
 		
 	host_islands_list = component.host_islands.all()
 	
-	return render_to_response("templates/islandcomponent_assign.html", locals())
+	return render_to_response("templates/islandcomponent_assign.html", locals(), context_instance=RequestContext(request))
 
 @login_required
 def update_component(request, islandslug=None, componentslug=None):
@@ -89,11 +89,10 @@ def move_component(request, islandslug, componentslug):
 				item.order = new_component_position
 				item.save()
 			else:
-				print item.order
-				print new_component_position
 				if item.order >= new_component_position:
 					item.order = item.order + 1
 					item.save()
+		island.save(latest_comment="Moved Component " + component.name, editor=request.user)
 	
 	return HttpResponseRedirect(island.get_absolute_url())
 
@@ -102,5 +101,7 @@ def remove_component(request, islandslug, componentslug):
 	island = Island.objects.get(slug__exact=islandslug)
 	component = IslandComponent.objects.get(slug__exact=componentslug)
 	ComponentOrder.objects.filter(island__exact=island).filter(component__exact=component).delete()
+	
+	island.save(latest_comment="Removed Component " + component.name, editor=request.user)
 	
 	return HttpResponseRedirect(island.get_absolute_url())
