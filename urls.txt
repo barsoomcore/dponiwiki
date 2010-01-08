@@ -42,13 +42,14 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/(.*)', admin.site.root),
-    url(r'^accounts/login/$',  login, {'template_name': 'templates/login.html'}, name='login'),
+    url(r'^accounts/login/$',  login, {'template_name': 'templates/registration/login.html'}, name='login'),
 )
 
 urlpatterns += patterns('dponisetting.dponiwiki.utilityviews',
 	url(r'^canonical/(?P<canonicity>[-\w]+)/$', 'canonical', name='island-canonical'),
 	url(r'^search/(?P<type>[-\w]+)/$', 'search', name='search'),
-	url(r'^user/$', 'by_user', name='island-user'),
+	url(r'^user/$', 'by_user', name='user-search'),
+	url(r'^user/(?P<user>[-\w]+)/$', 'by_user', name='user'),
     url(r'^(?P<type>[-\w]+)/history/(?P<slug>[-\w]+)/$', 'item_history', name='item_history'),
     url(r'^accounts/register/$', 'register', name="register"),
 	url(r'^history/(?P<slug>[-\w]+)/(?P<type>[-\w]+)/revert/$', 'revert_to_revision', name='wiki_revert_to_revision'),
