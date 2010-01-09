@@ -6,6 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.contrib.auth.views import logout
+import datetime
 
 from dponisetting.dponiwiki.models import Island, IslandComponent, ChangeSet
 from dponisetting.dponiwiki.forms import UserCreationFormExtended
@@ -96,7 +97,11 @@ def item_history(request, slug, type):
 
 def homepage_show(request):
 	''' Just shows the homepage. '''
-	return render_to_response('templates/home.html', context_instance=(RequestContext(request)))
+	last_week = datetime.datetime.now() - datetime.timedelta(days=7)
+	latest_updates = Island.objects.all().filter(modified__gte=last_week).filter(iscanonical=True)
+	
+	template_params = {'latest_updates': latest_updates }
+	return render_to_response('templates/home.html', template_params, context_instance=(RequestContext(request)))
 
 def revert_to_revision(request, slug, type):
 	''' Reverts the current item to the selected revision. '''
