@@ -8,6 +8,7 @@
 			<p>Owner: <a href="{% url user component.owner.username %}">{{component.owner}}</a></p>
 	</div>
 	<h1>{{ component.name }}</h1>
+		<p class="updated">Updated: {{ component.modified|date:"N d, P" }}</p>
 	<div id="islandcomponent-body">
 		{{ component.content|textile }}
 		
@@ -21,6 +22,5 @@
 		{% else %}
 		<p>This component is not used in any islands.</p>
 		{% endif %}
-		<p class="small">Updated {{ component.modified }}</p>
 	</div>
 {% endblock %}

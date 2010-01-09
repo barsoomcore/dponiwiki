@@ -32,7 +32,7 @@
 	
 	<ul>
 		{% for island in latest_updates %}
-			<li><a href="{{ island.get_absolute_url }}">{{ island.name }}</a>: {{ island.summary|truncatewords:10 }}</li>
+			<li><a href="{{ island.get_absolute_url }}">{{ island.name }}</a>: {{ island.summary|truncatewords:20 }}</li>
 		{% endfor %}
 	</ul>
 	
