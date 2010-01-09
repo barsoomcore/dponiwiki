@@ -26,7 +26,7 @@ def search(request, type):
 		try:
 			class_type = globals()[type]
 		except KeyError:
-			return HttpResponseRedirect('/dponiwiki/islands/')
+			return HttpResponseRedirect('/dponiwiki/')
 		
 		if class_type == Island:
 			island_list = class_type.objects.filter(Q(name__contains=term) | Q(summary__contains=term))
@@ -76,7 +76,7 @@ def item_history(request, slug, type, template_name='history.html'):
 		try:
 			class_type = globals()[type]
 		except KeyError:
-			return HttpResponseRedirect('/dponiwiki/islands/')
+			return HttpResponseRedirect('/dponiwiki/')
 
 		item = get_object_or_404(class_type, slug=slug)
 		changes = item.changeset_set.all().order_by('-revision')
@@ -92,6 +92,8 @@ def item_history(request, slug, type, template_name='history.html'):
 
 	return HttpResponseNotAllowed(['GET'])
 
+def homepage_show(request):
+	return render_to_response('templates/home.html', context_instance=(RequestContext(request)))
 
 def revert_to_revision(request, slug, type):
 
@@ -100,7 +102,7 @@ def revert_to_revision(request, slug, type):
 		try:
 			class_type = globals()[type]
 		except KeyError:
-			return HttpResponseRedirect('/dponiwiki/islands/')
+			return HttpResponseRedirect('/dponiwiki/')
 
 		item = get_object_or_404(class_type, slug=slug)
 
@@ -153,11 +155,11 @@ def register(request):
 		form = UserCreationFormExtended(data=request.POST)
 		if form.is_valid():
 			new_user = form.save()
-			return HttpResponseRedirect(reverse('island-list'))
+			return HttpResponseRedirect(reverse('login', kwargs={'next': '/islands/'}))
 		else: form = UserCreationFormExtended()
 		
-	return render_to_response('templates/registration/registration_form.html', { 'form' : form })
+	return render_to_response('templates/registration/registration_form.html', { 'form' : form }, context_instance=RequestContext(request))
 
 def logout_view(request):
 	logout(request)
-	return HttpResponseRedirect(reverse('island-list'))
+	return HttpResponseRedirect(reverse('homepage'))
