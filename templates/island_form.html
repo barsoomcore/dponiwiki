@@ -8,24 +8,47 @@
 {% endblock %}
 {% block content %}
 
+	{% if island %}
+		<h1>Edit "{{ island.name }}"</h1>
+	{% else %}
+		<h1>Create a New Island</h1>
+	{% endif %}
+
 	<form action="" method="post">
 	
    		<table class="fieldwrapper">
    		<tr><td colspan="3">{{ form.name.errors }}</td></tr>
    		<tr><td><label for="id_name">Island Name:</label></td>
    			<td>{{ form.name }}</td>
-   			<td>You must include a name!</td>
+   			<td>
+   				{% if island %}Your island's name.
+   				{% else %}You must include a name!
+   				{% endif %}
+   			</td>
    		</tr>
    		
    		<tr><td colspan="3">{{ form.summary.errors }}</td></tr>
    		<tr><td><label for="id_summary">Island Summary: </label></td>
    			<td>{{ form.summary }}</td>
-   			<td>You can provide a brief summary of your island that people can search on.</td>
+   			<td>
+   				{% if island %}Your island's Summary
+   				{% else %}You can provide a brief summary of your island that people can search on.
+   				{% endif %}
+   			</td>
    		</tr>
    		<tr><td colspan="3">{{ form.content.errors }}</td></tr>
    		<tr><td><label for="id_content">Island Content:</label></td>
    			<td>{{ form.content }}</td>
-   			<td>Put the meat of your island here. You can use <a href="http://textile.thresholdstate.com/">Textile</a> markup here to style your content: use "_underscores_" for italics, or "*asterixes*" for bold. "h1." will produce a heading of level one, and if you enclose the URL of an image in exclamation points "!imageurl!" the image will display in your content.</td>
+   			<td>
+   				{% if island %}Your island's content. Remember, you 
+   				{% else %}Put the meat of your island here. You 
+   				{% endif %}can use <a href="http://textile.thresholdstate.com/">Textile</a> markup here to style your content: 
+   					<ul>
+   						<li>use "_underscores_" for <em>italics</em>, or "*asterixes*" for <strong>bold</strong>.</li>
+   						<li>"h1." will produce a heading of level one</li>
+   						<li>if you enclose the URL of an image in exclamation points "!imageurl!" the image will display in your content.</li>
+   					</ul>
+   			</td>
    		</tr>
    		<tr><td colspan="3">{{ form.comment.errors }}</td></tr>
    		<tr><td><label for="id_comment">Comment:</label></td>
