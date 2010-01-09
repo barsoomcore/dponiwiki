@@ -11,6 +11,8 @@ from dponisetting.dponiwiki.models import Island, IslandComponent, ChangeSet
 from dponisetting.dponiwiki.forms import UserCreationFormExtended
 
 def canonical(request, canonicity):
+	'''	Returns a list of islands matching the supplied canonicity '''
+		
 	island_list = Island.objects.filter(iscanonical=canonicity)
 	if canonicity == "True":
 		heading = "Canonical Islands"
@@ -20,6 +22,7 @@ def canonical(request, canonicity):
 
 	
 def search(request, type):
+	''' Returns a list of either islands or components based on search string '''
 	if 'q' in request.GET:
 		term = request.GET['q']
 		
@@ -42,6 +45,7 @@ def search(request, type):
 
 
 def by_user(request, user=None):
+	''' Returns both islands and components owned by supplied user. '''
 	if 'q' in request.GET:
 		owner = request.GET['q']
 	elif user:
@@ -69,8 +73,8 @@ def by_user(request, user=None):
 	return render_to_response("templates/island_list.html", template_params, context_instance=(RequestContext(request)))
 
 
-def item_history(request, slug, type, template_name='history.html'):
-
+def item_history(request, slug, type):
+	''' Display changeset list for given item. '''
 	if request.method == 'GET':
 		
 		try:
@@ -80,12 +84,10 @@ def item_history(request, slug, type, template_name='history.html'):
 
 		item = get_object_or_404(class_type, slug=slug)
 		changes = item.changeset_set.all().order_by('-revision')
-
-		# not sure if template_params is better than locals(), as above.
-		# should probably choose one or the other, anyway.
 		
 		template_params = {'item': item,
-                           'changes': changes}
+                           'changes': changes,
+                           	'type': type}
 
 		return render_to_response('templates/history.html',
                                   template_params, context_instance=(RequestContext(request)))
@@ -93,10 +95,11 @@ def item_history(request, slug, type, template_name='history.html'):
 	return HttpResponseNotAllowed(['GET'])
 
 def homepage_show(request):
+	''' Just shows the homepage. '''
 	return render_to_response('templates/home.html', context_instance=(RequestContext(request)))
 
 def revert_to_revision(request, slug, type):
-
+	''' Reverts the current item to the selected revision. '''
 	if request.method == 'POST':
 		
 		try:
@@ -119,10 +122,8 @@ def revert_to_revision(request, slug, type):
 	return HttpResponseNotAllowed(['POST'])
 
 
-def view_changeset(request, type, slug, revision,
-                   template_name='changeset.html',
-                   *args, **kw):
-
+def view_changeset(request, type, slug, revision, *args, **kw):
+	''' Returns the diff-ed version of the item. '''
 	if request.method == "GET":
     
 		# no idea why this is being done this way
@@ -140,7 +141,8 @@ def view_changeset(request, type, slug, revision,
 		template_params = {'component': component,
                            'component_name': component.name,
                            'changeset': changeset,
-                           'slug': slug}
+                           'slug': slug,
+                           'type': type}
 		
 		return render_to_response('templates/changeset.html',
                                   template_params,

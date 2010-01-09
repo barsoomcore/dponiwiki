@@ -219,6 +219,8 @@ class ChangeSet(models.Model):
 		# Also, not sure why self.component.__class__.__name__ returns "WikiComponent"
 		
 		source_item = Island.objects.filter(slug=self.component.slug)
+		if not source_item:
+			source_item = IslandComponent.objects.filter(slug=self.component.slug)
 		type = source_item[0].__class__.__name__
 		return ('wiki_changeset', (), {'type': type, 'slug': self.component.slug, 'revision': self.revision})
 

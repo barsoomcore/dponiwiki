@@ -11,5 +11,5 @@
         <h2> {{ changeset.old_title }} </h2>
     {% endif %}
     {{ changeset.display_diff|safe|textile }}
-    <p><a href="{% url item_history type='Island' slug=component.slug%}">Back to History</a></p>
+    <p><a href="{% url item_history type=type slug=component.slug%}">Back to History</a></p>
 {% endblock %}
