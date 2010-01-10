@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.forms import UserCreationForm
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.contrib.auth.views import logout
 import datetime
 
@@ -32,17 +33,40 @@ def search(request, type):
 		except KeyError:
 			return HttpResponseRedirect('/dponiwiki/')
 		
+		try:
+			page = int(request.GET.get('page', '1'))
+		except ValueError:
+			page = 1
+		
+		islands = ''
+		components = ''
+		
 		if class_type == Island:
 			island_list = class_type.objects.filter(Q(name__contains=term) | Q(summary__contains=term))
 			url = "templates/island_list.html"
+			paginator = Paginator(island_list, 25)
+		
+			try:
+				islands = paginator.page(page)
+			except (EmptyPage, InvalidPage):
+				islands = paginator.page(paginator.num_pages)
+				
 		elif class_type == IslandComponent:
 			component_list = class_type.objects.filter(Q(name__contains=term) | Q(content__contains=term))
-			url = "templates/islandcomponent_list.html"
+			url = "templates/island_list.html"
 			type = "Island Component"
+			paginator = Paginator(component_list, 25)
+		
+			try:
+				components = paginator.page(page)
+			except (EmptyPage, InvalidPage):
+				components = paginator.page(paginator.num_pages)
 		
 		heading = "Search Results: All " + type + "s containing the term \"" + term + "\""
+		
+		template_params = { 'heading': heading, 'islands': islands, 'components': components, 'term': term }
 			
-	return render_to_response(url, locals(), context_instance=(RequestContext(request)))
+	return render_to_response(url, template_params, context_instance=(RequestContext(request)))
 
 
 def by_user(request, user=None):
@@ -52,8 +76,26 @@ def by_user(request, user=None):
 	elif user:
 		owner = user
 		
+	try:
+		page = int(request.GET.get('page', '1'))
+	except ValueError:
+		page = 1
+	
+	# this whole bit seems retarded to me but things keep barfing if I don't set
+	# the relevant bits to '' ahead of time.
+	
 	island_list = Island.objects.filter(owner__username__exact=owner)
 	component_list = IslandComponent.objects.filter(owner__username__exact=owner)
+	all_list = island_list
+	
+	island_paginator = Paginator(island_list, 15)
+	component_paginator = Paginator(component_list, 15)
+	try:
+		islands = island_paginator.page(page)
+		components = component_paginator.page(page)
+	except (EmptyPage, InvalidPage):
+		islands = island_paginator.page(island_paginator.num_pages)
+		components = component_paginator.page(component_paginator.num_pages)
 	island_header = ''
 	component_header = ''
 	conjunction = ''
@@ -69,7 +111,7 @@ def by_user(request, user=None):
 	else:
 		heading = "All " + island_header + conjunction + component_header + " Owned By \"" + owner + "\""
 	
-	template_params = {'heading': heading, 'island_list': island_list, 'component_list': component_list, 'owner': owner}
+	template_params = {'heading': heading, 'islands': islands, 'components': components, 'term': owner}
 	
 	return render_to_response("templates/island_list.html", template_params, context_instance=(RequestContext(request)))
 
@@ -84,7 +126,18 @@ def item_history(request, slug, type):
 			return HttpResponseRedirect('/dponiwiki/')
 
 		item = get_object_or_404(class_type, slug=slug)
-		changes = item.changeset_set.all().order_by('-revision')
+		changes_list = item.changeset_set.all().order_by('-revision')
+		paginator = Paginator(changes_list, 25)
+		
+		try:
+			page = int(request.GET.get('page', '1'))
+		except ValueError:
+			page = 1
+		
+		try:
+			changes = paginator.page(page)
+		except (EmptyPage, InvalidPage):
+			changes = paginator.page(paginator.num_pages)
 		
 		template_params = {'item': item,
                            'changes': changes,
@@ -98,7 +151,7 @@ def item_history(request, slug, type):
 def homepage_show(request):
 	''' Just shows the homepage. '''
 	last_week = datetime.datetime.now() - datetime.timedelta(days=7)
-	latest_updates = Island.objects.all().filter(modified__gte=last_week).filter(iscanonical=True)
+	latest_updates = Island.objects.all().filter(modified__gte=last_week).filter(iscanonical=True)[:10]
 	
 	template_params = {'latest_updates': latest_updates }
 	return render_to_response('templates/home.html', template_params, context_instance=(RequestContext(request)))

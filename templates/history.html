@@ -5,14 +5,15 @@
 <h1><a href="{{ item.get_absolute_url }}">{{ item.name }}</a></h1>
 
 <form action="{% url wiki_revert_to_revision item.slug, type  %}" method="post">
-	<table>
+	<table id="historytable">
     	<tr class="tbheader">
 	  		<th>At</th>
 	  		<th>User</th>
-	  		<th>Comment</th>
-	  		<th>Revert</th>
+	  		<th style="text-align: center">Comment</th>
+	  		<th style="text-align: center">Revision #</th>
+	  		<th style="text-align: center">Revert</th>
     	</tr>
-    	{% for change in changes %}
+    	{% for change in changes.object_list %}
 			<tr class="{% cycle 'tbodd' 'tbeven' %}">
 				<td><a href="{{ change.get_absolute_url }}">
 					{{ change.modified|date:"M d, Y" }}</a>
@@ -23,8 +24,8 @@
 				<td>
 					{% if change.comment %}<i>'{{ change.comment}}'</i> {% endif %}
 				</td>
-				<td>{{ change.revision }}</td>
-				<td>
+				<td style="text-align: center">{{ change.revision }}</td>
+				<td style="text-align: center">
 					{% if forloop.first %}
 						Current revision
 					{% else %}
@@ -36,6 +37,23 @@
 			</tr>
     	{% endfor %}
 	</table>
+	
+	<div class="pagination">
+    	<span class="step-links">
+        {% if changes.has_previous %}
+            <a href="?page={{ changes.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ changes.number }} of {{ changes.paginator.num_pages }}.
+        </span>
+
+        {% if changes.has_next %}
+            <a href="?page={{ changes.next_page_number }}">next</a>
+        {% endif %}
+    	</span>
+	</div>
+
 	{% ifnotequal changes.count 1 %}
 		<input type="submit" value="Revert">
 	{% endifnotequal %}
