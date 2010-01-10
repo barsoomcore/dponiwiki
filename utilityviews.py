@@ -151,7 +151,7 @@ def item_history(request, slug, type):
 def homepage_show(request):
 	''' Just shows the homepage. '''
 	last_week = datetime.datetime.now() - datetime.timedelta(days=7)
-	latest_updates = Island.objects.all().filter(modified__gte=last_week).filter(iscanonical=True)[:10]
+	latest_updates = Island.objects.filter(modified__gte=last_week).filter(iscanonical=True)[:10]
 	
 	template_params = {'latest_updates': latest_updates }
 	return render_to_response('templates/home.html', template_params, context_instance=(RequestContext(request)))
