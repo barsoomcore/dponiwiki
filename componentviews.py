@@ -11,20 +11,22 @@ from models import Island, IslandComponent, ComponentOrder
 def assign_component(request, slug):
 	component = IslandComponent.objects.get(slug__exact=slug)
 	islands_list = Island.objects.filter(owner__exact=component.owner).exclude(components__id__exact=component.id)
+	host_islands_list = component.host_islands.all()
 	if request.method == "POST":
 		for new_island in request.POST.values():
 			new_island = Island.objects.get(slug__exact=new_island)
-			current_order = ComponentOrder.objects.filter(island__exact=new_island).order_by('order')
-			new_order_order = 1
-			if current_order:
-				for item in current_order:
-					if item.order == new_order_order:
-						new_order_order = new_order_order + 1
-					
-			new_order = ComponentOrder(island=new_island, component=component, order=new_order_order)
-			new_order.save()
-			new_island.save(latest_comment="Added Component " + component.name, editor=request.user)
-		
+			if not new_island in host_islands_list:
+				current_order = ComponentOrder.objects.filter(island__exact=new_island).order_by('order')
+				new_order_order = 1
+				if current_order:
+					for item in current_order:
+						if item.order == new_order_order:
+							new_order_order = new_order_order + 1
+						
+				new_order = ComponentOrder(island=new_island, component=component, order=new_order_order)
+				new_order.save()
+				new_island.save(latest_comment="Added Component " + component.name, editor=request.user)
+	
 	host_islands_list = component.host_islands.all()
 	
 	return render_to_response("templates/islandcomponent_assign.html", locals(), context_instance=RequestContext(request))
