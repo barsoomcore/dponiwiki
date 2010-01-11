@@ -1,3 +1,4 @@
+{% load tagging_tags %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
 "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en">
@@ -21,6 +22,24 @@
 			{% else %}
 			<a href="{% url login %}?next={{request.path}}">Login</a>	or <a href="{% url register%}">Register</a>
 			{% endif %}</p>
+		</div>
+		<div id="right">
+			<div id="tag-cloud">
+				<h2>Find Cool Stuff</h2>
+				<p>Below is a list of some of the most common tags used on components in DINO-PIRATES OF NINJA ISLAND. Click on the most interesting tags to find components you're interested in!</p>
+				{% tag_cloud_for_model dponiwiki.IslandComponent as tagcloud with steps=5 min_count=2 distribution=log %}
+				<p class="tags-in-cloud">
+					{% for tag in tagcloud %}
+						<span style="font-size: 
+							{% ifequal tag.font_size 5 %}x-large{% endifequal %}
+							{% ifequal tag.font_size 4 %}large{% endifequal %}
+							{% ifequal tag.font_size 3 %}medium{% endifequal %}
+							{% ifequal tag.font_size 2 %}small{% endifequal %}
+							{% ifequal tag.font_size 1 %}x-small{% endifequal %}
+							"><a href="{% url component_tag_detail tag %}">{{ tag }}</a></span>
+					{% endfor %}
+				</p>
+			</div>
 		</div>
 		<div id="content">
 			{% block content %}
