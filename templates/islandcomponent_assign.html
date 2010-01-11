@@ -3,7 +3,7 @@
 {% block content %}
 	<h1><a href="{% url component-detail component.slug %}">{{ component.name }}</a></h1>
 	
-	<h2>Islands already using this component:</h2>
+	<h2>Some of the islands already using this component:</h2>
 	{% if host_islands_list %}
 	{% for island in host_islands_list %}
 	<p><a href="{% url island-detail island.slug %}">{{ island.name }}</a></p>
@@ -14,9 +14,24 @@
 	
 	<h2>Islands of yours you might want to add this component to:</h2>
 	<form action="{% url component-assign component.slug %}" method="post">
-	{% for island in islands_list %}
-	<input type="checkbox" name="{{island.name}}" value="{{island.slug}}"><a href="{% url island-detail island.slug %}">{{ island.name }}</a><br />
-	{% endfor %}
-	<input type="submit" value="Assign" />
+		{% for island in islands_list.object_list %}
+		<input type="checkbox" name="{{island.name}}" value="{{island.slug}}"><a href="{% url island-detail island.slug %}">{{ island.name }}</a><br />
+		{% endfor %}
+		<div class="pagination">
+			<span class="step-links">
+			{% if islands_list.has_previous %}
+				<a href="?page={{ islands_list.previous_page_number }}{% if term %}&q={{ term }}{% endif %}">previous</a>
+			{% endif %}
+	
+			<span class="current">
+				Page {{ islands_list.number }} of {{ islands_list.paginator.num_pages }}.
+			</span>
+	
+			{% if islands_list.has_next %}
+				<a href="?page={{ islands_list.next_page_number }}{% if term %}&q={{ term }}{% endif %}">next</a>
+			{% endif %}
+			</span>
+		</div>
+		<input type="submit" value="Assign" />
 	</form>
 {% endblock %}

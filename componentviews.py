@@ -3,6 +3,7 @@ from django.views.generic.create_update import create_object, update_object
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 from forms import IslandComponentForm
 from models import Island, IslandComponent, ComponentOrder
@@ -27,9 +28,22 @@ def assign_component(request, slug):
 				new_order.save()
 				new_island.save(latest_comment="Added Component " + component.name, editor=request.user)
 	
-	host_islands_list = component.host_islands.all()
+	host_islands_list = component.host_islands.all()[:10]
+	paginator = Paginator(islands_list, 15)
 	
-	return render_to_response("templates/islandcomponent_assign.html", locals(), context_instance=RequestContext(request))
+	try:
+		page = int(request.GET.get('page', '1'))
+	except ValueError:
+		page = 1
+	
+	try:
+		islands = paginator.page(page)
+	except (EmptyPage, InvalidPage):
+		islands = paginator.page(paginator.num_pages)
+	
+	template_params = {'component': component, 'islands_list': islands, 'host_islands_list': host_islands_list }
+	
+	return render_to_response("templates/islandcomponent_assign.html", template_params, context_instance=RequestContext(request))
 
 @login_required
 def update_component(request, islandslug=None, componentslug=None):
