@@ -19,6 +19,22 @@
 			<li><a href="{{ island.get_absolute_url}}">{{ island.name }}</a></li>
 			{% endfor %}
 		</ul>
+		
+		<div class="pagination">
+			<span class="step-links">
+			{% if islands.has_previous %}
+				<a href="?page={{ islands.previous_page_number }}{% if term %}&q={{ term }}{% endif %}">previous</a>
+			{% endif %}
+	
+			<span class="current">
+				Page {{ islands.number }} of {{ islands.paginator.num_pages }}.
+			</span>
+	
+			{% if islands.has_next %}
+				<a href="?page={{ islands.next_page_number }}{% if term %}&q={{ term }}{% endif %}">next</a>
+			{% endif %}
+			</span>
+		</div>
 		{% else %}
 		<p>This component is not used in any islands.</p>
 		{% endif %}

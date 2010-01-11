@@ -1,4 +1,5 @@
 from django.shortcuts import render_to_response, redirect
+from django.views.generic.list_detail import object_detail
 from django.views.generic.create_update import create_object, update_object
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
@@ -7,6 +8,32 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 from forms import IslandComponentForm
 from models import Island, IslandComponent, ComponentOrder
+
+def display_component(request, slug):
+	component = IslandComponent.objects.get(slug__exact=slug)
+	islands_list = component.host_islands.all()
+	paginator = Paginator(islands_list, 15)
+	
+	try:
+		page = int(request.GET.get('page', '1'))
+	except ValueError:
+		page = 1
+	
+	try:
+		islands = paginator.page(page)
+	except (EmptyPage, InvalidPage):
+		islands = paginator.page(paginator.num_pages)
+	
+	extra_context = { 'islands':islands }
+	queryset = IslandComponent.objects.all()
+	
+	return object_detail(request,
+						queryset,
+						template_name = 'templates/islandcomponent_detail.html',
+						template_object_name = 'component',
+						extra_context = extra_context,
+						slug = slug
+						)
 
 @login_required
 def assign_component(request, slug):

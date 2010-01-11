@@ -31,7 +31,13 @@ def display_island(request, slug, *args, **kwargs):
 	extra_context={'components': ordered_components, 'reorder_list': reorder_list}
 	queryset = Island.objects.all()
 	
-	return object_detail(request, queryset, template_name='templates/island_detail.html', template_object_name='island', extra_context=extra_context, slug=slug)
+	return object_detail(request, 
+						queryset, 
+						template_name='templates/island_detail.html', 
+						template_object_name='island', 
+						extra_context=extra_context,
+						slug=slug
+						)
 
 @login_required
 def update_island(request, slug=None):
