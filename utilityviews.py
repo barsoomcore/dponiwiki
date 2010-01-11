@@ -148,13 +148,6 @@ def item_history(request, slug, type):
 
 	return HttpResponseNotAllowed(['GET'])
 
-def homepage_show(request):
-	''' Just shows the homepage. '''
-	last_week = datetime.datetime.now() - datetime.timedelta(days=7)
-	latest_updates = Island.objects.filter(modified__gte=last_week).filter(iscanonical=True)[:10]
-	
-	template_params = {'latest_updates': latest_updates }
-	return render_to_response('templates/home.html', template_params, context_instance=(RequestContext(request)))
 
 def revert_to_revision(request, slug, type):
 	''' Reverts the current item to the selected revision. '''
@@ -215,7 +208,9 @@ def register(request):
 		form = UserCreationFormExtended(data=request.POST)
 		if form.is_valid():
 			new_user = form.save()
-			return HttpResponseRedirect(reverse('login', kwargs={'next': '/islands/'}))
+			
+			# we gotta find a way to preserve context here.
+			return HttpResponseRedirect(reverse('login'))
 		else: form = UserCreationFormExtended()
 		
 	return render_to_response('templates/registration/registration_form.html', { 'form' : form }, context_instance=RequestContext(request))

@@ -38,6 +38,18 @@ class NonRevertedChangeSetManager(QuerySetManager):
 
 # thanks to the wiki-app crew for those items!
 
+class StaticPage(models.Model):
+	name = models.CharField(max_length = 100)
+	slug = models.SlugField(max_length = 100, unique=True)
+	owner = models.ForeignKey(User)
+	content = models.TextField()
+	created = models.DateTimeField(auto_now_add=True)
+	modified = models.DateTimeField(auto_now=True)
+	
+	@permalink
+	def get_absolute_url(self):
+		return('page-detail', (), {'slug': self.slug})
+
 class WikiComponent(models.Model):
 	name = models.CharField(max_length = 100)
 	slug = models.SlugField(max_length = 100, unique=True)

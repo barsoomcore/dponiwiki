@@ -1,14 +1,13 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from models import WikiComponent, Island, IslandComponent
+from models import WikiComponent, Island, IslandComponent, StaticPage
 
 class WikiComponentForm(forms.ModelForm):
 	content = forms.CharField(
 				widget=forms.Textarea(attrs={'rows':'20'}))
 	class Meta:
 		model = WikiComponent
-
 
 class IslandForm(WikiComponentForm):
 	class Meta:
@@ -30,3 +29,7 @@ class UserCreationFormExtended(UserCreationForm):
 	class Meta:
 		model = User
 		fields = ('username', 'email')
+
+class StaticPageForm(forms.ModelForm):
+	class Meta:
+		model = StaticPage
