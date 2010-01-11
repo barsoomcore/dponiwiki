@@ -3,8 +3,9 @@
 
 from django.conf.urls.defaults import *
 from django.contrib.auth.views import login
+import datetime
 from tagging.views import tagged_object_list
-from dponisetting.dponiwiki.models import Island, IslandComponent
+from dponisetting.dponiwiki.models import Island, IslandComponent, StaticPage
 from dponiwiki.forms import IslandForm, IslandComponentForm
 
 island_dict = { 
@@ -24,7 +25,7 @@ island_canonical_list_dict = {
 component_dict = { 
 	'queryset': IslandComponent.objects.all(), 
 	'template_name': 'templates/islandcomponent_detail.html', 
-	'template_object_name': 'component' 
+	'template_object_name': 'component'
 }
 component_list_dict = { 
 	'queryset': IslandComponent.objects.all(),
@@ -39,6 +40,16 @@ component_tag_dict = {
 	'template_object_name':'component'
 }
 
+last_week = datetime.datetime.now() - datetime.timedelta(days=7)
+latest_updates = Island.objects.filter(modified__gte=last_week).filter(iscanonical=True)[:10]
+extra_context = {'latest_updates': latest_updates }
+page_dict = {
+	'queryset': StaticPage.objects.all(),
+	'template_name': 'templates/page_detail.html',
+	'template_object_name': 'page',
+	'extra_context': extra_context
+}
+
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
@@ -49,7 +60,7 @@ urlpatterns = patterns('',
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
-    url(r'^$', 'dponisetting.dponiwiki.utilityviews.homepage_show', name="homepage"),
+    url(r'^$', 'django.views.generic.simple.redirect_to', {'url': '/dponiwiki/page/home/' }, name="homepage"),
     url(r'^admin/(.*)', admin.site.root),
     url(r'^accounts/login/$',  login, {'template_name': 'templates/registration/login.html'}, name='login'),
     url(r'^components/tag/(?P<tag>[^/]+)/$', tagged_object_list, component_tag_dict, name='component_tag_detail'),
@@ -68,6 +79,7 @@ urlpatterns += patterns('dponisetting.dponiwiki.utilityviews',
 )
 
 urlpatterns += patterns('dponisetting.dponiwiki.componentviews',
+	url(r'^IslandComponent/(?P<slug>[-\w]+)/$', 'display_component', name='component-detail'), 
 	url(r'^Island/(?P<islandslug>[-\w]+)/create-component/$', 'update_component', name='public-component-create', ),
 	url(r'^Island/(?P<islandslug>[-\w]+)/update-component/(?P<componentslug>[-\w]+)/$', 'update_component', name='public-component-update', ),
 	url(r'^assign-component/(?P<slug>[-\w]+)/$', 'assign_component', name='component-assign', ),
@@ -82,7 +94,7 @@ urlpatterns += patterns('dponisetting.dponiwiki.islandviews',
 )
 
 urlpatterns += patterns('django.views.generic.list_detail',
-	url(r'^IslandComponent/(?P<slug>[-\w]+)/$', 'object_detail', component_dict, name='component-detail'), 
 	url(r'^islands/$', 'object_list', island_canonical_list_dict, name='island-list'),
 	url(r'^components/$', 'object_list', component_list_dict, name='component-list'),
+    url(r'^page/(?P<slug>[-\w]+)/$', 'object_detail', page_dict, name='page-detail'),
 )
