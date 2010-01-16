@@ -62,11 +62,16 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^$', 'django.views.generic.simple.redirect_to', {'url': '/dponiwiki/page/home/' }, name="homepage"),
     url(r'^admin/(.*)', admin.site.root),
-    url(r'^accounts/login/$',  login, {'template_name': 'templates/registration/login.html'}, name='login'),
-	url(r'^accounts/password_change/$', 'django.contrib.auth.views.password_change', {'template_name': 'templates/registration/password_change_form.html'}, name='password_reset'),
-	url(r'^accounts/password_change/done/$', 'django.contrib.auth.views.password_change_done', {'template_name': 'templates/registration/password_change_done.html'}),
-	url(r'^components/tag/(?P<tag>[^/]+)/$', tagged_object_list, component_tag_dict, name='component_tag_detail'),
+    url(r'^components/tag/(?P<tag>[^/]+)/$', tagged_object_list, component_tag_dict, name='component_tag_detail'),
 )
+
+urlpatterns += patterns('django.contrib.auth.views',
+    url(r'^accounts/login/$',  login, {'template_name': 'templates/registration/login.html'}, name='login'),
+    url(r'^accounts/logout/$', 'logout', {'next_page': '/dponiwiki/'}, name='logout'),
+	url(r'^accounts/password_change/$', 'password_change', {'template_name': 'templates/registration/password_change_form.html'}, name='password_reset'),
+	url(r'^accounts/password_change/done/$', 'password_change_done', {'template_name': 'templates/registration/password_change_done.html'}),
+)
+
 
 urlpatterns += patterns('dponisetting.dponiwiki.utilityviews',
 	url(r'^canonical/(?P<canonicity>[-\w]+)/$', 'canonical', name='island-canonical'),
@@ -77,7 +82,6 @@ urlpatterns += patterns('dponisetting.dponiwiki.utilityviews',
     url(r'^accounts/register/$', 'register', name="register"),
 	url(r'^history/(?P<slug>[-\w]+)/(?P<type>[-\w]+)/revert/$', 'revert_to_revision', name='wiki_revert_to_revision'),
 	url(r'^history/(?P<slug>[-\w]+)/(?P<type>[-\w]+)/changeset/(?P<revision>[-\w]+)/$', 'view_changeset', name='wiki_changeset'),
-    url(r'^accounts/logout/$', 'logout_view', name='logout'),
 )
 
 urlpatterns += patterns('dponisetting.dponiwiki.componentviews',

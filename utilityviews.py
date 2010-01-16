@@ -215,7 +215,3 @@ def register(request):
 	else: form = UserCreationFormExtended()
 		
 	return render_to_response('templates/registration/registration_form.html', { 'form' : form }, context_instance=RequestContext(request))
-
-def logout_view(request):
-	logout(request)
-	return HttpResponseRedirect(reverse('homepage'))
