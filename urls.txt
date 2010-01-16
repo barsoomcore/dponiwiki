@@ -63,7 +63,9 @@ urlpatterns = patterns('',
     url(r'^$', 'django.views.generic.simple.redirect_to', {'url': '/dponiwiki/page/home/' }, name="homepage"),
     url(r'^admin/(.*)', admin.site.root),
     url(r'^accounts/login/$',  login, {'template_name': 'templates/registration/login.html'}, name='login'),
-    url(r'^components/tag/(?P<tag>[^/]+)/$', tagged_object_list, component_tag_dict, name='component_tag_detail'),
+	url(r'^accounts/password_change/$', 'django.contrib.auth.views.password_change', {'template_name': 'templates/registration/password_change_form.html'}, name='password_reset'),
+	url(r'^accounts/password_change/done/$', 'django.contrib.auth.views.password_change_done', {'template_name': 'templates/registration/password_change_done.html'}),
+	url(r'^components/tag/(?P<tag>[^/]+)/$', tagged_object_list, component_tag_dict, name='component_tag_detail'),
 )
 
 urlpatterns += patterns('dponisetting.dponiwiki.utilityviews',
