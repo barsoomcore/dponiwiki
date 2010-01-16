@@ -7,6 +7,7 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.contrib.auth.views import logout
+from django.contrib.auth import authenticate, login
 import datetime
 
 from dponisetting.dponiwiki.models import Island, IslandComponent, ChangeSet
@@ -207,10 +208,11 @@ def register(request):
 	if request.method == 'POST':
 		form = UserCreationFormExtended(data=request.POST)
 		if form.is_valid():
-			new_user = form.save()
-			
-			# we gotta find a way to preserve context here.
-			return HttpResponseRedirect(reverse('login'))
+			new_user = form.save()			
+			user = authenticate(username=new_user.username, password=form.cleaned_data['password1'])
+			if user is not None:
+				login(request, user)
+			return HttpResponseRedirect(reverse('homepage'))
 		else: form = UserCreationFormExtended()
 		
 	return render_to_response('templates/registration/registration_form.html', { 'form' : form }, context_instance=RequestContext(request))
