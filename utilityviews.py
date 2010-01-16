@@ -203,7 +203,6 @@ def view_changeset(request, type, slug, revision, *args, **kw):
     
     
 def register(request):
-	form = UserCreationFormExtended()
 	
 	if request.method == 'POST':
 		form = UserCreationFormExtended(data=request.POST)
@@ -213,7 +212,7 @@ def register(request):
 			if user is not None:
 				login(request, user)
 			return HttpResponseRedirect(reverse('homepage'))
-		else: form = UserCreationFormExtended()
+	else: form = UserCreationFormExtended()
 		
 	return render_to_response('templates/registration/registration_form.html', { 'form' : form }, context_instance=RequestContext(request))
 

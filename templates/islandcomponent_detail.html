@@ -12,6 +12,8 @@
 	<div id="islandcomponent-body">
 		{{ component.content|textile }}
 		
+		<p class="tags">Tags: {{ component.tags }}</p>
+		
 		{% if component.host_islands.all %}
 		<p>Islands this component is used in:</p>
 		<ul id="islandcomponent-list">
