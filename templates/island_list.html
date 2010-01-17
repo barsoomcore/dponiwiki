@@ -2,12 +2,12 @@
 {% block title %}Some of the Islands...{% endblock %}
 {% block content %}
 	{% if heading %}
-		<h3>{{ heading }}</h3>
+		<h2>{{ heading }}</h2>
 	{% endif %}
 	
 	{% if islands %}
 		{% if components %}
-			<h3>Islands</h3>
+			<h2>Islands</h2>
 		{% endif %}
 		<ul id="island-list">
 		{% for island in islands.object_list %}
@@ -33,7 +33,7 @@
 	
 	{% if components %}
 		{% if islands %}
-			<h3>Components</h3>
+			<h2>Components</h2>
 		{% endif %}
 		<ul id="component-list">
 		{% for component in components.object_list %}

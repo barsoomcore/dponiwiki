@@ -1,5 +1,6 @@
 {% extends "templates/base.html" %}
 {% load markup %}
+{% load tagging_tags %}
 {% block title %}{{ island.name }}{% endblock %}
 {% block content %}
 	<div class="functions">
@@ -28,29 +29,36 @@
 		<div class="box">
 		{% endif %}
 		<h3 class="component-title"><a href="{% url component-detail component.slug %}">{{ component.name }}</a></h3>
-		<div class="functions">
-			<form style="display: inline" action="{% url move_component island.slug component.slug %}" method="POST">
-			<a href="{% url component-assign component.slug %}">Assign</a> :: 
-			<a href="{% url public-component-update island.slug, component.slug %}">Edit </a> :: 
-			<a href="{% url remove_component island.slug, component.slug %}">Remove</a>
-				{% if reorder_list %}
-					<select name="order_change">
-					{% for component_order, component_name in reorder_list.items %}
-						{% ifnotequal component_name component.name %}
-						<option value="{{ component_order }}" label="{{ component_name }}" />
-						{% endifnotequal %}
-						{% ifequal component_name component.name %}
-						<option value="{{ component_order }}" label="-----" />
-						{% endifequal %}
-					{% endfor %}
-					</select>
-					<input type="submit" value="Move" />
-				{% endif %}
-			</form>
-			<p>Owner: <a href="{% url user component.owner.username %}">{{ component.owner }}</a></p>
-		</div>
+		<p>Owner: <a href="{% url user component.owner.username %}">{{ component.owner }}</a></p>
 		<p>{{ component.content|textile }}</p>
-		<p class="component-tags">Tags: {{ component.tags }} </p>
+		<div class="component-footer">
+			<div class="functions">
+				<form style="display: inline" action="{% url move_component island.slug component.slug %}" method="POST">
+				<a href="{% url component-assign component.slug %}">Assign</a> :: 
+				<a href="{% url public-component-update island.slug, component.slug %}">Edit </a> :: 
+				<a href="{% url remove_component island.slug, component.slug %}">Remove</a>
+					{% if reorder_list %}
+						<select name="order_change">
+						{% for component_order, component_name in reorder_list.items %}
+							{% ifnotequal component_name component.name %}
+							<option value="{{ component_order }}" label="{{ component_name }}" />
+							{% endifnotequal %}
+							{% ifequal component_name component.name %}
+							<option value="{{ component_order }}" label="-----" />
+							{% endifequal %}
+						{% endfor %}
+						</select>
+						<input type="submit" value="Move" />
+					{% endif %}
+				</form>
+			</div>
+			<p class="component-tags">Tags: 
+				{% tags_for_object component as tags %}
+				{% for tag in tags %}
+					<em><a href="{% url component_tag_detail tag %}">{{ tag }}</a></em>
+				{% endfor %}
+			</p>
+		</div>
 		{% if component.is_box %}
 		</div>
 		{% endif %}

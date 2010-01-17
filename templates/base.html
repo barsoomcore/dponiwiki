@@ -17,14 +17,14 @@
 			</ul>
 			<div id="searchbox">
 				<h2>Find Cool Stuff</h2>
-				<form action="{% url user-search %}" method="get" >
-					<label for="q">Search by username:</label> <input type="text" name="q" />
+				<form action="{% url search 'Island' %}" method="get" >
+					<label for="q">Search Islands:</label> <input type="text" name="q" /> 
 				</form>
 				<form action="{% url search 'IslandComponent' %}" method="get" >
 					<label for="q">Search Components:</label> <input type="text" name="q" />  
 				</form>
-				<form action="{% url search 'Island' %}" method="get" >
-					<label for="q">Search Islands:</label> <input type="text" name="q" /> 
+				<form action="{% url user-search %}" method="get" >
+					<label for="q">Search by username:</label> <input type="text" name="q" />
 				</form>
 			</div>
 			<div id="tag-cloud">
