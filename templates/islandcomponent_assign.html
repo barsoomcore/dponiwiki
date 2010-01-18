@@ -5,9 +5,11 @@
 	
 	<h2>Some of the islands already using this component:</h2>
 	{% if host_islands_list %}
+	<ul id="island-list">
 	{% for island in host_islands_list %}
-	<p><a href="{% url island-detail island.slug %}">{{ island.name }}</a></p>
+		<li class="{% cycle 'tbeven' 'tbodd' %}"><a href="{% url island-detail island.slug %}">{{ island.name }}</a></p>
 	{% endfor %}
+	</ul>
 	{% else %}
 	<p>This component is not used in any islands.</p>
 	{% endif %}
@@ -15,7 +17,7 @@
 	<h2>Islands of yours you might want to add this component to:</h2>
 	<form action="{% url component-assign component.slug %}" method="post">
 		{% for island in islands_list.object_list %}
-		<input type="checkbox" name="{{island.name}}" value="{{island.slug}}"><a href="{% url island-detail island.slug %}">{{ island.name }}</a><br />
+			<p class="{% cycle 'tbeven' 'tbodd' %}"><input type="checkbox" name="{{island.name}}" value="{{island.slug}}"><a href="{% url island-detail island.slug %}">{{ island.name }}</a></p>
 		{% endfor %}
 		<div class="pagination">
 			<span class="step-links">

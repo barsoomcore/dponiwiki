@@ -11,7 +11,7 @@
 		{% endif %}
 		<ul id="island-list">
 		{% for island in islands.object_list %}
-			<li><a href=" {{ island.get_absolute_url }}">{{ island.name }}</a></li>
+			<li class="{% cycle 'tbeven' 'tbodd' %}"><a href=" {{ island.get_absolute_url }}">{{ island.name }}</a></li>
 		{% endfor %}
 		</ul>
 		<div class="pagination">
@@ -37,7 +37,7 @@
 		{% endif %}
 		<ul id="component-list">
 		{% for component in components.object_list %}
-			<li><a href="{{ component.get_absolute_url }}">{{ component.name }}</a></li>
+			<li class="{% cycle 'tbeven' 'tbodd' %}"><a href="{{ component.get_absolute_url }}">{{ component.name }}</a></li>
 		{% endfor %}
 		</ul>
 		<div class="pagination">

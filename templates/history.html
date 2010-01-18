@@ -2,7 +2,7 @@
 {% block title %}History{% endblock %}
 {% block content %}
 
-<h1><a href="{{ item.get_absolute_url }}">{{ item.name }}</a></h1>
+<h1><a href="{{ item.get_absolute_url }}">{{ item.name }}</a> Revision History</h1>
 
 <form action="{% url wiki_revert_to_revision item.slug, type  %}" method="post">
 	<table id="historytable">
@@ -55,7 +55,7 @@
 	</div>
 
 	{% ifnotequal changes.count 1 %}
-		<input type="submit" value="Revert">
+		<input type="submit" value="Revert to selected revision">
 	{% endifnotequal %}
 
 </form>

@@ -1,5 +1,6 @@
 {% extends "templates/base.html" %}
 {% load markup %}
+{% load tagging_tags %}
 {% block title %}{{ component.name }}{% endblock %}
 {% block content %}
 	<div class="functions">
@@ -8,17 +9,23 @@
 			<p>Owner: <a href="{% url user component.owner.username %}">{{component.owner}}</a></p>
 	</div>
 	<h1>{{ component.name }}</h1>
-		<p class="updated">Updated: {{ component.modified|date:"N d, P" }}</p>
+	<p class="updated">Updated: {{ component.modified|date:"N d, P" }}</p>
 	<div id="islandcomponent-body">
-		{{ component.content|textile }}
-		
-		<p class="tags">Tags: {{ component.tags }}</p>
-		
-		{% if component.host_islands.all %}
-		<p>Islands this component is used in:</p>
+		{{ component.content|textile }}		
+	</div>
+	<div class="component-footer">
+		<p class="component-tags">Tags: 
+			{% tags_for_object component as tags %}
+			{% for tag in tags %}
+				<em><a href="{% url component_tag_detail tag %}">{{ tag }}</a></em>
+			{% endfor %}
+		</p>
+	</div>	
+	{% if component.host_islands.all %}
+		<h3>Islands this component is used in:</h3>
 		<ul id="islandcomponent-list">
 			{% for island in component.host_islands.all %}
-			<li><a href="{{ island.get_absolute_url}}">{{ island.name }}</a></li>
+			<li class="{% cycle 'tbeven' 'tbodd' %}"><a href="{{ island.get_absolute_url}}">{{ island.name }}</a></li>
 			{% endfor %}
 		</ul>
 		
@@ -37,8 +44,7 @@
 			{% endif %}
 			</span>
 		</div>
-		{% else %}
+	{% else %}
 		<p>This component is not used in any islands.</p>
-		{% endif %}
-	</div>
+	{% endif %}
 {% endblock %}
