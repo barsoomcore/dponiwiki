@@ -11,7 +11,7 @@
 	  		<th>User</th>
 	  		<th style="text-align: center">Comment</th>
 	  		<th style="text-align: center">Revision #</th>
-	  		<th style="text-align: center">Revert</th>
+	  		{% if user.is_authenticated %}<th style="text-align: center">Revert</th>{% endif %}
     	</tr>
     	{% for change in changes.object_list %}
 			<tr class="{% cycle 'tbodd' 'tbeven' %}">
@@ -25,15 +25,19 @@
 					{% if change.comment %}<i>'{{ change.comment}}'</i> {% endif %}
 				</td>
 				<td style="text-align: center">{{ change.revision }}</td>
-				<td style="text-align: center">
-					{% if forloop.first %}
-						Current revision
-					{% else %}
-						<input id="id_revision" name="revision"
-						{% ifequal forloop.counter 2 %}checked{% endifequal %}
-						type="radio" value="{{ change.revision }}">
-					{% endif %}
-				</td>
+				{% if user.is_authenticated %}
+					<td style="text-align: center">
+						{% if forloop.first %}
+							Current revision
+						{% else %}
+							<input id="id_revision" name="revision"
+							{% ifequal forloop.counter 2 %}
+								checked
+							{% endifequal %}
+							type="radio" value="{{ change.revision }}">
+						{% endif %}
+					</td>
+				{% endif %}
 			</tr>
     	{% endfor %}
 	</table>
@@ -54,9 +58,11 @@
     	</span>
 	</div>
 
-	{% ifnotequal changes.count 1 %}
-		<input type="submit" value="Revert to selected revision">
-	{% endifnotequal %}
+	{% if user.is_authenticated %}
+		{% ifnotequal changes.count 1 %}
+			<input type="submit" value="Revert to selected revision">
+		{% endifnotequal %}
+	{% endif %}
 
 </form>
 

@@ -1,13 +1,14 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.db.models import Q
 from django import forms
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseNotAllowed
 from django.contrib.auth.forms import UserCreationForm
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.contrib.auth.views import logout
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 import datetime
 
 from dponisetting.dponiwiki.models import Island, IslandComponent, ChangeSet
@@ -149,7 +150,7 @@ def item_history(request, slug, type):
 
 	return HttpResponseNotAllowed(['GET'])
 
-
+@login_required
 def revert_to_revision(request, slug, type):
 	''' Reverts the current item to the selected revision. '''
 	if request.method == 'POST':
@@ -171,7 +172,7 @@ def revert_to_revision(request, slug, type):
         
 		return HttpResponseRedirect(url)
 
-	return HttpResponseNotAllowed(['POST'])
+	return HttpResponseNotAllowed(['GET'])
 
 
 def view_changeset(request, type, slug, revision, *args, **kw):
