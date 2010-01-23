@@ -3,7 +3,7 @@ from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.views.generic.list_detail import object_detail
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.http import HttpResponseRedirect, HttpResponseNotFound
+from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 
 from forms import IslandForm
@@ -12,10 +12,6 @@ from models import Island, IslandComponent, ComponentOrder
 def display_island(request, slug, *args, **kwargs):
 	# this wrapper gets the ordered list of components for the island and passes it 
 	# to the template
-#	try:
-#		island = Island.objects.get(slug__exact=slug)
-#	except Island.DoesNotExist:
-#		return HttpResponseNotFound("Sorry, the Island you're looking for could not be found.")
 
 	island = get_object_or_404(Island, slug=slug)
 	if island.components:

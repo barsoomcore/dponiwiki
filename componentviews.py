@@ -3,7 +3,7 @@ from django.views.generic.list_detail import object_detail
 from django.views.generic.create_update import create_object, update_object
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
-from django.http import HttpResponseRedirect, HttpResponseNotFound
+from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 from forms import IslandComponentForm
