@@ -1,16 +1,17 @@
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.views.generic.list_detail import object_detail
 from django.views.generic.create_update import create_object, update_object
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 from forms import IslandComponentForm
 from models import Island, IslandComponent, ComponentOrder
 
 def display_component(request, slug):
-	component = IslandComponent.objects.get(slug__exact=slug)
+	
+	component = get_object_or_404(IslandComponent, slug=slug)
 	islands_list = component.host_islands.all()
 	paginator = Paginator(islands_list, 15)
 	
@@ -37,7 +38,7 @@ def display_component(request, slug):
 
 @login_required
 def assign_component(request, slug):
-	component = IslandComponent.objects.get(slug__exact=slug)
+	component = get_object_or_404(IslandComponent, slug__exact=slug)
 	islands_list = Island.objects.filter(owner__exact=component.owner).exclude(components__id__exact=component.id)
 	host_islands_list = component.host_islands.all()
 	if request.method == "POST":
@@ -121,8 +122,8 @@ def update_component(request, islandslug=None, componentslug=None):
 
 @login_required
 def move_component(request, islandslug, componentslug):
-	island = Island.objects.get(slug__exact=islandslug)
-	component = IslandComponent.objects.get(slug__exact=componentslug)
+	island = get_object_or_404(Island, slug__exact=islandslug)
+	component = get_object_or_404(IslandComponent, slug__exact=componentslug)
 	current_order = ComponentOrder.objects.filter(island__exact=island).order_by('order')
 	
 	if request.method == 'POST':
@@ -141,8 +142,8 @@ def move_component(request, islandslug, componentslug):
 
 @login_required
 def remove_component(request, islandslug, componentslug):
-	island = Island.objects.get(slug__exact=islandslug)
-	component = IslandComponent.objects.get(slug__exact=componentslug)
+	island = get_object_or_404(Island, slug__exact=islandslug)
+	component = get_object_or_404(IslandComponent, slug__exact=componentslug)
 	ComponentOrder.objects.filter(island__exact=island).filter(component__exact=component).delete()
 	
 	island.save(latest_comment="Removed Component " + component.name, editor=request.user)

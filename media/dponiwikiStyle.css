@@ -97,6 +97,12 @@ table {border-collapse: collapse; }
 	margin-right: 20px ; 
 	padding: 0.5em 0 0.5em 5px
 }
+#content .standard li {
+	list-style-type: disc;
+	margin-left: -20px;
+	margin-right: 20px;
+	padding: 0.5em 0 0.5em 5px
+}
 #updates li a { font-weight: bold; }
 .updated { font-size: 50%; color: #777; margin-top: -2em }
 .functions { font-size: 50%; float: right }
