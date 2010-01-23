@@ -79,10 +79,6 @@ table {border-collapse: collapse; }
 
 /* end */
 
-#welcome { font-size: 50%; text-align: center; margin-top: 2em }
-.updated { font-size: 50%; color: #777; margin-top: -2em }
-#canonicitynote { font-size:70%; font-style:italic; margin:0 0 2em 0 }
-#classicintro { font-size:70%; font-style:italic }
 
 	#nav h2 { text-align: center; color:black; }
 	#nav #searchbox {font-size: 80%; margin-bottom: 40px; text-align: center}
@@ -91,34 +87,67 @@ table {border-collapse: collapse; }
 	#nav #tag-cloud p { font-size: 60% }
 	#nav #tag-cloud .tags-in-cloud { text-align: center; font-size: 50% }
 
-
-	#updates li { list-style-type: none; margin-left: -20px; margin-right: 20px ; padding: 0.5em 0 0.5em 5px}
-	#updates li a { font-weight: bold; }
-
+#welcome { font-size: 50%; text-align: center; margin-top: 2em }
+#canonicitynote { font-size:70%; font-style:italic; margin:0 0 2em 0 }
+#classicintro { font-size:70%; font-style:italic }
+#content ul { padding: 1% 1% 1% 4%; }
+#content ul li { 
+	list-style-type: none; 
+	margin-left: -20px; 
+	margin-right: 20px ; 
+	padding: 0.5em 0 0.5em 5px
+}
+#updates li a { font-weight: bold; }
+.updated { font-size: 50%; color: #777; margin-top: -2em }
 .functions { font-size: 50%; float: right }
 	.functions form { float:right }
 	.functions p { font-size: 50% }
-
-#island-list { padding: 1% 1% 1% 4%; }
-	#island-list li { list-style-type: none; margin-left: -20px; margin-right: 20px ; padding: 0.5em 0 0.5em 5px}
-#islandcomponent-list {padding: 1% 1% 1% 4%; }
-	#islandcomponent-list li {list-style-type: none; margin-left: -20px; margin-right: 20px ; padding: 0.5em 0 0.5em 5px}
-#component-list { padding: 1% 1% 1% 4%; }
-	#component-list li { list-style-type: none; margin-left: -20px; margin-right: 20px ; padding: 0.5em 0 0.5em 5px}
-
 .pagination { padding-top:1em; font-size:75%; text-align:right }
 
-#island-body { padding: 0 0 0 0; margin-top:0; height:auto; overflow:auto; font-size: small; }
-#island-summary { float:right; width:30%; border: 1px solid black; margin-top:0; padding: 0 5px 0 5px }
+#island-body { 
+	padding: 0 0 0 0; 
+	margin-top:0; 
+	height:auto; 
+	overflow:auto; 
+	font-size: small; 
+}
+#island-summary { 
+	float:right; 
+	width:30%; 
+	border: 1px solid black; 
+	-moz-border-radius: 5px; 
+	-webkit-border-radius: 5px; 
+	margin:0 5px 5px 5px; 
+	padding: 0 5px 0 5px 
+}
 	#island-summary h4 { margin-top: 0.5em; text-align:center }
 	#island-summary p { font-size: 70% }
+	
 #island-components { height:auto; overflow:auto }
 	#island-components .component-title { margin-top:0; border-top: 1px solid #BD521E }
-	#island-components h3 { font-family: Georgia, serif; color: #BD521E; font-size: 150%; font-style:normal }
-	#island-components .box { border: 1px solid black; width: 50%; float:left; margin: 2px 5px 5px 0; background-color: white }
-	#island-components .box .component-title {border: none }
-	.component-footer { border-top: 5px solid #BFBFBF; padding: 0 5px 0.3em 5px; background-color: #BFBFBF }
+	#island-components .component-owner { font-size: 50% }
+	#island-components h3 { 
+		font-family: Georgia, serif; 
+		color: #BD521E; 
+		font-size: 150%; 
+		font-style:normal 
+	}
+	#island-components .box { 
+		border: 1px solid black; 
+		width: 50%; 
+		float:left; 
+		margin: 2px 5px 5px 0; 
+		padding: 0 2px 0 2px; 
+		background-color: white 
+	}
+		#island-components .box .component-title {border: none }
+		#island-components .box .component-footer { margin: 0 -2px 0 -2px }
 	#island-components .component-tags { font-size: x-small }
+.component-footer { 
+	border-top: 5px solid #BFBFBF; 
+	padding: 0 5px 0.3em 5px; 
+	background-color: #BFBFBF 
+}
 #islandcomponent-body { padding: 2%; }
 
 #historytable { width:100%; border-collapse:collapse }
