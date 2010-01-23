@@ -18,10 +18,10 @@
 		{% if island.summary %}
 		<div id="island-summary">
 			<h4>Summary</h4>
-			{{ island.summary|textile }}
+			{{ island.summary|force_escape|textile }}
 		</div>
 		{% endif %}
-		{{ island.content|textile }}
+		{{ island.content|force_escape|textile }}
 	</div>
 	<div id="island-components">
 		{% for component in components %}
@@ -30,7 +30,7 @@
 		{% endif %}
 		<h3 class="component-title"><a href="{% url component-detail component.slug %}">{{ component.name }}</a></h3>
 		<p>Owner: <a href="{% url user component.owner.username %}">{{ component.owner }}</a></p>
-		<p>{{ component.content|textile }}</p>
+		<p>{{ component.content|force_escape|textile }}</p>
 		<div class="component-footer">
 			<div class="functions">
 				<form style="display: inline" action="{% url move_component island.slug component.slug %}" method="POST">

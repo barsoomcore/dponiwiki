@@ -11,7 +11,7 @@
 	<h1>{{ component.name }}</h1>
 	<p class="updated">Updated: {{ component.modified|date:"N d, P" }}</p>
 	<div id="islandcomponent-body">
-		{{ component.content|textile }}		
+		{{ component.content|force_escape|textile }}		
 	</div>
 	<div class="component-footer">
 		<p class="component-tags">Tags: 
