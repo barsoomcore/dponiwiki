@@ -4,22 +4,22 @@
 
 {% block content %}
 	<h1>Create an account</h1>
-	<form action="." method="post">
+	<form action="." method="post" id="register">
 		{% if form.errors %}
 			<p class="error">Please correct the errors below.</p>
 		{% endif %}
 
 		{{ form.username.errors }}
-		<label for="id_username">Username:</label> {{ form.username }}
+		<p><label for="id_username">Username:</label> {{ form.username }}</p>
         
 		{{ form.email.errors }}
-		<label for="id_email">Email:</label> {{ form.email }}
+		<p><label for="id_email">Email:</label> {{ form.email }}</p>
 
 		{{ form.password1.errors }}
-		<label for="id_password1">Password: {{ form.password1 }}
+		<p><label for="id_password1">Password:</label> {{ form.password1 }}</p>
 
 		{{ field.password2.errors }}
-		<label for="id_password2">Password (again): {{ form.password2 }}
+		<p><label for="id_password2">Password (again):</label> {{ form.password2 }}</p>
 
 		<input type="submit" value="Create the account" />
 	</form>

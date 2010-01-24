@@ -27,6 +27,10 @@
 					<label for="q">Search by username:</label> <input type="text" name="q" />
 				</form>
 			</div>
+			<p id="welcome">{% if user.is_authenticated %}Welcome, <a href="{% url user user.username %}">{{ user.username }}</a><br /><a href="{% url logout%}">Logout</a> : <a href="{% url password_reset %}">Reset Password</a>
+			{% else %}
+			<a href="{% url login %}?next={{request.path}}">Login</a> or <a href="{% url register%}">Register</a>
+			{% endif %}</p>
 			<div id="tag-cloud">
 				<h2>Popular Tags</h2>
 				<p>Below is a list of some of the most common tags used on <a href="{% url page-detail 'components' %}">components</a> in DINO-PIRATES OF NINJA ISLAND. Click on the most interesting tags to find components you're interested in!</p>
@@ -43,10 +47,6 @@
 					{% endfor %}
 				</p>
 			</div>
-			<p id="welcome">{% if user.is_authenticated %}Welcome, <a href="{% url user user.username %}">{{ user.username }}</a><br /><a href="{% url logout%}">Logout</a> : <a href="{% url password_reset %}">Reset Password</a>
-			{% else %}
-			<a href="{% url login %}?next={{request.path}}">Login</a> or <a href="{% url register%}">Register</a>
-			{% endif %}</p>
 		</div>
 		<div id="content">
 			{% block content %}

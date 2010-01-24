@@ -81,13 +81,13 @@ table {border-collapse: collapse; }
 
 
 	#nav h2 { text-align: center; color:black; }
-	#nav #searchbox {font-size: 80%; margin-bottom: 40px; text-align: center}
+	#nav #searchbox {font-size: 80%; text-align: center}
 	#nav .searchbox { float: right; }
 	#nav #tag-cloud { font-size: 80%; padding: 0 2px 0 5px }
 	#nav #tag-cloud p { font-size: 60% }
 	#nav #tag-cloud .tags-in-cloud { text-align: center; font-size: 50% }
 
-#welcome { font-size: 50%; text-align: center; margin-top: 2em }
+#welcome { font-size: 50%; text-align: center; margin-top: 1em }
 #canonicitynote { font-size:70%; font-style:italic; margin:0 0 2em 0 }
 #classicintro { font-size:70%; font-style:italic }
 #content ul { padding: 1% 1% 1% 4%; }
@@ -165,3 +165,5 @@ table {border-collapse: collapse; }
 #footer { font-size:75%; margin: 3em 0; }
 	#footer p { margin:0em; }
 	#footer img { float:left; margin: 0.25em 0.5em 0 0; }
+
+#register > p > input { position: absolute; left: 400px }

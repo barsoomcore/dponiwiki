@@ -8,11 +8,9 @@
     <p class="error">Sorry, that's not a valid username or password</p>
   {% endif %}
 
-  <form action='./?next={{ redirect_to }}' method='post'>
-    <label for="username">User name:</label>
-    <input type="text" name="username" value="" id="username">
-    <label for="password">Password:</label>
-    <input type="password" name="password" value="" id="password">
+  <form action='./?next={{ redirect_to }}' method='post' id="register">
+    <p><label for="username">User name:</label> <input type="text" name="username" value="" id="username"></p>
+    <p><label for="password">Password:</label> <input type="password" name="password" value="" id="password"></p>
 
     <input type="submit" value="login" />
     <input type="hidden" name="next" value="{{ next }}" />
