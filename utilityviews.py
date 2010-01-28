@@ -44,7 +44,7 @@ def search(request, type):
 		components = ''
 		
 		if class_type == Island:
-			island_list = class_type.objects.filter(Q(name__contains=term) | Q(summary__contains=term))
+			island_list = class_type.objects.filter(Q(name__icontains=term) | Q(summary__icontains=term))
 			url = "templates/island_list.html"
 			paginator = Paginator(island_list, 25)
 		
