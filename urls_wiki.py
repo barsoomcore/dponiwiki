@@ -15,9 +15,9 @@ island_list_dict = {
 	'template_object_name': 'island' 
 }
 island_canonical_list_dict = { 
-	'queryset': Island.objects.filter(iscanonical=True), 
+	'queryset': Island.objects.filter(iscanonical__exact=True), 
 	'template_name': 'templates/island_list.html', 
-	'template_object_name': 'island' 
+	'template_object_name': 'islands' 
 }
 component_dict = { 
 	'queryset': IslandComponent.objects.all(), 

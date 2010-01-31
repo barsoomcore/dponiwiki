@@ -16,13 +16,28 @@ from dponisetting.dponiwiki.forms import UserCreationFormExtended
 
 def canonical(request, canonicity):
 	'''	Returns a list of islands matching the supplied canonicity '''
-		
-	island_list = Island.objects.filter(iscanonical=canonicity)
+	
 	if canonicity == "True":
+		island_list = Island.objects.filter(iscanonical__exact=True)
 		heading = "Canonical Islands"
 	else:
+		island_list = Island.objects.filter(iscanonical__exact=False)
 		heading = "Non-Canonical Islands"
-	return render_to_response("templates/island_list.html", locals(), context_instance=(RequestContext(request)))
+		
+	try:
+		page = int(request.GET.get('page', '1'))
+	except ValueError:
+		page = 1
+	
+	paginator = Paginator(island_list, 25)
+
+	try:
+		islands = paginator.page(page)
+	except (EmptyPage, InvalidPage):
+		islands = paginator.page(paginator.num_pages)
+	
+	template_params = { 'heading': heading, 'islands': islands }
+	return render_to_response("templates/island_list.html", template_params, context_instance=(RequestContext(request)))
 
 	
 def search(request, type):
