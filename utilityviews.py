@@ -1,7 +1,7 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.db.models import Q
 from django import forms
-from django.http import HttpResponseRedirect, HttpResponseNotAllowed
+from django.http import HttpResponseRedirect, HttpResponseNotAllowed, HttpResponseNotFound
 from django.contrib.auth.forms import UserCreationForm
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
@@ -48,7 +48,7 @@ def search(request, type):
 		try:
 			class_type = globals()[type]
 		except KeyError:
-			return HttpResponseRedirect('/dponiwiki/')
+			return HttpResponseNotFound
 		
 		try:
 			page = int(request.GET.get('page', '1'))

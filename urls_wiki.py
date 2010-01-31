@@ -33,12 +33,12 @@ component_list_dict = {
 
 last_week = datetime.datetime.now() - datetime.timedelta(days=7)
 latest_updates = Island.objects.filter(modified__gte=last_week).filter(iscanonical=True)[:10]
-extra_context = {'latest_updates': latest_updates }
+latest_context = {'latest_updates': latest_updates }
 page_dict = {
 	'queryset': StaticPage.objects.all(),
 	'template_name': 'templates/page_detail.html',
 	'template_object_name': 'page',
-	'extra_context': extra_context
+	'extra_context': latest_context
 }
 
 urlpatterns = patterns('',
