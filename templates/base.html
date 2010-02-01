@@ -14,8 +14,9 @@
 		</div>
 		<div id="nav">
 			<ul>
-				<li><a href="/~corey/dino-pirates/Home.php">DPoNI Home</a></li>
-				<li><a href="/~corey/dino-pirates/Basics.php">The Rules</a></li>
+				<li><a href="/Home.php">DPoNI Home</a></li>
+				<li><a href="/Basics.php">The Rules</a></li>
+				<li><a href="{% url page-detail 'home' %}">The Setting</a></li>
 				<li>&nbsp;</li>
 				<li><a href="{% url create-island %}">Create an Island</a></li>
 				<li><a href="{% url create-component %}">Create a Component</a></li>
