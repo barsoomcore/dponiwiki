@@ -4,7 +4,7 @@
 {% block title %}{{ island.name }}{% endblock %}
 {% block content %}
 	<div class="functions">
-		<p><a href="{% url public-island-update island.slug %}">Edit</a> :: <a href="{% url public-component-create island.slug %}">Add Component</a> :: <a href="{% url item_history type="Island" slug=island.slug %}">View History</a></p>
+		<p><a href="{% url update-island island.slug %}">Edit</a> :: <a href="{% url create-component-island island.slug %}">Add Component</a> :: <a href="{% url item_history type="Island" slug=island.slug %}">View History</a></p>
 		<p>Owner: <a href="{% url user island.owner.username %}">{{ island.owner }}</a></p>
 	</div>
 	<h1>{{ island.name }}</h1>
@@ -34,8 +34,8 @@
 		<div class="component-footer">
 			<div class="functions">
 				<form style="display: inline" action="{% url move_component island.slug component.slug %}" method="POST">
-				<a href="{% url component-assign component.slug %}">Assign</a> :: 
-				<a href="{% url public-component-update island.slug, component.slug %}">Edit </a> :: 
+				<a href="{% url assign-component component.slug %}">Assign</a> :: 
+				<a href="{% url update-component island.slug, component.slug %}">Edit </a> :: 
 				<a href="{% url remove_component island.slug, component.slug %}">Remove</a>
 					{% if reorder_list %}
 						<select name="order_change">

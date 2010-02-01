@@ -4,8 +4,8 @@
 {% block title %}{{ component.name }}{% endblock %}
 {% block content %}
 	<div class="functions">
-			<p><a href="{% url component-assign component.slug %}">Assign</a> :: 
-			<a href="{% url public-component-update 'None', component.slug %}">Edit</a> :: <a href="{% url item_history type='IslandComponent' slug=component.slug %}">View History</a></p>
+			<p><a href="{% url assign-component component.slug %}">Assign</a> :: 
+			<a href="{% url update-component 'None', component.slug %}">Edit</a> :: <a href="{% url item_history type='IslandComponent' slug=component.slug %}">View History</a></p>
 			<p>Owner: <a href="{% url user component.owner.username %}">{{component.owner}}</a></p>
 	</div>
 	<h1>{{ component.name }}</h1>

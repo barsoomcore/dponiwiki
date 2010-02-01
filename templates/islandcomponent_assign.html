@@ -15,7 +15,7 @@
 	{% endif %}
 	
 	<h2>Islands of yours you might want to add this component to:</h2>
-	<form action="{% url component-assign component.slug %}" method="post">
+	<form action="{% url assign-component component.slug %}" method="post">
 		{% for island in islands_list.object_list %}
 			<p class="{% cycle 'tbeven' 'tbodd' %}"><input type="checkbox" name="{{island.name}}" value="{{island.slug}}"><a href="{% url island-detail island.slug %}">{{ island.name }}</a></p>
 		{% endfor %}
