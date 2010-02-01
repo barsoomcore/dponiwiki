@@ -39,7 +39,7 @@
 				<a href="{% url remove_component island.slug, component.slug %}">Remove</a>
 					{% if reorder_list %}
 						<select name="order_change">
-						{% for component_order, component_name in reorder_list.items %}
+						{% for component_order, component_name in reorder_list %}
 							{% ifnotequal component_name component.name %}
 							<option value="{{ component_order }}" label="{{ component_name }}" />
 							{% endifnotequal %}
@@ -58,6 +58,7 @@
 					<em><a href="{% url component_tag_detail tag %}">{{ tag }}</a></em>
 				{% endfor %}
 			</p>
+			<p>Order: {{ component.order }}</p>
 		</div>
 		{% if component.is_box %}
 		</div>

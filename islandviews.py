@@ -28,7 +28,7 @@ def display_island(request, slug, *args, **kwargs):
 			for component in ordered_components:
 				reorder_list[component.order] = component.name
 		
-	extra_context={'components': ordered_components, 'reorder_list': reorder_list}
+	extra_context={'components': ordered_components, 'reorder_list': sorted(reorder_list.items())}
 	queryset = Island.objects.all()
 	
 	return object_detail(request, 
