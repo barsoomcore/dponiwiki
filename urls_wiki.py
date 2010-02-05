@@ -62,7 +62,7 @@ urlpatterns = patterns('',
 
 urlpatterns += patterns('django.contrib.auth.views',
     url(r'^accounts/login/$',  
-    	login, 
+    	'login', 
     	{ 'template_name': 'templates/registration/login.html'}, 
     	name='login'
     ),
