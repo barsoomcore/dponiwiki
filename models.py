@@ -84,7 +84,15 @@ class WikiComponent(models.Model):
 		
 		if editor == None:
 			editor = self.owner
-        
+		
+		# now we want to reset the order of the components so the values don't keep getting bigger
+		
+		current_order = ComponentOrder.objects.filter(island__exact=self).order_by('order')
+		
+		for index, item in enumerate(current_order):
+			item.order = index
+			item.save()
+		        
         # code below from:
         # http://www.revolunet.com/snippets/snippet/automatic-and-unique-slug-field
 		if not self.slug:

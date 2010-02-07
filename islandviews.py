@@ -26,7 +26,7 @@ def display_island(request, slug, *args, **kwargs):
 		reorder_list = {}
 		if len(ordered_components) > 1:
 			for component in ordered_components:
-				reorder_list[component.order] = component.name
+				reorder_list[component.order] = component.name[0:12]
 		
 	extra_context={'components': ordered_components, 'reorder_list': sorted(reorder_list.items())}
 	queryset = Island.objects.all()
