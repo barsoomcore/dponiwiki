@@ -1,7 +1,7 @@
 {% extends "templates/base.html" %}
 {% block title %}Assign Component!{% endblock %}
 {% block content %}
-	<h1><a href="{% url component-detail component.slug %}">{{ component.name }}</a></h1>
+	<h1>Assign <a href="{% url component-detail component.slug %}">{{ component.name }}</a> To Some Islands</h1>
 	
 	<h2>Some of the islands already using this component:</h2>
 	{% if host_islands_list %}

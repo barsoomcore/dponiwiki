@@ -58,4 +58,8 @@ def update_island(request, slug=None):
 	else:
 		form = IslandForm(instance=island)
 	
-	return render_to_response('templates/island_form.html', locals(), context_instance=RequestContext(request))
+	return render_to_response(
+		'templates/island_form.html', 
+		locals(), 
+		context_instance=RequestContext(request)
+	)
