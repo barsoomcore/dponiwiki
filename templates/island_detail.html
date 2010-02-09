@@ -55,12 +55,7 @@
 						<div class="move-box">
 							<select name="order_change">
 							{% for component_order, component_name in reorder_list %}
-								{% ifnotequal component_name component.name %}
 								<option value="{{ component_order }}" label="{{ component_name }}" />
-								{% endifnotequal %}
-								{% ifequal component_name component.name %}
-								<option value="{{ component_order }}" label="-----" />
-								{% endifequal %}
 							{% endfor %}
 							</select>
 							<button type="submit" value="Move" class="move-button" >
