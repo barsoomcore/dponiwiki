@@ -14,16 +14,19 @@ import datetime
 from dponisetting.dponiwiki.models import Island, IslandComponent, ChangeSet
 from dponisetting.dponiwiki.forms import UserCreationFormExtended
 
+
 def canonical(request, canonicity):
 	'''	Returns a list of islands matching the supplied canonicity '''
 	
 	if canonicity == "True":
-		island_list = Island.objects.filter(iscanonical__exact=True)
-		heading = "Canonical Islands"
+		canonicity = "Canonical"
+		island_list = Island.objects.filter(iscanonical__exact=True).order_by('name')
 	else:
-		island_list = Island.objects.filter(iscanonical__exact=False)
-		heading = "Non-Canonical Islands"
-		
+		canonicity = "Non-Canonical"
+		island_list = Island.objects.filter(iscanonical__exact=False).order_by('name')
+	
+	heading = 'Some islands to explore...'
+	
 	try:
 		page = int(request.GET.get('page', '1'))
 	except ValueError:
@@ -36,8 +39,12 @@ def canonical(request, canonicity):
 	except (EmptyPage, InvalidPage):
 		islands = paginator.page(paginator.num_pages)
 	
-	template_params = { 'heading': heading, 'islands': islands }
-	return render_to_response("templates/island_list.html", template_params, context_instance=(RequestContext(request)))
+	template_params = { 'heading': heading, 'islands': islands, 'canonicity': canonicity }
+	return render_to_response(
+		"templates/island_list.html", 
+		template_params, 
+		context_instance=(RequestContext(request))
+	)
 
 	
 def search(request, type):

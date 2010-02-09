@@ -9,27 +9,6 @@ island_dict = {
 	'queryset': Island.objects.all(), 
 	'template_object_name': 'island' 
 }
-island_list_dict = { 
-	'queryset': Island.objects.all(), 
-	'template_name': 'templates/island_list.html', 
-	'template_object_name': 'island' 
-}
-island_canonical_list_dict = { 
-	'queryset': Island.objects.filter(iscanonical__exact=True), 
-	'template_name': 'templates/island_list.html', 
-	'template_object_name': 'islands' 
-}
-component_dict = { 
-	'queryset': IslandComponent.objects.all(), 
-	'template_name': 'templates/islandcomponent_detail.html', 
-	'template_object_name': 'component'
-}
-component_list_dict = { 
-	'queryset': IslandComponent.objects.all(),
-	'template_name': 'templates/islandcomponent_list.html', 
-	'template_object_name': 'component' 
-}
-
 
 last_week = datetime.datetime.now() - datetime.timedelta(days=7)
 latest_updates = Island.objects.filter(modified__gte=last_week).filter(iscanonical=True)[:10]
@@ -129,7 +108,5 @@ urlpatterns += patterns('dponisetting.dponiwiki.islandviews',
 )
 
 urlpatterns += patterns('django.views.generic.list_detail',
-	url(r'^islands/$', 'object_list', island_canonical_list_dict, name='island-list'),
-	url(r'^components/$', 'object_list', component_list_dict, name='component-list'),
     url(r'^page/(?P<slug>[-\w]+)/$', 'object_detail', page_dict, name='page-detail'),
 )

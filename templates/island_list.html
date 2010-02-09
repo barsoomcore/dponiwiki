@@ -3,7 +3,16 @@
 {% block content %}
 	{% if heading %}
 		<h2>{{ heading }}</h2>
+	{% else %}
+		<h2>Here's some cool stuff...</h2>
 	{% endif %}
+	
+	{% ifequal canonicity "Canonical" %}
+		<p id="canonicitynote">These islands are a canonical part of the DINO-PIRATES OF NINJA ISLAND setting. While you can still edit them, keep in mind that the admins may revert your changes if they don't align with the overall setting vision. Want to see some <a href="{% url island-canonical 'False' %}">non-canonical islands</a>?</p>
+	{% endifequal %}
+	{% ifequal canonicity "Non-Canonical" %}
+		<p id="canonicitynote">These islands are NOT a canonical part of the DINO-PIRATES OF NINJA ISLAND setting.  That doesn't mean you can't use them, but they won't show up in some parts of the site.  If you think this island SHOULD be canonical, please contact the setting administrators and maybe they'll agree with you. Want to see some <a href="{% url island-canonical 'True' %}">canonical islands</a>?</p>
+	{% endifequal %}
 	
 	{% if islands %}
 		{% if components %}
@@ -11,7 +20,8 @@
 		{% endif %}
 		<ul id="island-list">
 		{% for island in islands.object_list %}
-			<li class="{% cycle 'tbeven' 'tbodd' %}"><a href=" {{ island.get_absolute_url }}">{{ island.name }}</a></li>
+			<li class="{% cycle 'tbeven' 'tbodd' %}"><a href=" {{ island.get_absolute_url }}">{{ island.name }}</a> 
+			{% if island.summary %} &mdash; {{ island.summary|safe|truncatewords:10 }}{% endif %}</li>
 		{% endfor %}
 		</ul>
 		<div class="pagination">
@@ -55,10 +65,5 @@
 			{% endif %}
 			</span>
 		</div>
-	{% endif %}
-	{% if user.is_authenticated %}
-		
-		<h3><a href="{% url create-island %}">Create!</a></h3>
-		
 	{% endif %}
 {% endblock %}
