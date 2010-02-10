@@ -81,6 +81,7 @@ class WikiComponent(models.Model):
 		if latest_comment == None:
 			latest_comment = self.comment
 		self.comment = ''
+		latest_comment = latest_comment[0:49]
 		
 		if editor == None:
 			editor = self.owner

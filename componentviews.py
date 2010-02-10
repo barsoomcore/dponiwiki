@@ -100,7 +100,7 @@ def update_component(request, islandslug=None, componentslug=None):
 			latest_changeset = component.latest_changeset()
 			for host_island in host_islands:
 				host_island.save(
-					latest_comment="Updated Component " + 
+					latest_comment="Updated " + 
 						component.name + ": " + 
 						latest_changeset.comment, 
 					editor=request.user)
