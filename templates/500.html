@@ -1,8 +1,69 @@
-{% extends "templates/base.html" %}
-{% block title %}Whoops!{% endblock %}
-{% block content %}
-
-<h1>Okay, That's Weird</h1>
-<p>Something kind of funny just happened. Funny weird, not funny ha-ha. Why not drop a line to the site admin and let them know what just happened?</p>
-
-{% endblock %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+	<head>
+		<title>Whoops!</title>
+		<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}dponiwikiStyle.css" />
+		<link rel="icon" type="image/png" href="{{ MEDIA_URL }}images/favicon.png" />
+	</head>
+	<body>
+		<div id="banner">
+			<a href="http://www.scratchfactory.com"><img src="{{ MEDIA_URL }}images/SFTransparentLogo.png" style="padding-top:5px;float:right;"></a>
+			<a href="/Home.php"><img style="border: none; padding-left: 25px;" src="{{ MEDIA_URL }}images/Banner.png" alt="Banner"></a>
+		</div>
+		<div id="nav">
+			<ul>
+				<li><a href="/Home.php">DPoNI Home</a></li>
+				<li><a href="/Basics.php">The Rules</a></li>
+				<li><strong><a href="{% url page-detail 'home' %}">The Setting</a></strong></li>
+				<li>&nbsp;</li>
+				<li><a href="{% url island-canonical 'True' %}">Browse the Islands!</a></li>
+				<li>&nbsp;</li>
+				<li><a href="{% url create-island %}">Create an Island</a></li>
+				<li><a href="{% url create-component %}">Create a Component</a></li>
+			</ul>
+			<div id="searchbox">
+				<h2>Find Cool Stuff</h2>
+				<form action="{% url search 'Island' %}" method="get" >
+					<label for="q">Search Islands:</label> <input type="text" name="q" /> 
+				</form>
+				<form action="{% url search 'IslandComponent' %}" method="get" >
+					<label for="q">Search Components:</label> <input type="text" name="q" />  
+				</form>
+				<form action="{% url user-search %}" method="get" >
+					<label for="q">Search by username:</label> <input type="text" name="q" />
+				</form>
+			</div>
+			<p id="welcome">{% if user.is_authenticated %}Welcome, <a href="{% url user user.username %}">{{ user.username }}</a><br /><a href="{% url logout%}">Logout</a> : <a href="{% url password_reset %}">Reset Password</a>
+			{% else %}
+			<a href="{% url login %}?next={{request.path}}">Login</a> or <a href="{% url register%}">Register</a>
+			{% endif %}</p>
+			<div id="tag-cloud">
+				<h2>Popular Tags</h2>
+				<p>Below is a list of some of the most common tags used on <a href="{% url page-detail 'components' %}">components</a> in DINO-PIRATES OF NINJA ISLAND. Click on the most interesting tags to find components you're interested in!</p>
+				{% tag_cloud_for_model dponiwiki.IslandComponent as tagcloud with steps=5 min_count=2 distribution=log %}
+				<p class="tags-in-cloud">
+					{% for tag in tagcloud %}
+						<span style="font-size: 
+							{% ifequal tag.font_size 5 %}x-large{% endifequal %}
+							{% ifequal tag.font_size 4 %}large{% endifequal %}
+							{% ifequal tag.font_size 3 %}medium{% endifequal %}
+							{% ifequal tag.font_size 2 %}small{% endifequal %}
+							{% ifequal tag.font_size 1 %}x-small{% endifequal %}
+							"><a href="{% url component_tag_detail tag %}">{{ tag }}</a></span>
+					{% endfor %}
+				</p>
+			</div>
+		</div>
+		<div id="content">
+			<h1>Okay, That's Weird</h1>
+			<p>Something kind of funny just happened. Funny weird, not funny ha-ha. Why not drop a line to the site admin and let them know what just happened?</p>
+			<div id="footer">
+				<a rel="license" href="http://creativecommons.org/licenses/by/2.5/ca/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/2.5/ca/80x15.png" /></a>
+				<p>The content of this site, except images, is part of the Creative Commons.</p>
+				<p><span xmlns:dc="http://purl.org/dc/elements/1.1/" property="dc:title">DINO-PIRATES OF NINJA ISLAND</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://www.dino-pirates.com" property="cc:attributionName" rel="cc:attributionURL">Corey Reid</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/2.5/ca/">Creative Commons Attribution 2.5 Canada License</a>.</p>
+				<p>Images are copyright the respective copyright holders.</p>
+			</div>
+		</div>
+	</body>
+</html>
