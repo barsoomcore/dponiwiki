@@ -16,7 +16,7 @@
 	<div id="updates">
 		<h2>Some Recent Updates</h2>
 		
-		<ul>
+		<ul id="island-list">
 			{% for island in latest_updates %}
 				<li class="{% cycle 'tbeven' 'tbodd' %}"><a href="{{ island.get_absolute_url }}">{{ island.name }}</a>: {{ island.latest_changeset.comment }}</li>
 			{% endfor %}

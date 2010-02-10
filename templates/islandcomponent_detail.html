@@ -18,7 +18,7 @@
 	</div>
 	<h1>{{ component.name }}</h1>
 	<p class="updated">Updated: {{ component.modified|date:"N d, P" }}</p>
-	<div id="islandcomponent-body">
+	<div class="islandcomponent-body">
 		{{ component.content|textile }}		
 	</div>
 	<div class="component-footer">
@@ -31,7 +31,7 @@
 	</div>	
 	{% if component.host_islands.all %}
 		<h3>Islands this component is used in:</h3>
-		<ul id="islandcomponent-list">
+		<ul id="island-list">
 			{% for island in component.host_islands.all %}
 			<li class="{% cycle 'tbeven' 'tbodd' %}"><a href="{{ island.get_absolute_url}}">{{ island.name }}</a></li>
 			{% endfor %}
