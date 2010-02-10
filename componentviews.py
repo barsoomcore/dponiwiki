@@ -71,7 +71,11 @@ def assign_component(request, slug):
 	
 	template_params = {'component': component, 'islands_list': islands, 'host_islands_list': host_islands_list }
 	
-	return render_to_response("templates/islandcomponent_assign.html", template_params, context_instance=RequestContext(request))
+	return render_to_response(
+		"templates/islandcomponent_assign.html", 
+		template_params, 
+		context_instance=RequestContext(request)
+	)
 
 @login_required
 def update_component(request, islandslug=None, componentslug=None):
@@ -95,7 +99,11 @@ def update_component(request, islandslug=None, componentslug=None):
 			host_islands = component.host_islands.all()
 			latest_changeset = component.latest_changeset()
 			for host_island in host_islands:
-				host_island.save(latest_comment="Updated Component " + component.name + ": " + latest_changeset.comment, editor=request.user)
+				host_island.save(
+					latest_comment="Updated Component " + 
+						component.name + ": " + 
+						latest_changeset.comment, 
+					editor=request.user)
 			
 			if island:
 				if component not in island.components.all():

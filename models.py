@@ -57,7 +57,7 @@ class WikiComponent(models.Model):
 	content = models.TextField()
 	created = models.DateTimeField(auto_now_add=True, blank=True)
 	modified = models.DateTimeField(auto_now=True, blank=True)
-	comment = models.CharField(max_length=50)
+	comment = models.CharField(max_length=100)
 	
 	class Meta:
 		ordering = ['-modified']
@@ -208,7 +208,7 @@ class ChangeSet(models.Model):
 	# How to recreate this version
 	old_name = models.CharField(max_length=100)
 	content_diff = models.TextField(blank=True)
-	comment = models.CharField(max_length=50, blank=True)
+	comment = models.CharField(max_length=100, blank=True)
 	modified = models.DateTimeField(auto_now=True)
 	reverted = models.BooleanField(default=False)
 	objects = QuerySetManager()
