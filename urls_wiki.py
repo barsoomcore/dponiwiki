@@ -10,6 +10,7 @@ island_dict = {
 	'template_object_name': 'island' 
 }
 
+
 last_week = datetime.datetime.now() - datetime.timedelta(days=7)
 latest_updates = Island.objects.filter(modified__gte=last_week).filter(iscanonical=True)[:10]
 latest_context = {'latest_updates': latest_updates }
