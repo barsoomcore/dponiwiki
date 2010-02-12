@@ -174,6 +174,8 @@ class IslandComponent(WikiComponent):
 	is_box = models.BooleanField(default=False)
 	
 	def host_islands_list(self):
+		''' This function is used in admin.py to populate the host islands for a
+		component in the admin interface.'''
 		host_island_objects = self.host_islands.all()
 		island_names = ""
 		if host_island_objects:
@@ -234,11 +236,6 @@ class ChangeSet(models.Model):
 
 	@permalink
 	def get_absolute_url(self):
-	
-		# this is only going to work if we're viewing an Island's history
-		# need a solution that will work for both Island and IslandComponent
-		# Also, not sure why self.component.__class__.__name__ returns "WikiComponent"
-		
 		source_item = Island.objects.filter(slug=self.component.slug)
 		if not source_item:
 			source_item = IslandComponent.objects.filter(slug=self.component.slug)
@@ -273,11 +270,9 @@ class ChangeSet(models.Model):
 
 		old_content = component.content
 		old_name = component.name
-#		old_markup = component.markup
 
 		component.content = content
 		component.name = changeset.old_name
-#		component.markup = changeset.old_markup
 		component.save(latest_comment="Reverted to revision #%s" % self.revision, editor=editor)
 
 		self.save()
