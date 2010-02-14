@@ -2,7 +2,7 @@
 
 {% block content %}
 
-	<h1>Login!</h1>
+	<h1>Log In!</h1>
 
   {% if form.errors %}
     <p class="error">Sorry, that's not a valid username or password</p>
@@ -13,7 +13,7 @@
     <p><label for="password">Password:</label> <input type="password" name="password" value="" id="password"></p>
     <p><a href="{% url password_reset %}">Forgot your password?</a></p>
 
-    <input type="submit" value="Login" />
+    <input type="submit" value="Log In" />
     <input type="hidden" name="next" value="{{ next }}" />
   </form>
   
