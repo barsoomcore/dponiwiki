@@ -34,7 +34,7 @@
 					<label for="q">Search by username:</label> <input type="text" name="q" />
 				</form>
 			</div>
-			<p id="welcome">{% if user.is_authenticated %}Welcome, <a href="{% url user user.username %}">{{ user.username }}</a><br /><a href="{% url logout%}">Logout</a> : <a href="{% url password_reset %}">Reset Password</a>
+			<p id="welcome">{% if user.is_authenticated %}Welcome, <a href="{% url user user.username %}">{{ user.username }}</a><br /><a href="{% url logout%}">Logout</a> : <a href="{% url password_change %}">Reset Password</a>
 			{% else %}
 			<a href="{% url login %}?next={{request.path}}">Login</a> or <a href="{% url register%}">Register</a>
 			{% endif %}</p>
