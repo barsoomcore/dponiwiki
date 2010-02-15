@@ -46,13 +46,7 @@
 				{% tag_cloud_for_model dponiwiki.IslandComponent as tagcloud with steps=5 min_count=2 distribution=log %}
 				<p class="tags-in-cloud">
 					{% for tag in tagcloud %}
-						<span style="font-size: 
-							{% ifequal tag.font_size 5 %}x-large{% endifequal %}
-							{% ifequal tag.font_size 4 %}large{% endifequal %}
-							{% ifequal tag.font_size 3 %}medium{% endifequal %}
-							{% ifequal tag.font_size 2 %}small{% endifequal %}
-							{% ifequal tag.font_size 1 %}x-small{% endifequal %}
-							"><a href="{% url component_tag_detail tag %}">{{ tag }}</a></span>
+						<span style="font-size: {{ tag.font_size }}em"><a href="{% url component_tag_detail tag %}">{{ tag }}</a></span>
 					{% endfor %}
 				</p>
 			</div>
