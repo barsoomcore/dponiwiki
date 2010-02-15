@@ -5,13 +5,16 @@
 {% block content %}
 	<div class="functions">
 		<a href="{% url update-island island.slug %}">
-			<img src="{{MEDIA_URL}}images/Edit.png" title="Edit this page">
+			<img src="{{MEDIA_URL}}images/Edit.png" title="Edit this island">
 		</a>
 		<a href="{% url create-component-island island.slug %}">
-			<img src="{{MEDIA_URL}}images/Add.png" title="Add a new component to this page">
+			<img src="{{MEDIA_URL}}images/Add.png" title="Add a new component to this island">
 		</a>
 		<a href="{% url item_history type="Island" slug=island.slug %}">
-			<img src="{{MEDIA_URL}}images/History.png" title="View this page's history">
+			<img src="{{MEDIA_URL}}images/History.png" title="View this island's history">
+		</a>
+		<a href="/feeds/Island/{{ island.slug }}">
+			<img src="{{ MEDIA_URL }}images/Feed.png" title="Subscribe to this island's updates via RSS" />
 		</a>
 		<p>Owner: <a href="{% url user island.owner.username %}">{{ island.owner }}</a></p>
 	</div>
