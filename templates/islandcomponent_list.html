@@ -1,28 +1,43 @@
 {% extends "templates/base.html" %}
+{% load tagging_tags %}
+{% load taggingextras %}
 {% block title %}Components...{% endblock %}
 {% block content %}
 	{% if heading %}
 		<h3>{{ heading }}</h3>
 	{% endif %}
-	{% if tag %}
-		<h2>Components Tagged with "{{tag}}"</h2>
+	{% if tags %}
+		<h2>Components tagged with 
+			{% if not tags|length_is:"1" %}
+				the tags
+			{% endif %}'{{ tags|join:', '}}'</h2>
 	{% endif %}
 	<ul id="component-list">
-	{% for component in component_list %}
-		<li class="{% cycle 'tbeven' 'tbodd'%}"><a href=" {{ component.get_absolute_url }}">{{ component.name }}</a></li>
+	{% for component in components.object_list %}
+		<li class="{% cycle 'tbeven' 'tbodd'%}"><a href=" {{ component.get_absolute_url }}">{{ component.name }}</a>
+		{% tags_for_object component as component_tags %}
+			<span class="drill-down"> (other tags: 
+			{% for component_tag in component_tags %}
+				{% if component_tag|isabsent:tags %}
+					<a href="/dponiwiki/components/tag/{{tags|join:'/'}}/{{component_tag}}/ ">
+						{{component_tag}}</a>
+				{% endif %}
+			{% endfor %}
+			)</span>
+				</li>
 	{% endfor %}
 	</ul>
 		<div class="pagination">
 			<span class="step-links">
-			{% if page_obj.has_previous %}
+			{% if components.has_previous %}
 				<a href="?page={{ page_obj.previous_page_number }}{% if term %}&q={{ term }}{% endif %}">previous</a>
 			{% endif %}
 	
 			<span class="current">
-				Page {{ page_obj.number }} of {{ paginator.num_pages }}.
+				Page {{ components.number }} of {{ components.paginator.num_pages }}.
 			</span>
 	
-			{% if page_obj.has_next %}
+			{% if components.has_next %}
 				<a href="?page={{ page_obj.next_page_number }}{% if term %}&q={{ term }}{% endif %}">next</a>
 			{% endif %}
 			</span>

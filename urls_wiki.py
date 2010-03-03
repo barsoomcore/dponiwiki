@@ -10,7 +10,7 @@ island_dict = {
 	'template_object_name': 'island' 
 }
 
-
+latest_updates = ''
 last_week = datetime.datetime.now() - datetime.timedelta(days=7)
 latest_updates = Island.objects.filter(modified__gte=last_week).filter(iscanonical=True)[:10]
 latest_context = {'latest_updates': latest_updates }
@@ -32,17 +32,6 @@ urlpatterns = patterns('',
     	{'url': '/dponiwiki/page/home/' }, 
     	name="homepage"
     ),
-    url(r'^components/tag/(?P<tag>[^/]+)/$', 
-    	tagged_object_list, 
-    	{
-			'queryset_or_model': IslandComponent, 
-			'paginate_by': 25,
-			'template_name':'templates/islandcomponent_list.html',
-			'allow_empty':True, 
-			'template_object_name':'component'
-		}, 
-    	name='component_tag_detail'
-    ),
     url(r'^accounts/', include('dponisetting.dponiwiki.urls_registration')),
     url(r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
 )
@@ -62,6 +51,7 @@ urlpatterns += patterns('dponisetting.dponiwiki.utilityviews',
 		'view_changeset', 
 		name='wiki_changeset'
 	),
+	url(r'^components/tag/(?P<url>.*)/$', 'by_tags', name='component_tag_detail'),
 )
 
 urlpatterns += patterns('dponisetting.dponiwiki.componentviews',

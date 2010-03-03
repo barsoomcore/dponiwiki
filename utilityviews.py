@@ -10,6 +10,7 @@ from django.contrib.auth.views import logout
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 import datetime
+from tagging.models import Tag, TaggedItem
 
 from dponisetting.dponiwiki.models import Island, IslandComponent, ChangeSet
 from dponisetting.dponiwiki.forms import UserCreationFormExtended
@@ -88,7 +89,12 @@ def search(request, type):
 		
 		heading = "Search Results: All " + type + "s containing the term \"" + term + "\""
 		
-		template_params = { 'heading': heading, 'islands': islands, 'components': components, 'term': term }
+		template_params = { 
+			'heading': heading, 
+			'islands': islands, 
+			'components': components, 
+			'term': term 
+			}
 			
 	return render_to_response(url, template_params, context_instance=(RequestContext(request)))
 
@@ -135,10 +141,53 @@ def by_user(request, user=None):
 	else:
 		heading = "All " + island_header + conjunction + component_header + " Owned By \"" + owner + "\""
 	
-	template_params = {'heading': heading, 'islands': islands, 'components': components, 'term': owner}
+	template_params = {
+		'heading': heading, 
+		'islands': islands, 
+		'components': components, 
+		'term': owner
+		}
 	
-	return render_to_response("templates/island_list.html", template_params, context_instance=(RequestContext(request)))
+	return render_to_response(
+		'templates/island_list.html', 
+		template_params, 
+		context_instance=(RequestContext(request))
+		)
 
+
+def by_tags(request, url):
+	'''parses request, spits out tags, finds components'''
+	tag_name_list = url.split('/')
+	tag_list = []
+	for tag in tag_name_list:
+		tagged_item = Tag.objects.get(name=tag)
+		if tagged_item not in tag_list:
+			tag_list.append(tagged_item)
+	tagged_items = TaggedItem.objects.get_by_model(IslandComponent, tag_list)
+	
+	item_tags = []
+	for item in tagged_items:
+		item_tags.append(item.tags)
+	
+	item_paginator = Paginator(tagged_items, 25)
+	
+	try:
+		page = int(request.GET.get('page', '1'))
+	except ValueError:
+		page = 1
+	
+	try:
+		components = item_paginator.page(page)
+	except (EmptyPage, InvalidPage):
+		components = item_paginator.page(item_paginator.num_pages)
+	
+	template_params = {'components': components, 'tags': tag_list, 'item_tags': item_tags }
+	
+	return render_to_response(
+		'templates/islandcomponent_list.html', 
+		template_params,
+		context_instance=(RequestContext(request))
+		)
 
 def item_history(request, slug, type):
 	''' Display changeset list for given item. '''
@@ -168,7 +217,9 @@ def item_history(request, slug, type):
                            	'type': type}
 
 		return render_to_response('templates/history.html',
-                                  template_params, context_instance=(RequestContext(request)))
+                                  template_params, 
+                                  context_instance=(RequestContext(request))
+                                  )
 
 	return HttpResponseNotAllowed(['GET'])
 
@@ -222,6 +273,7 @@ def view_changeset(request, type, slug, revision, *args, **kw):
 		return render_to_response('templates/changeset.html',
                                   template_params,
                                   context_instance=RequestContext(request))
+	
 	return HttpResponseNotAllowed(['GET'])
     
     
@@ -237,4 +289,8 @@ def register(request):
 			return HttpResponseRedirect(reverse('homepage'))
 	else: form = UserCreationFormExtended()
 		
-	return render_to_response('templates/registration/registration_form.html', { 'form' : form }, context_instance=RequestContext(request))
+	return render_to_response(
+		'templates/registration/registration_form.html', 
+		{ 'form' : form }, 
+		context_instance=RequestContext(request)
+		)
