@@ -16,15 +16,17 @@
 	{% for component in components.object_list %}
 		<li class="{% cycle 'tbeven' 'tbodd'%}"><a href=" {{ component.get_absolute_url }}">{{ component.name }}</a>
 		{% tags_for_object component as component_tags %}
-			<span class="drill-down"> (other tags: 
-			{% for component_tag in component_tags %}
-				{% if component_tag|isabsent:tags %}
-					<a href="/dponiwiki/components/tag/{{tags|join:'/'}}/{{component_tag}}/ ">
-						{{component_tag}}</a>
-				{% endif %}
-			{% endfor %}
-			)</span>
-				</li>
+			{% if not component_tags|matches:tags %}
+				<span class="drill-down"> (other tags: 
+				{% for component_tag in component_tags %}
+					{% if component_tag|isabsent:tags %}
+						<a href="/dponiwiki/components/tag/{{tags|join:'/'}}/{{component_tag}}/ ">
+							{{component_tag}}</a>
+					{% endif %}
+				{% endfor %}
+				)</span>
+			{% endif %}
+		</li>
 	{% endfor %}
 	</ul>
 		<div class="pagination">
