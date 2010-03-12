@@ -13,55 +13,57 @@
 	{% else %}
 		<h1>Create a New Component</h1>
 	{% endif %}
-	<p style="margin-top: -1.5em; margin-bottom:2em"><a href="{% url page-detail 'components' %}">What are components?</a></p>
-
+	<p style="margin-top: -1.5em; "><a href="{% url page-detail 'components' %}">What are components?</a></p>
+	
 	<form action="" method="post">
-		
-		<table class="fieldwrapper">
-   		<tr><td colspan="3">{{ form.name.errors }}</td></tr>
-   		<tr><td><label for="id_name">Name:</label></td>
-   			<td>{{ form.name }}</td>
-   			<td>
-   				{% if component %}Your component's name
-   				{% else %}You must include a name!
-   				{% endif %}
-   			</td>
-   		</tr>
-   		</tr>
-   		<tr><td colspan="3">{{ form.content.errors }}</td></tr>
-   		<tr><td><label for="id_content">Content:</label></td>
-   			<td>{{ form.content }}</td>
-   			<td>{% if component %}Your component's content. Remember, you 
-   			{% else %}Put the meat of your component here. You 
-   			{% endif %}can use <a href="http://textile.thresholdstate.com/" tabindex="-1">Textile</a> markup here to style your content:
-   					<ul>
-   						<li>use "_underscores_" for <em>italics</em>, or "*asterixes*" for <strong>bold</strong>.</li>
-   						<li>"h1." will produce a heading of level one</li>
-   						<li>if you enclose the URL of an image in exclamation points "!imageurl!" the image will display in your content. Include "(imageleft)" or "(imageright)" after the first "!" to float the image to either side.</li>
-   						<li>put "bq.." before a statblock to set it off from the rest of the text.</li>
-   					</ul>
-   			</td>
-   		</tr>
-   		<tr><td colspan="3">{{ form.tags.errors }}</td></tr>
-   		<tr><td><label for="id_tags">Tags:</label></td>
-   			<td>{{ form.tags }}</td>
-   			<td>Tags help people find your component. Separate tags with commas. Sample tags you might want to use: ninja clan, pirate, city, character...</td>
-   		</tr>
-   		<tr><td colspan="3">{{ form.is_box.errors }}</td></tr>
-   		<tr><td><label for="id_is_box">Use Box Style:</label></td>
-   			<td>{{ form.is_box }}</td>
-   			<td>If you want your component to display as a separate box aside from the main content of the island it's part of, check this box.</td>
-   		</tr>
-   		<tr><td colspan="3">{{ form.comment.errors }}</td></tr>
-   		<tr><td><label for="id_comment">Comment:</label></td>
-   			<td>{{ form.comment }}</td>
-   			<td>You must include a comment so we know what you're thinking. Yes, you have to be thinking.</td>
-   		</tr>
-   		
-		</table>
+		<fieldset class="bottomfield">
+			<label for="id_name">Component Name</label>{{ form.name.errors }}
+			{{ form.name }}
+			<div class="tips">
+				<p>{% if component %}Your component's name.
+				{% else %}You must include a name!
+				{% endif %}</p>
+			</div>
+   			<label for="id_content">Component Content</label>{{ form.content.errors }}
+   			{{ form.content }}
+			<div class="tips">
+				<p>{% if island %}Your component's content. Remember, you 
+				{% else %}Put the meat of your component here. You 
+				{% endif %}can use <a href="javascript:openMarkup();" target="_blank" tabindex="-1">Textile</a> markup here to style your content.</p>
+			</div>
+			<label for="id_tags">Tags:</label>{{ form.tags.errors }}
+			{{ form.tags }}
+			<div class="tips">
+				<p>Tags help people find your component. Separate tags with commas. Sample tags you might want to use: <a href="{% url component_tag_detail 'ninja' %}">ninja</a>, <a href="{% url component_tag_detail 'pirate' %}">pirate</a>, <a href="{% url component_tag_detail 'clan' %}">clan</a>...</p>
+			</div>
+			<label for="id_comment">Comment:</label>{{ form.comment.errors }}
+			{{ form.comment }}
+			<div class="tips" style="margin-bottom: 1em">
+				<p>You must include a comment so we know what you're thinking. Yes, you have to be thinking.</p>
+			</div>
+			<label class="box" for="id_is_box">Use Box Style</label>{{ form.is_box.errors }}
+			{{ form.is_box }}
+			<div class="tips">
+				<p>If you want your component to display as a separate box aside from the main content of the island it's part of, check this box.</p>
+			</div>
+		</fieldset>
 		
 		<input type="submit" value="Save" />
 	</form>
+	<script language="JavaScript"> document.forms[3].name.focus();</script>
+	
+	<script type="text/javascript">
+		var markupWin;
+		function openMarkup(){
+			if (markupWin == null || markupWin.closed){
+				markupWin = window.open("{% url markup %}","","toolbar=no,personal=no,menubar=no,status=yes,resizable=yes,width=450,height=700,location=no,scrollbars=yes");
+			}
+			else{
+				markupWin.focus();
+			}
+		}
+	</script>
+	
 	<script language="JavaScript"> document.forms[3].name.focus();</script>
 	
 	{% if island %}

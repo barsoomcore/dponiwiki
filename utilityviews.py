@@ -160,7 +160,7 @@ def by_tags(request, url):
 	tag_name_list = url.split('/')
 	tag_list = []
 	for tag in tag_name_list:
-		tagged_item = Tag.objects.get(name=tag)
+		tagged_item = get_object_or_404(Tag, name=tag)
 		if tagged_item not in tag_list:
 			tag_list.append(tagged_item)
 	tagged_items = TaggedItem.objects.get_by_model(IslandComponent, tag_list)
@@ -188,6 +188,9 @@ def by_tags(request, url):
 		template_params,
 		context_instance=(RequestContext(request))
 		)
+
+def display_markup(request):
+	return render_to_response('templates/markup.html')
 
 def item_history(request, slug, type):
 	''' Display changeset list for given item. '''

@@ -52,6 +52,7 @@ urlpatterns += patterns('dponisetting.dponiwiki.utilityviews',
 		name='wiki_changeset'
 	),
 	url(r'^components/tag/(?P<url>.*)/$', 'by_tags', name='component_tag_detail'),
+	url(r'^markup/$', 'display_markup', name='markup'),
 )
 
 urlpatterns += patterns('dponisetting.dponiwiki.componentviews',
