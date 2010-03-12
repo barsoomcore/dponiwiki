@@ -33,7 +33,7 @@
    			<td>{{ form.content }}</td>
    			<td>{% if component %}Your component's content. Remember, you 
    			{% else %}Put the meat of your component here. You 
-   			{% endif %}can use <a href="http://textile.thresholdstate.com/">Textile</a> markup here to style your content:
+   			{% endif %}can use <a href="http://textile.thresholdstate.com/" tabindex="-1">Textile</a> markup here to style your content:
    					<ul>
    						<li>use "_underscores_" for <em>italics</em>, or "*asterixes*" for <strong>bold</strong>.</li>
    						<li>"h1." will produce a heading of level one</li>
@@ -62,6 +62,7 @@
 		
 		<input type="submit" value="Save" />
 	</form>
+	<script language="JavaScript"> document.forms[3].name.focus();</script>
 	
 	{% if island %}
 	<p><a href="{% url island-detail island.slug %}">Back</a></p>
