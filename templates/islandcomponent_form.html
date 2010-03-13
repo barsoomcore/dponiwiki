@@ -34,7 +34,7 @@
 			<label for="id_tags">Tags:</label>{{ form.tags.errors }}
 			{{ form.tags }}
 			<div class="tips">
-				<p>Tags help people find your component. Separate tags with commas. Sample tags you might want to use: <a href="{% url component_tag_detail 'ninja' %}">ninja</a>, <a href="{% url component_tag_detail 'pirate' %}">pirate</a>, <a href="{% url component_tag_detail 'clan' %}">clan</a>...</p>
+				<p>Tags help people find your component. Separate tags with commas. Sample tags you might want to use: <a href="{% url component_tag_detail 'ninja' %}" tabindex="-1" >ninja</a>, <a href="{% url component_tag_detail 'pirate' %}" tabindex="-1" >pirate</a>, <a href="{% url component_tag_detail 'clan' %}" tabindex="-1" >clan</a>...</p>
 			</div>
 			<label for="id_comment">Comment:</label>{{ form.comment.errors }}
 			{{ form.comment }}
