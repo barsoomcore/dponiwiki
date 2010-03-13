@@ -42,7 +42,7 @@
 			{% endif %}</p>
 			<div id="tag-cloud">
 				<h2>Popular Tags</h2>
-				<p>Below is a list of some of the most common tags used on <a href="{% url page-detail 'components' %}">components</a> in DINO-PIRATES OF NINJA ISLAND. Click on the most interesting tags to find components you're interested in!</p>
+				<p>Below is a list of some of the most common tags used on <a href="{% url page-detail 'components' %}">components</a> in <strong>DINO-PIRATES OF NINJA ISLAND</strong>. Click on tags to find components you're interested in!</p>
 				{% tag_cloud_for_model dponiwiki.IslandComponent as tagcloud with steps=5 min_count=2 distribution=log %}
 				<p class="tags-in-cloud">
 					{% for tag in tagcloud %}
