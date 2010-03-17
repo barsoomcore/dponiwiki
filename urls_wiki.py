@@ -32,6 +32,11 @@ urlpatterns = patterns('',
     	{'url': '/dponiwiki/page/home/' }, 
     	name="homepage"
     ),
+    url(r'^markup/$', 
+    	'django.views.generic.simple.direct_to_template', 
+    	{'template': 'markup.html'}, 
+    	name='markup'
+    ),
     url(r'^accounts/', include('dponisetting.dponiwiki.urls_registration')),
     url(r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
 )
@@ -52,7 +57,6 @@ urlpatterns += patterns('dponisetting.dponiwiki.utilityviews',
 		name='wiki_changeset'
 	),
 	url(r'^components/tag/(?P<url>.*)/$', 'by_tags', name='component_tag_detail'),
-	url(r'^markup/$', 'display_markup', name='markup'),
 )
 
 urlpatterns += patterns('dponisetting.dponiwiki.componentviews',

@@ -165,10 +165,6 @@ def by_tags(request, url):
 			tag_list.append(tagged_item)
 	tagged_items = TaggedItem.objects.get_by_model(IslandComponent, tag_list)
 	
-	item_tags = []
-	for item in tagged_items:
-		item_tags.append(item.tags)
-	
 	item_paginator = Paginator(tagged_items, 25)
 	
 	try:
@@ -181,16 +177,13 @@ def by_tags(request, url):
 	except (EmptyPage, InvalidPage):
 		components = item_paginator.page(item_paginator.num_pages)
 	
-	template_params = {'components': components, 'tags': tag_list, 'item_tags': item_tags }
+	template_params = {'components': components, 'tags': tag_list, }
 	
 	return render_to_response(
 		'templates/islandcomponent_list.html', 
 		template_params,
 		context_instance=(RequestContext(request))
 		)
-
-def display_markup(request):
-	return render_to_response('templates/markup.html')
 
 def item_history(request, slug, type):
 	''' Display changeset list for given item. '''
