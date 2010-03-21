@@ -2,6 +2,7 @@
 {% load markup %}
 {% load tagging_tags %}
 {% block title %}{{ island.name }}{% endblock %}
+
 {% block content %}
 	<div class="functions">
 		<a href="{% url update-island island.slug %}">
@@ -15,6 +16,9 @@
 		</a>
 		<a href="/feeds/Island/{{ island.slug }}">
 			<img src="{{ MEDIA_URL }}images/Feed.png" title="Subscribe to this island's updates via RSS" />
+		</a>
+		<a href="#disqus_block">
+			<img src="{{ MEDIA_URL }}images/Comments.png" title="View the comments on this island" />
 		</a>
 		<p>Owner: <a href="{% url user island.owner.username %}">{{ island.owner }}</a></p>
 	</div>
@@ -83,5 +87,16 @@
 			</div>
 		</div>
 		{% endfor %}
+		
+		<a name="disqus_block"><div id="disqus_thread"></div></a>
+		<script type="text/javascript">
+		  (function() {
+		   var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		   dsq.src = 'http://dino-pirates.disqus.com/embed.js';
+		   (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+		  })();
+		</script>
+		<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript=dino-pirates">comments powered by Disqus.</a></noscript>
+		<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 	</div>
 {% endblock %}

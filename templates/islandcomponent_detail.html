@@ -16,6 +16,9 @@
 			</a>
 			<a href="/feeds/IslandComponent/{{ component.slug }}">
 				<img src="{{ MEDIA_URL }}images/Feed.png" title="Subscribe to this component's updates via RSS" />
+			</a>
+			<a href="#disqus_block">
+				<img src="{{ MEDIA_URL }}images/Comments.png" title="View the comments on this component" />
 			</a></p>
 			<p>Owner: <a href="{% url user component.owner.username %}">{{component.owner}}</a></p>
 	</div>
@@ -31,7 +34,8 @@
 				<em><a href="{% url component_tag_detail tag %}">{{ tag }}</a></em>
 			{% endfor %}
 		</p>
-	</div>	
+	</div>
+	
 	{% if component.host_islands.all %}
 		<h3>Islands this component is used in:</h3>
 		<ul id="island-list">
@@ -57,5 +61,17 @@
 		</div>
 	{% else %}
 		<p>This component is not used in any islands.</p>
-	{% endif %}
+	{% endif %}	
+	
+	<a name="disqus_block"><div id="disqus_thread"></div></a>
+	<script type="text/javascript">
+	  (function() {
+	   var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	   dsq.src = 'http://dino-pirates.disqus.com/embed.js';
+	   (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	  })();
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript=dino-pirates">comments powered by Disqus.</a></noscript>
+	<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+	
 {% endblock %}

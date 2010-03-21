@@ -7,14 +7,22 @@
 	{{ page.content|safe }}
 	</div>
 	
+	{% if latest_updates %}
 	<div id="updates">
 		<h2>Some Recent Updates</h2>
 		
-		<ul id="island-list">
-			{% for island in latest_updates %}
-				<li class="{% cycle 'tbeven' 'tbodd' %}"><a href="{{ island.get_absolute_url }}">{{ island.name }}</a>: {{ island.latest_changeset.comment }} ({{ island.latest_changeset.modified|timesince }} ago)</li>
-			{% endfor %}
-		</ul>
+		
+			<ul id="island-list">
+				{% for island in latest_updates %}
+					<li class="{% cycle 'tbeven' 'tbodd' %}"><a href="{{ island.get_absolute_url }}">{{ island.name }}</a>: {{ island.latest_changeset.comment }} ({{ island.latest_changeset.modified|timesince }} ago)</li>
+				{% endfor %}
+			</ul>
 	</div>
+	{% endif %}
+		<div id="recentcomments" class="dsq-widget">
+			<h2 class="dsq-widget-title">Recent Comments</h2>
+			<p style="margin-top:-1em; font-size:50%"><a href="http://disqus.com/">Comments powered by Disqus</a></p>
+			<script type="text/javascript" src="http://disqus.com/forums/dino-pirates/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=24&excerpt_length=200"></script>
+		</div>
 	
 {% endblock %}

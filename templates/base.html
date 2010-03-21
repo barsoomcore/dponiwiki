@@ -6,6 +6,16 @@
 		<title>{% block title %}{% endblock %}</title>
 		<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}dponiwikiStyle.css" />
 		<link rel="icon" type="image/png" href="{{ MEDIA_URL }}images/favicon.png" />
+		<script type="text/javascript" src="{{ MEDIA_URL }}scripts/disqus_developer.js"></script>
+		<script type="text/javascript">
+			disqus_developer = disqus_developer_default;
+			{% if island %}
+			disqus_title = "{{ island.name }}";
+			{% endif %}
+			{% if component %}
+			disqus_title = "{{ component.name }}";
+			{% endif %}
+		</script>
 	</head>
 	<body>
 		<div id="banner">
