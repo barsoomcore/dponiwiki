@@ -10,16 +10,6 @@ island_dict = {
 	'template_object_name': 'island' 
 }
 
-latest_updates = ''
-last_week = datetime.datetime.now() - datetime.timedelta(days=7)
-latest_updates = Island.objects.filter(modified__gte=last_week).filter(iscanonical=True)[:10]
-latest_context = {'latest_updates': latest_updates }
-page_dict = {
-	'queryset': StaticPage.objects.all(),
-	'template_name': 'templates/page_detail.html',
-	'template_object_name': 'page',
-	'extra_context': latest_context
-}
 feeds = {
 	'latest': LatestEntries,
 	'Island': IslandFeed,
@@ -39,6 +29,7 @@ urlpatterns = patterns('',
     ),
     url(r'^accounts/', include('dponisetting.dponiwiki.urls_registration')),
     url(r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
+    url(r'^page/', include('dponisetting.dponiwiki.urls_static')),
 )
 
 urlpatterns += patterns('dponisetting.dponiwiki.utilityviews',
@@ -85,8 +76,4 @@ urlpatterns += patterns('dponisetting.dponiwiki.islandviews',
 	url(r'^Island/(?P<slug>[-\w]+)/$', 'display_island', island_dict, name='island-detail'),
 	url(r'^create-island/$', 'update_island', name='create-island'),
 	url(r'^update-island/(?P<slug>[-\w]+)/$', 'update_island', name='update-island' ),
-)
-
-urlpatterns += patterns('django.views.generic.list_detail',
-    url(r'^page/(?P<slug>[-\w]+)/$', 'object_detail', page_dict, name='page-detail'),
 )
