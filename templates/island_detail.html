@@ -49,7 +49,7 @@
 			<h3 class="component-title"><a href="{% url component-detail component.slug %}">{{ component.name }}</a></h3>
 			<p class="component-owner">Owner: <a href="{% url user component.owner.username %}">{{ component.owner }}</a></p>
 			<div class="islandcomponent-body">
-				{{ component.content|textile }}
+				{{ component.content|dinostyle }}
 			</div>
 			<div class="component-footer">
 				<div class="functions">
