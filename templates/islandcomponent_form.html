@@ -29,7 +29,7 @@
 			<div class="tips">
 				<p>{% if island %}Your component's content. Remember, you 
 				{% else %}Put the meat of your component here. You 
-				{% endif %}can use <a href="javascript:openMarkup();" target="_blank" tabindex="-1">Textile</a> markup here to style your content.</p>
+				{% endif %}can use <a href="javascript:openMarkup();" target="_blank" tabindex="-1">Textile</a> markup here to style your content. To link to another island or component, just put [[ ]] around the item's name, like so: [[Component Name]].</p>
 			</div>
 			<label for="id_tags">Tags:</label>{{ form.tags.errors }}
 			{{ form.tags }}

@@ -1,5 +1,6 @@
 {% extends "templates/base.html" %}
 {% load markup %}
+{% load taggingextras %}
 {% load tagging_tags %}
 {% block title %}{{ island.name }}{% endblock %}
 
@@ -33,10 +34,10 @@
 		{% if island.summary %}
 		<div id="island-summary">
 			<h4>Summary</h4>
-			{{ island.summary|textile }}
+			{{ island.summary|dinostyle }}
 		</div>
 		{% endif %}
-		{{ island.content|textile }}
+		{{ island.content|dinostyle }}
 	</div>
 	<div id="island-components">
 		{% for component in components %}
