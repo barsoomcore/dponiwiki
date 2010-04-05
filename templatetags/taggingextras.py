@@ -20,7 +20,7 @@ def matches(list1, list2):
 	else:
 		return False
 
-def find_item(match):
+def custom_link(match):
 	try:
 		item = Island.objects.get(name__exact=match.group('name'))
 	except Island.DoesNotExist:
@@ -29,12 +29,12 @@ def find_item(match):
 		except IslandComponent.DoesNotExist:
 			return match.group()
 	
-	return "<a href=\"" + item.get_absolute_url() + "\">" + match.group('name') + "</a>"
+	return "\"" + match.group('name') + "\":" + item.get_absolute_url()
 
 
 @register.filter
 def dinostyle(content):
 	pattern = re.compile(r'\[\[(?P<name>[^\]\]]*)\]\]')
-	linked_content = pattern.sub(find_item, content)
+	linked_content = pattern.sub(custom_link, content)
 	
 	return textile(linked_content)
