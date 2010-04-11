@@ -1,6 +1,7 @@
 import re
 from django import template
 from markup import textile
+from django.template.defaultfilters import slugify
 
 from dponisetting.dponiwiki.models import Island, IslandComponent
 
@@ -21,11 +22,12 @@ def matches(list1, list2):
 		return False
 
 def custom_link(match):
+	slug = slugify(match.group('name'))
 	try:
-		item = Island.objects.get(name__exact=match.group('name'))
+		item = Island.objects.get(slug__exact=slug)
 	except Island.DoesNotExist:
 		try:
-			item = IslandComponent.objects.get(name__exact=match.group('name'))
+			item = IslandComponent.objects.get(slug__exact=slug)
 		except IslandComponent.DoesNotExist:
 			return match.group()
 	
