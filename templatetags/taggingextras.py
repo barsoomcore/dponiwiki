@@ -27,8 +27,7 @@ def custom_link(match):
 	that match the term passed in. It tries to handle possessives
 	and plurals, too.'''
 	slug = slugify(match.group('name'))
-	if slug[-1] == "s":
-		short_slug = slug[:-1]
+	short_slug = slug[:-1]
 	try:
 		item = Island.objects.get(slug__iexact=slug)
 	except Island.DoesNotExist:
