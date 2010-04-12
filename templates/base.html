@@ -4,7 +4,8 @@
 <html lang="en">
 	<head>
 		<title>{% block title %}{% endblock %}</title>
-		<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}dponiwikiStyle.css" />
+		<link rel="stylesheet" type="text/css" media="screen" href="{{ MEDIA_URL }}dponiwikiStyle.css" />
+		<link rel="stylesheet" type="text/css" media="print" href="{{ MEDIA_URL }}dponiwikiPrintStyle.css" />
 		<link rel="icon" type="image/png" href="{{ MEDIA_URL }}images/favicon.png" />
 		<script type="text/javascript" src="{{ MEDIA_URL }}scripts/disqus_developer.js"></script>
 		<script type="text/javascript">
