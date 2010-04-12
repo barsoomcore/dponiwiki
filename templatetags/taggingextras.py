@@ -1,7 +1,8 @@
 import re
 from django import template
-from markup import textile
+from django.db.models import Q
 from django.template.defaultfilters import slugify
+from markup import textile
 
 from dponisetting.dponiwiki.models import Island, IslandComponent
 
@@ -22,20 +23,33 @@ def matches(list1, list2):
 		return False
 
 def custom_link(match):
+	'''This is called in dinostyle and finds Islands or Components
+	that match the term passed in. It tries to handle possessives
+	and plurals, too.'''
 	slug = slugify(match.group('name'))
+	if slug[-1] == "s":
+		short_slug = slug[:-1]
 	try:
-		item = Island.objects.get(slug__exact=slug)
+		item = Island.objects.get(slug__iexact=slug)
 	except Island.DoesNotExist:
 		try:
-			item = IslandComponent.objects.get(slug__exact=slug)
-		except IslandComponent.DoesNotExist:
-			return match.group()
+			item = Island.objects.get(slug__iexact=short_slug)
+		except Island.DoesNotExist:
+			try:
+				item = IslandComponent.objects.get(slug__iexact=slug)
+			except IslandComponent.DoesNotExist:
+				try:
+					item = IslandComponent.objects.get(slug__iexact=short_slug)
+				except IslandComponent.DoesNotExist:
+					return match.group()
 	
 	return "\"" + match.group('name') + "\":" + item.get_absolute_url()
 
 
 @register.filter
 def dinostyle(content):
+	
+	# This regex goes for [[<name>]]
 	pattern = re.compile(r'\[\[(?P<name>[^\]\]]*)\]\]')
 	linked_content = pattern.sub(custom_link, content)
 	
