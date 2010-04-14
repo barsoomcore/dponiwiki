@@ -21,7 +21,7 @@
 		<ul id="island-list">
 		{% for island in islands.object_list %}
 			<li class="{% cycle 'tbeven' 'tbodd' %}"><a href=" {{ island.get_absolute_url }}">{{ island.name }}</a> 
-			{% if island.summary %} &mdash; {{ island.summary|safe|truncatewords:10 }}{% endif %}</li>
+			{% if island.summary %} &mdash; {{ island.summary|safe|truncatewords:10|cut:"[["|cut:"]]" }}{% endif %}</li>
 		{% endfor %}
 		</ul>
 		<div class="pagination">
