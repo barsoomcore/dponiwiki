@@ -9,12 +9,12 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.contrib.auth.views import logout
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 import datetime, urllib2
 from tagging.models import Tag, TaggedItem
 
 from dponisetting.dponiwiki.models import Island, IslandComponent, ChangeSet
 from dponisetting.dponiwiki.forms import UserCreationFormExtended
-
 
 def canonical(request, canonicity):
 	'''	Returns a list of islands matching the supplied canonicity '''
@@ -293,15 +293,16 @@ def register(request):
 
 def villain_picker(request, villain=None):
 
-	url = 'http://localhost/dponiwiki/media/roles/'
-	skills = urllib2.urlopen(url + 'Skills.data')
+	#url = settings.MEDIA_URL + '/roles/'
+	#skills = urllib2.urlopen(url + 'Skills.data')
+	skills = open(settings.ROLES_URL + 'Skills.data')
 	if skills:
 		skill_list = skills.readlines()
 	villain_data = []
 	villain_skills = []
 	if villain:
-		villain_stats = urllib2.urlopen(url + villain + '.data')
-	
+		#villain_stats = urllib2.urlopen(url + villain + '.data')
+		villain_stats = open(settings.ROLES_URL + villain + '.data')
 		if villain_stats:
 			villain_lines = villain_stats.readlines()
 		if villain_lines:
