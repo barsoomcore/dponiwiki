@@ -9,7 +9,7 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.contrib.auth.views import logout
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-import datetime
+import datetime, urllib2
 from tagging.models import Tag, TaggedItem
 
 from dponisetting.dponiwiki.models import Island, IslandComponent, ChangeSet
@@ -290,3 +290,44 @@ def register(request):
 		{ 'form' : form }, 
 		context_instance=RequestContext(request)
 		)
+
+def villain_picker(request, villain=None):
+
+	url = 'http://localhost/dponiwiki/media/roles/'
+	skills = urllib2.urlopen(url + 'Skills.data')
+	if skills:
+		skill_list = skills.readlines()
+	villain_data = []
+	villain_skills = []
+	if villain:
+		villain_stats = urllib2.urlopen(url + villain + '.data')
+	
+		if villain_stats:
+			villain_lines = villain_stats.readlines()
+		if villain_lines:
+			for line in villain_lines:
+				line = line.rstrip('\n')
+				line = line.split('|')
+				villain_data.append(line)
+		if skills:
+			villain_skills_names = villain_data[1][16].split(', ')
+			for skill in villain_skills_names:
+				skill_entry = []
+				skill_entry.append(skill)
+				for item in skill_list:
+					item = item.rstrip('\n')
+					item = item.split('|')
+					if item[0] == skill:
+						skill_entry.append(item[1])
+				villain_skills.append(skill_entry)
+	
+	
+	if villain == "WarLeader":
+		villain = "War Leader"
+	
+	template_params = {'villain_data': villain_data,
+						'villain_skills': villain_skills,
+						'villain_name': villain}
+
+	return render_to_response('templates/villain.html', template_params, 
+								context_instance=RequestContext(request))

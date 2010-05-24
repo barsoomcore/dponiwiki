@@ -1,0 +1,21 @@
+Level|BCB|SCB|Fort|Ref|Will|Abilities|DC|Damage|Toughness|Str|Dex|Con|Int|Wis|Cha|Skills|Description
+1|0||0|2|2|Challenge (fast stealth), Dodge Focus 1, Precise Shot, Sneak Attack 1||1||1|3|1|0|1|0|Acrobatics, Climb, Disguise, Jump, Sleight of Hand, Stealth|<p>The lurker specializes in taking down opponents by underhanded means, and when the prey least expects it. Lurkers are at a disadvantage in a fair fight, but their skills at stealth and deception ensure it should be difficult to pin them down.</p><p>This role is good for stealthy ninjae, singular assassins, cave-dwelling sudden death, or other foes that strike suddenly and unexpectedly, relying upon surprise and precision to defeat powerful foes. Lurkers generally fall quickly if unable to escape to strike again.</p><p><b>Level:</b> A lurker of the indicated level is a good challenge for a party of about four heroes of that level. One-on-one, a lurker has a good chance of defeating a single hero, under optimal circumstances.</p><p><b>Skills:</b> Lurkers are masters of ambush and movement. As such, they have Level + 3 ranks in Acrobatics, Climb, Disguise, Jump, Sleight of Hand, and Stealth. While masters of ambush, lurkers are susceptible to ambush as well.</p><p><b>Feats:</b> Lurkers are subtle opponents that rely upon speed and surprise, both in and out of combat. They gain the indicated feats at the indicated levels.</p><p><b>Damage:</b> This column is the lurker’s attack-form damage bonus. It can represent any sort of weapon, manufactured or natural, that suits your descriptors of the lurker. Though the Narrator is free to use whatever best fits, the default lurker attacks are all short-ranged weapons; they have a range increment of 30 ft, can only be used within 5 increments, and have a 19-20/+3 critical.</p><p><b>Size:</b> Lurkers can be any size, though medium is the most common. If applying size changes, do not adjust ability scores, combat bonuses, or toughness.
+2|1||0|3|3|||1||1|3|1|0|1|0
+3|2||1|4|3|Defensive Roll 1||1||1|3|1|0|1|0
+4|3||1|5|4|Sneak Attack 2||2||1|3|1|0|2|0
+5|3||1|6|4|||2||1|4|1|0|2|0
+6|4||2|7|5|Defensive Roll 2||2||1|4|2|0|2|0
+7|5||2|8|5|||2||1|4|2|0|3|0
+8|6||2|9|6|Sneak Attack 3||3||2|4|2|0|3|0
+9|6||3|10|6|Defensive Roll 3||3||2|5|2|0|3|0
+10|7||3|11|7|Dodge Focus 2||3||2|5|2|0|4|0
+11|8||3|12|7|||3||2|5|3|0|4|0
+12|9||4|13|8|Defensive Roll 4, Sneak Attack 4||3||2|5|3|0|4|0
+13|9||4|14|8|||3||2|6|3|0|5|0
+14|10||4|15|9|||3||2|6|3|0|5|0
+15|11||5|16|9|Defensive Roll 5, Dodge Focus 3||3||2|6|3|0|5|0
+16|12||5|17|10|||4||3|6|4|0|6|0
+17|12||5|18|10|||4||3|7|4|0|6|0
+18|13||6|19|11|Defensive Roll 6||4||3|7|4|0|6|0
+19|14||6|20|11|||4||3|7|4|0|7|0
+20|15||6|21|12|Dodge Focus 4||4||3|7|4|0|7|0

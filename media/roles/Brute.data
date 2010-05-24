@@ -1,0 +1,21 @@
+Level|BCB|SCB|Fort|Ref|Will|Abilities|DC|Damage|Toughness|Str|Dex|Con|Int|Wis|Cha|Skills|Description
+1|4||3|2|1|||1|1|4|1|3|-2|1|0|Climb, Intimidate, Jump, Notice|<p>Physically powerful and very dangerous, the brute excels at close combat. Whether a demon or beast tearing apart prey, or a mighty warrior crushing weaker foes, the brute closes with and destroys his enemies through sheer power.</p><p><b>Level:</b> A brute of the indicated level is a good challenge for a party of about four heroes of that level. One-on-one, a brute has a good chance of defeating a single hero.</p><p><b>Skills:</b> Brutes have well-developed physical talents, but are otherwise poorly trained. Their limited intellects prevent them from developing any complex skills. A brute has ranks equal to its Level + 3 in Climb, Intimidate, Jump, and Notice. You can substitute different skills if you wish.</p><p><b>Feats:</b> Brutes are unsubtle opponents and very simple fighters who rely upon their prodigious physical abilities. As such they acquire feats that fit their style. They gain the indicated feats at the indicated levels.</p><p><b>Damage:</b> A brute gets a single attack each round with the indicated bonus to damage. This could be a powerful jaw, rending talons, a huge axe, a magical sword, or a fiery aura that surrounds his hands. Give the appropriate descriptors for the particular concept of brute used in the encounter. Brutes rarely have a ranged attack, and almost never more than four of them.</p><p><b>Toughness:</b> Whether from thick hide, protective scales, primitive armor, or some other source, the brute gains the indicated bonus on his toughness saves. This is in addition to his constitution.</p><p><b>Size:</b> While brutes can be any size, do not adjust their abilities to account for changes in size.</p>												
+2|4||3|2|1|||1|1|4|1|3|-2|1|0|
+3|4||3|2|1|||1|1|4|1|3|-2|1|0|
+4|5||4|3|1|Cleave||1|1|4|1|3|-2|1|0|
+5|6||5|4|1|||1|2|5|1|3|-2|1|0|
+6|7||6|4|2|Attack Focus||1|2|5|2|4|-2|1|0|
+7|8||7|5|2|Improved Speed||2|3|6|2|4|-1|2|0|
+8|9||8|6|2|||2|3|6|2|4|-1|2|0|
+9|10||9|7|3|||2|4|7|3|5|-1|2|0|
+10|11||10|7|3|Attack Specialization||2|4|7|3|5|-1|2|0|
+11|11||11|8|3|||3|5|8|3|5|0|3|0|
+12|12||12|9|4|Great Cleave||3|5|8|4|6|0|3|0|
+13|12||13|10|4|Improved Speed||3|6|9|4|6|0|3|0|
+14|12||14|10|4|||3|6|9|4|6|0|3|0|
+15|13||15|11|5|||4|7|10|5|7|1|4|0|
+16|13||16|12|5|||4|7|10|5|7|1|4|0|
+17|13||17|13|5|||4|8|11|5|7|1|4|0|
+18|14||18|13|6|Improved Speed||4|8|11|6|8|1|4|0|
+19|14||19|14|6|||5|9|12|6|8|2|5|0|
+20|14||20|15|6|||5|9|12|6|8|2|5|0|

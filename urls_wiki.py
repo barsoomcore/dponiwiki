@@ -48,6 +48,8 @@ urlpatterns += patterns('dponisetting.dponiwiki.utilityviews',
 		name='wiki_changeset'
 	),
 	url(r'^components/tag/(?P<url>.*)/$', 'by_tags', name='component_tag_detail'),
+    url(r'^villains/$', 'villain_picker'),
+    url(r'^villains/(?P<villain>[-\w]+)/$', 'villain_picker', name='villain_picker'),
 )
 
 urlpatterns += patterns('dponisetting.dponiwiki.componentviews',

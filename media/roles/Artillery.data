@@ -1,0 +1,21 @@
+Level|BCB|SCB|Fort|Ref|Will|Abilities|DC|Damage|Toughness|Str|Dex|Con|Int|Wis|Cha|Skills|Description
+1|1|0|0|2|2|Improved Initiative, Precise Shot||2||0|3|2|0|1|0|Acrobatics, Climb, Concentration, Jump, Knowledge, Notice, Swim|<p>Artillery is meant to present powerful ranged combatants. Unlike lurkers, artillery don’t focus on ambush; they’re good enough, and use terrain intelligently enough, that they can confront things head-on. Unlike skirmishers, artillery don’t have to stay on the move, although clever movement is important to their success and survival.</p><p>This role can represent master archers, range-focused highwaymen, powerful evokers, demon-fused wizards, or any other character that is a threat due to powerful, unending ranged attacks.</p><p><b>Level:</b> Artillery of the indicated level is a good challenge for a party of about four heroes of that level. One-on-one, artillery has a good chance of defeating a single hero, under optimal circumstances.</p><p><b>Skills:</b> Artillery is accomplished at detecting and identifying targets, and proficient in the skills needed to move around. As such, they have Level + 3 ranks in Concentration, Knowledge (pick one), and Notice, and Level ranks in Acrobatics, Climb, Jump, and Swim. Depending upon their style, they may have one or two additional skills (such as Knowledge (supernatural) or Survival).</p><p><b>Combat:</b> Artillery has exceptional ranged combat skill. When making ranged attacks use the Primary Attack number. The Secondary Attack is for melee attacks. Likewise, the Defense numbers in parentheses are used when avoiding melee attack -- the larger numbers are for avoiding ranged attacks.</p><p><b>Feats:</b> Artillery relies upon their own deadly skill, and the distance and obstacles between them and their targets, to defeat their foes. The listed feats and abilities should allow that to happen.</p><p><em>Widen Attack:</em> The artillery can widen its basic damage attack (as the Widen Power feat) the listed times per encounter. This may be an enhanced power, specialized grenades, a hail of arrows, or some other special variation on their normal attack. (The limited usage is simply to prevent over-use, since such powerful area attacks quickly drain heroic resources. If you really need more uses, then have them; seriously consider granting a Conviction point to affected heroes.)</p><p><b>Damage:</b> This column is the artillery’s attack-form damage bonus. It can represent magic blasts, crossbows, muskets, longbows, shuriken, or whatever other attack form suits your descriptors of the artillery. Regardless, it has a range increment of 100 ft and 20/+4 critical.</p><p><b>Size:</b> Artillery can be any size, though medium is the most common. If applying size changes, do not adjust ability scores, combat bonuses, or toughness.</p>
+2|2|1|0|3|3|Ranged Pin||2||0|3|2|0|1|0|
+3|3|2|1|4|3|Improved Ranged Disarm||3||0|3|2|0|1|0|
+4|4|3|1|5|4|Improved Precise Shot||3||0|3|2|0|1|0|
+5|5|3|1|6|4|||3||0|3|2|0|1|0|
+6|6|4|2|7|5|Widen Attack (one)||4||0|3|2|1|1|1|
+7|7|5|2|8|6|||4||0|3|3|1|2|1|
+8|8|6|2|9|6|Defensive Roll 1||5|1|0|3|3|1|2|1|
+9|9|6|3|10|6|||5|1|0|4|3|1|2|1|
+10|10|7|3|11|7|Widen Attack (two)||6|1|0|4|3|1|2|1|
+11|11|8|3|12|7|Improved Critical (19-20)||6|1|1|4|4|2|3|2|
+12|12|9|4|13|8|||6|1|1|4|4|2|3|2|
+13|13|9|4|14|8|||7|1|1|5|4|2|3|2|
+14|14|10|4|15|9|Widen Attack (three)||7|1|1|5|4|2|3|2|
+15|15|11|5|16|9|||8|1|1|5|5|2|4|2|
+16|16|12|5|17|10|Defensive Roll 2||8|2|1|5|5|3|4|3|
+17|17|12|5|18|10|||8|2|1|6|5|3|4|3|
+18|18|13|6|19|11|Widen Attack (four)||9|2|1|6|5|3|4|3|
+19|19|14|6|20|11|||9|2|1|6|6|3|5|3|
+20|20|15|6|21|12|||10|2|1|7|6|3|5|3|

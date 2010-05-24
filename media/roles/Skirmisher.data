@@ -1,0 +1,21 @@
+Level|BCB|SCB|Fort|Ref|Will|Abilities|DC|Damage|Toughness|Str|Dex|Con|Int|Wis|Cha|Skills|Description|
+1|1|0|2|2|1|Move-By Action, Precise Shot|||1|1|2|1|0|1|0|Acrobatics, Climb, Jump, Stealth|<p>The skirmisher is the proof of the power of mobility. Skirmishers not only refuse to stay still, they lose out greatly by not moving. Skirmishers are generally wary of large groups of opponents, due to the risk of being hemmed in and unable to move fast enough. 																	</p><p>This role is ideal for many animalistic predators (cheetah, eagles, and others that rely upon speed), dervish nomads, shadow-dancing rogues, hit-and-run drakes, and classic swinging-from-the-rigging swashbucklers. If the opponent moves fast, and uses that momentum to strike hard, then the skirmisher role is the one you want.</p><p><b>Level:</b> A skirmisher of the indicated level is a good challenge for a party of about four heroes of that level. One-on-one, a skirmisher has a good chance of defeating a single hero, under optimal circumstances.</p><p><b>Skills:</b> Skirmishers are all about movement. They have Level + 3 ranks in Acrobatics, Climb, Jump, and Stealth. Additional skills can be swapped in (or even added) to better reflect a specific concept. Keep in mind the movement penalties to Stealth.</p><p><b>Feats:</b> Skirmisher feats are related to their movement. Precise Shot negates a penalty, making it easier to run them. They also get a specialty feat:</p><ul><li><em>Fast Overrun:</em> As Great Cleave, for overruns. As long as you have sufficient movement, and continue to succeed at overrun, you can continue to make overrun attempts until you run out of movement or miss an attempt. You can change directions between attempts but must move at least 10 feet before each attempt.</li></ul></p><p><b>Combat:</b> Skirmishers benefit from mobility. If a skirmisher moves at least 30' in a round, they use the Primary Attack value for their attack rolls, and the higher Defense rolls. A skirmisher who does not jump about uses the Secondary Attack value for their attack rolls, and avoids attacks with the lower Defense values. Skirmishers also make use of the Defensive Roll feat -- a Skirmisher who is flat-footed can only use its Constitution for its Toughness roll.</p><p><b>Damage:</b> This column is the Skirmisher’s base attack-form damage. If the damage form is a ranged attack, treat it as having a range of 30 feet. </p><p><b>Abilities:</b> Skirmishers of the indicated levels have the indicated ability scores.</p><p><b>Speed:</b> Skirmishers are fast. Add 10' to their speed for each "Improved Speed" feat they have (starting with a base speed of 30').</p>|10|
+2|2|1|3|3|1|Evasion, Improved Speed 1|||1|1|3|2|0|1|0|
+3|4|2|3|4|2|||1|1|1|3|2|0|1|0|
+4|5|3|4|5|2|Improved Speed 2||1|2|1|3|2|0|1|0|
+5|5|3|4|6|3|Improved Trip||1|2|1|3|2|0|2|0|
+6|7|4|5|6|3|||2|2|1|4|3|0|2|0|
+7|8|5|5|7|3|Improved Speed 3||2|2|1|4|3|1|2|0|
+8|9|6|6|8|4|||2|3|1|4|3|1|2|0|
+9|10|6|6|9|4|||3|3|1|4|4|1|3|0|
+10|11|7|7|10|5|Improved Overrun, Improved Speed 4||3|3|1|5|4|1|3|0|
+11|12|8|7|10|5|||3|3|2|5|4|1|3|0|
+12|14|9|8|11|6|||4|3|2|5|4|1|3|0|
+13|14|9|8|12|6|Improved Evasion, Improved Speed 5||4|3|2|5|5|1|4|0|
+14|15|10|9|13|6|||4|3|2|6|5|2|4|0|
+15|17|11|9|14|7|||5|3|2|6|5|2|4|0|
+16|18|12|10|14|7|Improved Speed 6||5|4|2|6|5|2|4|0|
+17|18|12|10|15|8|Fast Overrun||5|4|2|6|6|2|5|0|
+18|20|13|11|16|8|||6|4|2|7|6|2|5|0|
+19|21|14|11|17|9|Improved Speed 7||6|4|2|7|6|2|5|0|
+20|22|15|12|18|9|||6|4|2|7|6|2|5|0|
