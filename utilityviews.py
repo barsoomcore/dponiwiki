@@ -293,15 +293,12 @@ def register(request):
 
 def villain_picker(request, villain=None):
 
-	#url = settings.MEDIA_URL + '/roles/'
-	#skills = urllib2.urlopen(url + 'Skills.data')
 	skills = open(settings.ROLES_URL + 'Skills.data')
 	if skills:
 		skill_list = skills.readlines()
 	villain_data = []
 	villain_skills = []
 	if villain:
-		#villain_stats = urllib2.urlopen(url + villain + '.data')
 		villain_stats = open(settings.ROLES_URL + villain + '.data')
 		if villain_stats:
 			villain_lines = villain_stats.readlines()
