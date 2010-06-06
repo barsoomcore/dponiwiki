@@ -8,12 +8,33 @@
 	$(document).ready(function(){
 		var villain = {{ villain_data|safe }};
 		var skills = {{ villain_skills|safe }};
+		var selected = {{ villain_level }};
 		
 		//set the level select options
 		document.Villain.Villain_Level.options.length = 0;
 		for (i = 1; i < villain.length; i++){
 			document.Villain.Villain_Level.options[i] = new Option(i, i);
 		}
+		
+		// would like to define a villain as an object. Someday
+		var new_selected_level = {
+			Level: villain[selected][0],
+			BCB: villain[selected][1],
+			SCB: villain[selected][2],
+			Fortitude: villain[selected][3],
+			Reflex: villain[selected][4],
+			Will: villain[selected][5],
+			Abilities: villain[selected][6],
+			DC: villain[selected][7],
+			Damage: villain[selected][8],
+			Toughness: villain[selected][9],
+			Strength: villain[selected][10],
+			Dexterity: villain[selected][11],
+			Constitution: villain[selected][12],
+			Intelligence: villain[selected][13],
+			Wisdom: villain[selected][14],
+			Charisma: villain[selected][15]
+		};
 		
 		$("#level").change(function(){
 			var select = document.Villain.Villain_Level.options.selectedIndex;
@@ -79,7 +100,7 @@
 					}
 					if (String(this_skill[1]).charAt(0) != '-')
 						this_skill[1] = '+' + this_skill[1];
-					skill_list.push(this_skill.join(': '));
+					skill_list.push(this_skill.join(':&nbsp;'));
 				}
 				Skills = skill_list.join('; ');;
 				
@@ -106,9 +127,14 @@
 				Fortitude = parseInt(Fortitude) + parseInt(Constitution);
 				Reflex = parseInt(Dexterity) + parseInt(Reflex);
 				Will = parseInt(Wisdom) + parseInt(Will);
+				var Reputation = ((parseInt(Level)/5)).toPrecision(1);
+				if (Reputation < 1) { Reputation = 0 };
+				if ('{{ villain_name }}' == 'War Leader'){
+					Reputation = parseInt(Reputation) + 3;
+				}
 					
 				// and reset all the values in the form
-				$("#StatBlock").show();
+				$(".StatBlock").show();
 				$(".Level").html(Level + ' Level ');
 				$(".BCB").html(BCB);
 				$(".Primary_Attack").html(Primary_Attack);
@@ -139,6 +165,7 @@
 					$(".Second_Parry").html(' (' + Second_Parry + ')');
 				}
 				$(".Skills").html(Skills);
+				$(".Reputation").html(Reputation);
 			}		
 		});
 		
@@ -149,11 +176,13 @@
 {% block content %}
 
 	{% if villain_name %}
+		<div class="noprint">
 		<h4 style="float:left; padding-right: 1em">Select {{ villain_name }} Level:</h4>
 		<form name="Villain" style="padding-top: 1.8em;">
 			<select name="Villain_Level" id="level">
 			</select>
 		</form>
+		</div>
 	{% else %}
 		<h1>Selecting A Villain</h1>
 		<p>Villains are of course key to any great DINO-PIRATES OF NINJA ISLAND adventure. While you could peruse the list of creatures provided, and select a villain from within, sometimes that's more work than one really needs to take on.</p>
@@ -177,61 +206,218 @@
 		<p>The war leader is a field commander, a leader of troops and a commanding presence on any battlefield. Some inspire their followers through praise and leadership while others use threats and fear. The most dangerous tend to be honorable and noble, but the numbers they can bring and their dedication to dominance make them implacable foes and dangerous politicians.</p><p>Don’t confuse a war leader with a villain that simply attracts followers. Though of moderate power on his own, a war leader uses his followers to even the odds against the party. Other villains may use thugs and footsoldiers but the war leader depends upon them.</p>
 	{% endif %}
 	
-	<div id="StatBlock" style="display:none; clear:left" >
-		<h2><span class="Level"></span>{{ villain_name }}</h2>
+	<div class="StatBlock" style="display:none; clear:left" >
 		
-		<table width="100%">
-		<tr style="background-color: grey"><td colspan="12">Abilities</td></tr>
-		<tr><td width="6%">STR</td><td width="11%"><span class="Strength"></span></td>
-			<td width="6%">DEX</td><td width="11%"><span class="Dexterity"></span></td>
-			<td width="6%">CON</td><td width="11%"><span class="Constitution"></span></td>
-			<td width="6%">INT</td><td width="11%"><span class="Intelligence"></span></td>
-			<td width="6%">WIS</td><td width="10%"><span class="Wisdom"></span></td>
-			<td width="6%">CHA</td><td width="10%"><span class="Charisma"></span></td>
+		<table id="statblocktable">
+		<tr>
+			<td>Name:</td>
+			<td colspan="5"></td>
+			<td colspan="3">(<span class="Level"></span>{{ villain_name }} )</td>
+			<td colspan="2" class="stat_name">Reputation:</td>
+			<td class="statvalue">+<span class="Reputation"></span></td>
+		</tr>
+		<tr class="titlebar"><td colspan="12">Abilities</td></tr>
+		<tr>
+			<td width="8%" class="stat_name" style="text-align:center">STR</td><td width="9%" class="statvalue"><span class="Strength"></span></td>
+			<td width="8%" class="stat_name" style="text-align:center">DEX</td><td width="9%" class="statvalue"><span class="Dexterity"></span></td>
+			<td width="8%" class="stat_name" style="text-align:center">CON</td><td width="9%" class="statvalue"><span class="Constitution"></span></td>
+			<td width="8%" class="stat_name" style="text-align:center">INT</td><td width="9%" class="statvalue"><span class="Intelligence"></span></td>
+			<td width="8%" class="stat_name" style="text-align:center">WIS</td><td width="8%" class="statvalue"><span class="Wisdom"></span></td>
+			<td width="8%" class="stat_name" style="text-align:center">CHA</td><td width="8%" class="statvalue"><span class="Charisma"></span></td>
 		</tr>
 		
-		<tr style="background-color: grey"><td colspan="12">Skills</td></tr>
-		<tr><td colspan="12"><span class="Skills"></span></td></tr>
+		<tr class="titlebar"><td colspan="12">Skills</td></tr>
+		<tr>
+			<td colspan="12" style="padding-bottom: 30px"><span class="Skills"></span></td>
+		</tr>
 		
-		<tr style="background-color: grey"><td colspan="12">Feats and Powers</td></tr>
-		<tr><td colspan="12"><span class="Abilities">None</span></td></tr>
+		<tr class="titlebar"><td colspan="12">Feats and Powers</td></tr>
+		<tr>
+			<td colspan="12" style="padding-bottom: 30px"><span class="Abilities">None</span></td>
+		</tr>
+		
 		{% if villain_data.1.7 %}
-			<tr><td colspan="2">Save DC:</td><td colspan="10"><span class="DC"></span></td></tr>
+			<tr>
+				<td colspan="2">Save DC:</td>
+				<td colspan="10"><span class="DC"></span></td>
+			</tr>
 		{% endif %}
 		
-		<tr style="background-color: grey"><td colspan="12">Combat</td></tr>
-		<tr><td>Init:</td><td colspan="2"><span class="Dexterity"></span></td>
-			<td colspan="2">Primary Attack:</td><td colspan="3">+<span class="Primary_Attack"></span></td>
-			<td>Damage:</td><td colspan="3">+<span class="Full_Damage"></span></td></tr>
-		<tr><td>MB:</td><td colspan="2">+<span class="MB"></span></td>
+		<tr class="titlebar"><td colspan="12">Combat</td></tr>
+		<tr>
+			<td class="stat_name">Init:</td>
+			<td colspan="2" class="statvalue"><span class="Dexterity"></span></td>
+			<td colspan="3" class="stat_name">Primary Attack:</td>
+			<td colspan="2" class="statvalue">+<span class="Primary_Attack"></span></td>
+			<td class="stat_name" colspan="2">Damage:</td>
+			<td colspan="2" class="statvalue">+<span class="Full_Damage"></span></td>
+		</tr>
+		
+		<tr><td class="stat_name">Maneuver:</td>
+		<td colspan="2" class="statvalue">+<span class="MB"></span></td>
 			{% if villain_name = 'Artillery' or villain_name = 'Skirmisher' %}
-				<td colspan="2">Secondary Attack:</td><td colspan="3">+<span class="Secondary_Attack"></span></td>			
-				<td>Damage:</td><td colspan="3">+<span class="Damage"></span></td></tr>
+				<td colspan="3" class="stat_name">Secondary Attack:</td>
+				<td colspan="2" class="statvalue">+<span class="Secondary_Attack"></span></td>			
+				<td class="stat_name" colspan="2">Damage:</td>
+				<td colspan="2" class="statvalue">+<span class="Damage"></span></td>
+			{% else %}
+				<td colspan="9"></td>
 			{% endif %}
-		<tr><td colspan="2">Defense</td>
-			<td>FF:</td><td colspan="2"><span class="FF"></span>
+		</tr>
+		<tr>
+			<td colspan="2" class="stat_name" style="font-style:italic; text-align:center">Defense</td>
+			<td class="stat_name" colspan="2">Flat-Footed:</td>
+			<td colspan="2" class="statvalue"><span class="FF"></span>
 				<span class="Second_Defense"></span></td>
-			<td>Dodge:</td><td colspan="2"><span class="Dodge"></span>
+			<td class="stat_name">Dodge:</td>
+			<td colspan="2" class="statvalue"><span class="Dodge"></span>
 				<span class="Second_Dodge"></span></td>
-			<td>Parry:</td><td colspan="3"><span class="Parry"></span>
-				<span class="Second_Parry"></span></td></tr>
+			<td class="stat_name">Parry:</td>
+			<td colspan="2" class="statvalue"><span class="Parry"></span>
+				<span class="Second_Parry"></span></td>
+		</tr>
+		<tr class="stat_name" style="text-align:center; background-color: grey; color:white">
+			<td>Damage:</td>
+			<td colspan="2">0</td>
+			<td colspan="3">5+</td>
+			<td colspan="3">10+</td>
+			<td colspan="3">15+</td>
+		</tr>
+		<tr class="stat_name" style="text-align:center">
+			<td>/</td>
+			<td colspan="2">Bruised</td>
+			<td colspan="3">Dazed</td>
+			<td colspan="3">Staggered</td>
+			<td colspan="3">Unconscious</td>
+		</tr>
+		<tr style="text-align:center;">
+			<td>&nbsp;</td>
+			<td colspan="2">
+				<table width="100%"><tr>
+					<td class="checkbox">&nbsp;</td>
+					<td>&nbsp;</td>
+					<td class="checkbox">&nbsp;</td>
+					<td>&nbsp;</td>
+					<td class="checkbox">&nbsp;</td>
+				</tr></table>
+			</td>
+			<td colspan="3">
+				<table width="100%"><tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td class="checkbox">&nbsp;</td>
+					<td>&nbsp;</td>
+					<td class="checkbox">&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr></table>
+			</td>
+			<td colspan="3">
+				<table width="100%"><tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td class="checkbox">&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr></table>
+			</td>
+			<td colspan="3">
+				<table width="100%"><tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td class="checkbox">&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr></table>
+			</td>
+		</tr>
+		<tr class="stat_name" style="text-align:center">
+			<td>X</td>
+			<td colspan="2">Hurt</td>
+			<td colspan="3">Wounded</td>
+			<td colspan="3">Disabled</td>
+			<td colspan="3">Dying</td>
+		</tr>
+		<tr class="stat_name" style="text-align:center; background-color: grey; color:white"><td>Fatigue:</td><td colspan="11"></td></tr>
+		<tr class="stat_name" style="text-align:center">
+			<td></td>
+			<td colspan="2">Strained</td>
+			<td colspan="3">Winded</td>
+			<td colspan="3">Fatigued</td>
+			<td colspan="3">Exhausted</td>
+		</tr>
+		<tr style="text-align:center">
+			<td>/</td>
+			<td colspan="2">
+				<table width="100%"><tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td class="checkbox">&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr></table>
+			</td>
+			<td colspan="3">
+				<table width="100%"><tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td class="checkbox">&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr></table>
+			</td>
+			<td colspan="3">
+				<table width="100%"><tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td class="checkbox">&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr></table>
+			</td>
+			<td colspan="3">
+				<table width="100%"><tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td class="checkbox">&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr></table>
+			</td>
+		</tr>
 			
-		<tr style="background-color: grey"><td colspan="12">Saves</td></tr>
-		<tr><td colspan="2">Toughness:</td><td>+<span class="Toughness"></span></td>
-			<td colspan="2">Fortitude:</td><td>+<span class="Fort"></span></td>
-			<td colspan="2">Reflex:</td><td>+<span class="Ref"></span></td>
-			<td colspan="2">Will:</td><td>+<span class="Will"></span></td></tr>
+		<tr class="titlebar"><td colspan="12">Saves</td></tr>
+		<tr>
+			<td colspan="2" class="stat_name">Toughness:</td>
+			<td class="statvalue">+<span class="Toughness"></span></td>
+			<td colspan="2" class="stat_name">Fortitude:</td>
+			<td class="statvalue">+<span class="Fort"></span></td>
+			<td colspan="2" class="stat_name">Reflex:</td>
+			<td class="statvalue">+<span class="Ref"></span></td>
+			<td colspan="2" class="stat_name">Will:</td>
+			<td class="statvalue">+<span class="Will"></span></td>
+		</tr>
 		</table>
 	</div>
 	
 	{% if villain_name %}
-		<div style="clear:left">
+		<div style="clear:left" class="noprint">
 			<h3>About {{ villain_name }}{% if villain_name != "Artillery" %}s{% endif %}</h3>
 			{{ villain_data.1.17|safe }}
 		</div>
 	{% endif %}
 	
-	<div id="villain_selection" style="clear:left">
+	<div id="villain_selection" style="clear:left" class="noprint">
 		<h2>Select a{% if villain_name %}nother{% endif %} Villain type:</h2>
 		<p><a href="{% url villain_picker 'Artillery' %}">Artillery</a> ::
 		 <a href="{% url villain_picker 'Brute' %}">Brute</a> ::
@@ -240,7 +426,7 @@
 		 <a href="{% url villain_picker 'Skirmisher' %}">Skirmisher</a> ::
 		 <a href="{% url villain_picker 'WarLeader' %}">War Leader</a></p>
 	{% if latest_updates %}
-	<div id="updates">
+	<div id="updates" class="noprint">
 		<h2>Some Recent Updates</h2>
 		
 		

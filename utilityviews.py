@@ -325,7 +325,8 @@ def villain_picker(request, villain=None):
 	
 	template_params = {'villain_data': villain_data,
 						'villain_skills': villain_skills,
-						'villain_name': villain}
+						'villain_name': villain,
+						'villain_level': '1'}
 
 	return render_to_response('templates/villain.html', template_params, 
 								context_instance=RequestContext(request))
