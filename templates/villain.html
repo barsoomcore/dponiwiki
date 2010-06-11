@@ -3,173 +3,38 @@
 {% load smart_if %}
 {% block title %}Villain Generator!{% endblock %}
 {% block head %}
-
+<script type="text/javascript" src="{{ MEDIA_URL }}scripts/villain.js"></script>
 <script type="text/javascript">
+	
 	$(document).ready(function(){
-		var villain = {{ villain_data|safe }};
+		var villain_data = {{ villain_data|safe }};
 		var skills = {{ villain_skills|safe }};
 		var selected = {{ villain_level }};
 		
 		//set the level select options
 		document.Villain.Villain_Level.options.length = 0;
-		for (i = 1; i < villain.length; i++){
+		for (i = 1; i < villain_data.length; i++){
 			document.Villain.Villain_Level.options[i] = new Option(i, i);
 		}
 		
-		// would like to define a villain as an object. Someday
-		var new_selected_level = {
-			Level: villain[selected][0],
-			BCB: villain[selected][1],
-			SCB: villain[selected][2],
-			Fortitude: villain[selected][3],
-			Reflex: villain[selected][4],
-			Will: villain[selected][5],
-			Abilities: villain[selected][6],
-			DC: villain[selected][7],
-			Damage: villain[selected][8],
-			Toughness: villain[selected][9],
-			Strength: villain[selected][10],
-			Dexterity: villain[selected][11],
-			Constitution: villain[selected][12],
-			Intelligence: villain[selected][13],
-			Wisdom: villain[selected][14],
-			Charisma: villain[selected][15]
-		};
+		if (selected != '0') {
+			var villain_obj = create_villain(selected, villain_data, skills);
+			
+			villain_obj.display();
+		}
 		
 		$("#level").change(function(){
 			var select = document.Villain.Villain_Level.options.selectedIndex;
 			if (select != 0){
-				var selected_level = villain[select];
-				var Level = selected_level[0],
-					BCB = selected_level[1],
-					SCB = selected_level[2],
-					Fortitude = selected_level[3],
-					Reflex = selected_level[4],
-					Will = selected_level[5],
-					Abilities = selected_level[6],
-					DC = selected_level[7],
-					Damage = selected_level[8],
-					Toughness = selected_level[9],
-					Strength = selected_level[10],
-					Dexterity = selected_level[11],
-					Constitution = selected_level[12],
-					Intelligence = selected_level[13],
-					Wisdom = selected_level[14],
-					Charisma = selected_level[15];
+				var villain_obj = create_villain(select, villain_data, skills);
 				
-				// for some reason if we store the values with +
-				// signs parseInt stops working, so we add them
-				// if needed here
-				if (Strength.charAt(0) != '-') Strength = '+' + Strength;
-				if (Dexterity.charAt(0) != '-') Dexterity = '+' + Dexterity;
-				if (Constitution.charAt(0) != '-') Constitution = '+' + Constitution;
-				if (Intelligence.charAt(0) != '-') Intelligence = '+' + Intelligence;
-				if (Wisdom.charAt(0) != '-') Wisdom = '+' + Wisdom;
-				if (Charisma.charAt(0) != '-') Charisma = '+' + Charisma;
+				villain_obj.display();
 				
-				// create a full list of all abilities
-				var total_abilities = new Array();
-				var j = 0;
-				for (var i = 1; i <= select; i++) {
-					if (villain[i][6] != ''){
-						total_abilities[j] = villain[i][6];
-						j++;
-					}
-				}
-				Abilities = total_abilities.join(', ');
-				
-				// generate the proper skills list
-				var skill_list = new Array();
-				for (var i = 0; i < skills.length; i++) {
-					var key_ability = skills[i][1];
-					var this_skill = new Array();
-					this_skill[0] = skills[i][0];
-					this_skill[1] = 3 + parseInt(Level) + parseInt(eval(key_ability));
-					if ('{{ villain_name }}' == 'Artillery') {
-						var Level_Skills = ['Acrobatics', 'Climb', 'Jump', 'Swim'];
-						for (var j = 0; j <= Level_Skills.length; j++) {
-							if (this_skill[0] == Level_Skills[j]) {
-								this_skill[1] = this_skill[1] - 3;
-							}
-						}
-					}
-					if ('{{ villain_name }}' == 'War Leader') {
-						if (this_skill[0] == 'Notice') {
-							this_skill[1] = this_skill[1] - 3;
-						}
-					}
-					if (String(this_skill[1]).charAt(0) != '-')
-						this_skill[1] = '+' + this_skill[1];
-					skill_list.push(this_skill.join(':&nbsp;'));
-				}
-				Skills = skill_list.join('; ');;
-				
-				// calculate secondary values
-				var MB = parseInt(BCB) + parseInt(Strength);
-				var Primary_Attack = parseInt(BCB) + parseInt(Dexterity);
-				var Full_Damage = parseInt(Damage) + parseInt(Strength);
-				var Base_Defense = parseInt(BCB) + 10;
-				var Dodge = Base_Defense + parseInt(Dexterity);
-				var Parry = Base_Defense + parseInt(Strength);
-				if ('{{ villain_name }}' == 'War Leader'){
-					Dodge = Dodge + parseInt(Charisma);
-					Parry = Parry + parseInt(Charisma);
-				}
-				if (SCB){
-					var Secondary_Attack = parseInt(SCB) + parseInt(Dexterity);
-					var Second_Defense = parseInt(SCB) + 10;
-					var Second_Dodge = Second_Defense + parseInt(Dexterity);
-					var Second_Parry = Second_Defense + parseInt(Strength);
-				}
-				if (Toughness)
-					Toughness = parseInt(Toughness) + parseInt(Constitution);
-				else Toughness = parseInt(Constitution);
-				Fortitude = parseInt(Fortitude) + parseInt(Constitution);
-				Reflex = parseInt(Dexterity) + parseInt(Reflex);
-				Will = parseInt(Wisdom) + parseInt(Will);
-				var Reputation = ((parseInt(Level)/5)).toPrecision(1);
-				if (Reputation < 1) { Reputation = 0 };
-				if ('{{ villain_name }}' == 'War Leader'){
-					Reputation = parseInt(Reputation) + 3;
-				}
-					
-				// and reset all the values in the form
-				$(".StatBlock").show();
-				$(".Level").html(Level + ' Level ');
-				$(".BCB").html(BCB);
-				$(".Primary_Attack").html(Primary_Attack);
-				$(".Secondary_Attack").html(Secondary_Attack);
-				$(".Fort").html(Fortitude);
-				$(".Ref").html(Reflex);
-				$(".Will").html(Will);
-				if (Abilities != '') {$(".Abilities").html(Abilities);}
-					else $(".Abilites").html('None');
-				if (DC != '') {$(".DC").html(DC);}
-					else $(".DC").hide();
-				$(".Damage").html(Damage);
-				$(".Toughness").html(Toughness);
-				$(".Strength").html(Strength);
-				$(".Dexterity").html(Dexterity);
-				$(".Constitution").html(Constitution);
-				$(".Intelligence").html(Intelligence);
-				$(".Wisdom").html(Wisdom);
-				$(".Charisma").html(Charisma);
-				$(".MB").html(MB);
-				$(".Full_Damage").html(Full_Damage);
-				$(".FF").html(Base_Defense);
-				$(".Dodge").html(Dodge);
-				$(".Parry").html(Parry);
-				if (SCB) {
-					$(".Second_Defense").html(' (' + Second_Defense + ')');
-					$(".Second_Dodge").html(' (' + Second_Dodge + ')');
-					$(".Second_Parry").html(' (' + Second_Parry + ')');
-				}
-				$(".Skills").html(Skills);
-				$(".Reputation").html(Reputation);
 			}		
 		});
 		
 	});
+	
 </script>
 
 {% endblock%}
@@ -409,6 +274,7 @@
 		</tr>
 		</table>
 	</div>
+	
 	
 	{% if villain_name %}
 		<div style="clear:left" class="noprint">

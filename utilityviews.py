@@ -291,7 +291,7 @@ def register(request):
 		context_instance=RequestContext(request)
 		)
 
-def villain_picker(request, villain=None):
+def villain_picker(request, villain=None, level='0'):
 
 	skills = open(settings.ROLES_URL + 'Skills.data')
 	if skills:
@@ -322,11 +322,18 @@ def villain_picker(request, villain=None):
 	
 	if villain == "WarLeader":
 		villain = "War Leader"
-	
+		
+	try:
+		level = int(level)
+		if 1 > level or level > 20:
+			level = '0'
+	except ValueError:
+		level = '0'
+
 	template_params = {'villain_data': villain_data,
 						'villain_skills': villain_skills,
 						'villain_name': villain,
-						'villain_level': '1'}
+						'villain_level': level}
 
 	return render_to_response('templates/villain.html', template_params, 
 								context_instance=RequestContext(request))
