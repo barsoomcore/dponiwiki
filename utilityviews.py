@@ -297,7 +297,12 @@ def villain_picker(request, villain=None, level='0'):
 	villain_skills = []
 	villain_url = ''
 	if villain:
-		villain_stats = open(settings.ROLES_URL + villain + '.data')
+		try:
+			villain_stats = open(settings.ROLES_URL + villain + '.data')
+		except IOError:
+			villain = None
+			villain_stats = None
+			villain_lines = None
 		if villain_stats:
 			villain_lines = villain_stats.readlines()
 		if villain_lines:
@@ -305,21 +310,26 @@ def villain_picker(request, villain=None, level='0'):
 				line = line.rstrip('\n')
 				line = line.split('|')
 				villain_data.append(line)
-				
-		skills = open(settings.ROLES_URL + 'Skills.data')
+		
+		try:
+			skills = open(settings.ROLES_URL + 'Skills.data')
+		except IOError:
+			skills = None
 		if skills:
-			skill_list = skills.readlines()
-			villain_skills_names = villain_data[1][16].split(', ')
-			for skill in villain_skills_names:
-				skill_entry = []
-				skill_entry.append(skill)
-				for item in skill_list:
-					item = item.rstrip('\n')
-					item = item.split('|')
-					if item[0] == skill:
-						skill_entry.append(item[1])
-				villain_skills.append(skill_entry)
-		villain_url = '/dponiwiki/villains/' + villain
+			if villain_data != []:
+				skill_list = skills.readlines()
+				villain_skills_names = villain_data[1][16].split(', ')
+				for skill in villain_skills_names:
+					skill_entry = []
+					skill_entry.append(skill)
+					for item in skill_list:
+						item = item.rstrip('\n')
+						item = item.split('|')
+						if item[0] == skill:
+							skill_entry.append(item[1])
+					villain_skills.append(skill_entry)
+		if villain:
+			villain_url = '/dponiwiki/villains/' + villain
 	
 	if villain == "WarLeader":
 		villain_name = "War Leader"
