@@ -293,11 +293,9 @@ def register(request):
 
 def villain_picker(request, villain=None, level='0'):
 
-	skills = open(settings.ROLES_URL + 'Skills.data')
-	if skills:
-		skill_list = skills.readlines()
 	villain_data = []
 	villain_skills = []
+	villain_url = ''
 	if villain:
 		villain_stats = open(settings.ROLES_URL + villain + '.data')
 		if villain_stats:
@@ -307,7 +305,10 @@ def villain_picker(request, villain=None, level='0'):
 				line = line.rstrip('\n')
 				line = line.split('|')
 				villain_data.append(line)
+				
+		skills = open(settings.ROLES_URL + 'Skills.data')
 		if skills:
+			skill_list = skills.readlines()
 			villain_skills_names = villain_data[1][16].split(', ')
 			for skill in villain_skills_names:
 				skill_entry = []
@@ -318,10 +319,12 @@ def villain_picker(request, villain=None, level='0'):
 					if item[0] == skill:
 						skill_entry.append(item[1])
 				villain_skills.append(skill_entry)
-	
+		villain_url = '/dponiwiki/villains/' + villain
 	
 	if villain == "WarLeader":
-		villain = "War Leader"
+		villain_name = "War Leader"
+	else:
+		villain_name = villain
 		
 	try:
 		level = int(level)
@@ -329,11 +332,14 @@ def villain_picker(request, villain=None, level='0'):
 			level = '0'
 	except ValueError:
 		level = '0'
+		
 
-	template_params = {'villain_data': villain_data,
+	template_params = { 'villain': villain,
+						'villain_data': villain_data,
 						'villain_skills': villain_skills,
-						'villain_name': villain,
-						'villain_level': level}
+						'villain_name': villain_name,
+						'villain_level': level,
+						'villain_url': villain_url}
 
 	return render_to_response('templates/villain.html', template_params, 
 								context_instance=RequestContext(request))
