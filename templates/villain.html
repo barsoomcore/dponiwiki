@@ -7,8 +7,165 @@
 	{% else %}Villain Generator{% endif %}
 {% endblock %}
 {% block head %}
-<script type="text/javascript" src="{{ MEDIA_URL }}scripts/villain.js"></script>
 <script type="text/javascript">
+	function villain(selected_level, URL, name){
+		this.Level = selected_level[0];
+		this.BCB = selected_level[1];
+		this.SCB = selected_level[2];
+		this.Fortitude = parseInt(selected_level[3]) + parseInt(selected_level[12]);
+		this.Reflex = parseInt(selected_level[4]) + parseInt(selected_level[11]);
+		this.Will = parseInt(selected_level[5]) + parseInt(selected_level[14]);
+		this.DC = selected_level[7];
+		this.Damage = selected_level[8];
+		this.Base_Toughness = selected_level[9];
+		this.Strength = selected_level[10];
+		this.Dexterity = selected_level[11];
+		this.Constitution = selected_level[12];
+		this.Intelligence =selected_level[13];
+		this.Wisdom = selected_level[14];
+		this.Charisma = selected_level[15];
+		this.URL = URL + '/' + this.Level;
+		
+		this.MB = parseInt(this.BCB) + parseInt(this.Strength);
+		this.Primary_Attack = parseInt(this.BCB) + parseInt(this.Dexterity);
+		this.Full_Damage = parseInt(this.Damage) + parseInt(this.Strength);
+		this.Base_Defense = parseInt(this.BCB) + 10;
+		this.Dodge = this.Base_Defense + parseInt(this.Dexterity);
+		this.Parry = this.Base_Defense + parseInt(this.Strength);
+		
+		this.Secondary_Attack = parseInt(this.SCB) + parseInt(this.Dexterity);
+		this.Second_Defense = parseInt(this.SCB) + 10;
+		this.Second_Dodge = this.Second_Defense + parseInt(this.Dexterity);
+		this.Second_Parry = this.Second_Defense + parseInt(this.Strength);
+		
+		this.set_Reputation = function(){
+			var Reputation = ((parseInt(this.Level)/5)).toPrecision(1);
+			if (Reputation < 1) { Reputation = 0 };
+			if ('{{ villain_name }}' == 'War Leader'){
+				Reputation = parseInt(Reputation) + 3;
+			}
+			this.Reputation = Reputation;
+		};
+		this.set_Toughness = function(){
+			var Toughness = '';
+			if (this.Base_Toughness){
+				Toughness = parseInt(this.Base_Toughness) + parseInt(this.Constitution);
+			}
+			else Toughness = parseInt(this.Constitution);
+			
+			this.Toughness = Toughness;
+		};
+		
+		this.format_attributes = function(){
+			var Attributes = [this.Strength, this.Dexterity, this.Constitution, this.Intelligence, this.Wisdom, this.Charisma];
+			var Attribute_names = ['Strength', 'Dexterity', 'Constitution', 'Intelligence', 'Wisdom', 'Charisma'];
+		
+			for(var i = 0; i < Attributes.length; i++){
+				if ( Attributes[i].charAt(0) != '-'){
+					this[Attribute_names[i]] = '+' + Attributes[i];
+				}
+			}
+		};
+		
+		this.create_skills_list = function(skills){
+			var skill_list = new Array();
+			for (var i = 0; i < skills.length; i++) {
+				var key_ability = skills[i][1];
+				var this_skill = new Array();
+				this_skill[0] = skills[i][0];
+				this_skill[1] = 3 + parseInt(this.Level) + parseInt(this[key_ability]);
+				if ('{{ villain_name }}' == 'Artillery') {
+					var Level_Skills = ['Acrobatics', 'Climb', 'Jump', 'Swim'];
+					for (var j = 0; j <= Level_Skills.length; j++) {
+						if (this_skill[0] == Level_Skills[j]) {
+							this_skill[1] = this_skill[1] - 3;
+						}
+					}
+				}
+				if ('{{ villain_name }}' == 'War Leader') {
+					if (this_skill[0] == 'Notice') {
+						this_skill[1] = this_skill[1] - 3;
+					}
+				}
+				if (String(this_skill[1]).charAt(0) != '-')
+					this_skill[1] = '+' + this_skill[1];
+				skill_list.push(this_skill.join(':&nbsp;'));
+			}
+			this.Skills = skill_list.join('; ');
+		};
+		
+		this.create_abilities_list = function(villain_data){
+			var total_abilities = new Array();
+			var j = 0;
+			for (var i = 1; i <= this.Level; i++) {
+				if (villain_data[i][6] != ''){
+					total_abilities[j] = villain_data[i][6];
+					j++;
+				}
+			}	
+			this.Abilities = total_abilities.join(', ');
+		};
+		
+		// got this function from the good folks at Shopify
+		// http://forums.shopify.com/categories/2/posts/29259
+		this.set_Level = function() {
+			var n = this.Level;
+			var s=["th","st","nd","rd"],
+			   v=n%100;
+			this.Level = n+(s[(v-20)%10]||s[v]||s[0]);
+		};
+		
+		this.display = function(){
+			$(".StatBlock").show();
+			$(".Level").html(this.Level + ' Level ');
+			$(".BCB").html(this.BCB);
+			$(".Primary_Attack").html(this.Primary_Attack);
+			$(".Secondary_Attack").html(this.Secondary_Attack);
+			$(".Fort").html(this.Fortitude);
+			$(".Ref").html(this.Reflex);
+			$(".Will").html(this.Will);
+			if (this.Abilities != '') {$(".Abilities").html(this.Abilities);}
+				else $(".Abilites").html('None');
+			if (this.DC != '') {$(".DC").html(this.DC);}
+				else $(".DC").hide();
+			$(".Damage").html(this.Damage);
+			$(".Toughness").html(this.Toughness);
+			$(".Strength").html(this.Strength);
+			$(".Dexterity").html(this.Dexterity);
+			$(".Constitution").html(this.Constitution);
+			$(".Intelligence").html(this.Intelligence);
+			$(".Wisdom").html(this.Wisdom);
+			$(".Charisma").html(this.Charisma);
+			$(".MB").html(this.MB);
+			$(".Full_Damage").html(this.Full_Damage);
+			$(".FF").html(this.Base_Defense);
+			$(".Dodge").html(this.Dodge);
+			$(".Parry").html(this.Parry);
+			if (this.SCB) {
+				$(".Second_Defense").html(' (' + this.Second_Defense + ')');
+				$(".Second_Dodge").html(' (' + this.Second_Dodge + ')');
+				$(".Second_Parry").html(' (' + this.Second_Parry + ')');
+			}
+			$(".Skills").html(this.Skills);
+			$(".Reputation").html(this.Reputation);
+			$(".villain_link").attr('href',this.URL);
+			$(".villain_link").show();
+			$("title").html(this.Level + ' Level ' + name);
+		};
+	};
+	
+	function create_villain(select, villain_data, skills, URL, name){
+		var new_villain = new villain(villain_data[select], URL, name);
+		new_villain.format_attributes();
+		new_villain.create_abilities_list(villain_data);
+		new_villain.create_skills_list(skills);
+		new_villain.set_Toughness();
+		new_villain.set_Reputation();
+		new_villain.set_Level();
+		
+		return new_villain;
+	};
+
 	
 	$(document).ready(function(){
 		var villain_data = {{ villain_data|safe }};
