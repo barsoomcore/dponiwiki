@@ -1,20 +1,33 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.db.models import Q
-from django import forms
 from django.http import HttpResponseRedirect, HttpResponseNotAllowed, HttpResponseNotFound
-from django.contrib.auth.forms import UserCreationForm
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.contrib.auth.views import logout
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
-import datetime, urllib2
+import datetime
 from tagging.models import Tag, TaggedItem
 
 from dponisetting.dponiwiki.models import Island, IslandComponent, ChangeSet
 from dponisetting.dponiwiki.forms import UserCreationFormExtended
+
+
+def paginate(request, input_list, per_page=25):
+	try:
+		page = int(request.GET.get('page', '1'))
+	except ValueError:
+		page = 1
+	paginator = Paginator(input_list, per_page)
+	
+	try:
+		return_list = paginator.page(page)
+	except (EmptyPage, InvalidPage):
+		return_list = paginator.page(paginator.num_pages)
+	
+	return return_list
+
 
 def canonical(request, canonicity):
 	'''	Returns a list of islands matching the supplied canonicity '''
@@ -28,19 +41,14 @@ def canonical(request, canonicity):
 	
 	heading = 'Some islands to explore...'
 	
-	try:
-		page = int(request.GET.get('page', '1'))
-	except ValueError:
-		page = 1
+	islands = paginate(request, island_list)
 	
-	paginator = Paginator(island_list, 25)
-
-	try:
-		islands = paginator.page(page)
-	except (EmptyPage, InvalidPage):
-		islands = paginator.page(paginator.num_pages)
+	template_params = { 
+		'heading': heading, 
+		'islands': islands, 
+		'canonicity': canonicity 
+	}
 	
-	template_params = { 'heading': heading, 'islands': islands, 'canonicity': canonicity }
 	return render_to_response(
 		"templates/island_list.html", 
 		template_params, 
@@ -58,34 +66,19 @@ def search(request, type):
 		except KeyError:
 			return HttpResponseNotFound
 		
-		try:
-			page = int(request.GET.get('page', '1'))
-		except ValueError:
-			page = 1
-		
 		islands = ''
 		components = ''
 		
 		if class_type == Island:
 			island_list = class_type.objects.filter(Q(name__icontains=term) | Q(summary__icontains=term))
-			url = "templates/island_list.html"
-			paginator = Paginator(island_list, 25)
-		
-			try:
-				islands = paginator.page(page)
-			except (EmptyPage, InvalidPage):
-				islands = paginator.page(paginator.num_pages)
+			
+			islands = paginate(request, island_list)
 				
 		elif class_type == IslandComponent:
 			component_list = class_type.objects.filter(Q(name__contains=term) | Q(content__contains=term))
-			url = "templates/island_list.html"
 			type = "Island Component"
-			paginator = Paginator(component_list, 25)
-		
-			try:
-				components = paginator.page(page)
-			except (EmptyPage, InvalidPage):
-				components = paginator.page(paginator.num_pages)
+			
+			components = paginate(request, component_list)
 		
 		heading = "Search Results: All " + type + "s containing the term \"" + term + "\""
 		
@@ -96,7 +89,7 @@ def search(request, type):
 			'term': term 
 			}
 			
-	return render_to_response(url, template_params, context_instance=(RequestContext(request)))
+	return render_to_response("templates/island_list.html", template_params, context_instance=(RequestContext(request)))
 
 
 def by_user(request, user=None):
@@ -105,27 +98,13 @@ def by_user(request, user=None):
 		owner = request.GET['q']
 	elif user:
 		owner = user
-		
-	try:
-		page = int(request.GET.get('page', '1'))
-	except ValueError:
-		page = 1
-	
-	# this whole bit seems retarded to me but things keep barfing if I don't set
-	# the relevant bits to '' ahead of time.
 	
 	island_list = Island.objects.filter(owner__username__exact=owner)
 	component_list = IslandComponent.objects.filter(owner__username__exact=owner)
-	all_list = island_list
 	
-	island_paginator = Paginator(island_list, 15)
-	component_paginator = Paginator(component_list, 15)
-	try:
-		islands = island_paginator.page(page)
-		components = component_paginator.page(page)
-	except (EmptyPage, InvalidPage):
-		islands = island_paginator.page(island_paginator.num_pages)
-		components = component_paginator.page(component_paginator.num_pages)
+	islands = paginate(request, island_list, 15)
+	components = paginate(request, component_list, 15)
+	
 	island_header = ''
 	component_header = ''
 	conjunction = ''
@@ -165,17 +144,7 @@ def by_tags(request, url):
 			tag_list.append(tagged_item)
 	tagged_items = TaggedItem.objects.get_by_model(IslandComponent, tag_list)
 	
-	item_paginator = Paginator(tagged_items, 25)
-	
-	try:
-		page = int(request.GET.get('page', '1'))
-	except ValueError:
-		page = 1
-	
-	try:
-		components = item_paginator.page(page)
-	except (EmptyPage, InvalidPage):
-		components = item_paginator.page(item_paginator.num_pages)
+	components = paginate(request, tagged_items)
 	
 	template_params = {'components': components, 'tags': tag_list, }
 	
@@ -184,6 +153,7 @@ def by_tags(request, url):
 		template_params,
 		context_instance=(RequestContext(request))
 		)
+
 
 def item_history(request, slug, type):
 	''' Display changeset list for given item. '''
@@ -196,17 +166,8 @@ def item_history(request, slug, type):
 
 		item = get_object_or_404(class_type, slug=slug)
 		changes_list = item.changeset_set.all().order_by('-revision')
-		paginator = Paginator(changes_list, 25)
 		
-		try:
-			page = int(request.GET.get('page', '1'))
-		except ValueError:
-			page = 1
-		
-		try:
-			changes = paginator.page(page)
-		except (EmptyPage, InvalidPage):
-			changes = paginator.page(paginator.num_pages)
+		changes = paginate(request, changes_list)
 		
 		template_params = {'item': item,
                            'changes': changes,
@@ -218,6 +179,7 @@ def item_history(request, slug, type):
                                   )
 
 	return HttpResponseNotAllowed(['GET'])
+
 
 @login_required
 def revert_to_revision(request, slug, type):
@@ -249,7 +211,8 @@ def view_changeset(request, type, slug, revision, *args, **kw):
 	if request.method == "GET":
     
 		# no idea why this is being done this way
-		# don't really know what's happening so leave it until I have time to review
+		# don't really know what's happening so leave 
+		# it until I have time to review
 
 		component_args = {'component__slug': slug}
 
@@ -290,6 +253,7 @@ def register(request):
 		{ 'form' : form }, 
 		context_instance=RequestContext(request)
 		)
+
 
 def villain_picker(request, villain=None, level='0'):
 
