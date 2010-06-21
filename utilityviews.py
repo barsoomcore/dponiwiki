@@ -87,9 +87,13 @@ def search(request, type):
 			'islands': islands, 
 			'components': components, 
 			'term': term 
-			}
+		}
 			
-	return render_to_response("templates/island_list.html", template_params, context_instance=(RequestContext(request)))
+	return render_to_response(
+		"templates/island_list.html", 
+		template_params, 
+		context_instance=(RequestContext(request))
+	)
 
 
 def by_user(request, user=None):
@@ -125,13 +129,13 @@ def by_user(request, user=None):
 		'islands': islands, 
 		'components': components, 
 		'term': owner
-		}
+	}
 	
 	return render_to_response(
 		'templates/island_list.html', 
 		template_params, 
 		context_instance=(RequestContext(request))
-		)
+	)
 
 
 def by_tags(request, url):
@@ -152,7 +156,7 @@ def by_tags(request, url):
 		'templates/islandcomponent_list.html', 
 		template_params,
 		context_instance=(RequestContext(request))
-		)
+	)
 
 
 def item_history(request, slug, type):
@@ -171,12 +175,13 @@ def item_history(request, slug, type):
 		
 		template_params = {'item': item,
                            'changes': changes,
-                           	'type': type}
+                           	'type': type
+        }
 
 		return render_to_response('templates/history.html',
                                   template_params, 
                                   context_instance=(RequestContext(request))
-                                  )
+        )
 
 	return HttpResponseNotAllowed(['GET'])
 
@@ -227,11 +232,13 @@ def view_changeset(request, type, slug, revision, *args, **kw):
                            'component_name': component.name,
                            'changeset': changeset,
                            'slug': slug,
-                           'type': type}
+                           'type': type
+        }
 		
 		return render_to_response('templates/changeset.html',
                                   template_params,
-                                  context_instance=RequestContext(request))
+                                  context_instance=RequestContext(request)
+        )
 	
 	return HttpResponseNotAllowed(['GET'])
     
@@ -252,7 +259,7 @@ def register(request):
 		'templates/registration/registration_form.html', 
 		{ 'form' : form }, 
 		context_instance=RequestContext(request)
-		)
+	)
 
 
 def villain_picker(request, villain=None, level='0'):
@@ -313,7 +320,11 @@ def villain_picker(request, villain=None, level='0'):
 						'villain_skills': villain_skills,
 						'villain_name': villain_name,
 						'villain_level': level,
-						'villain_url': villain_url}
+						'villain_url': villain_url
+	}
 
-	return render_to_response('templates/villain.html', template_params, 
-								context_instance=RequestContext(request))
+	return render_to_response(
+		'templates/villain.html', 
+		template_params, 
+		context_instance=RequestContext(request)
+	)
