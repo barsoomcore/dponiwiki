@@ -80,8 +80,8 @@ urlpatterns += patterns('dponisetting.dponiwiki.islandviews',
 
 # these urls are ONLY necessary if you're using the villain_picker
 
-urlpatterns += patterns('dponisetting.dponiwiki.villainviews.villain_picker',
-    url(r'^villains/$'),
-    url(r'^villains/(?P<villain>[-\w]+)/$' name='villain_picker'),
-    url(r'^villains/(?P<villain>[-\w]+)/(?P<level>[-\w]+)$',  name='villain_picker'),
+urlpatterns += patterns('dponisetting.dponiwiki.villainviews',
+    url(r'^villains/$', 'villain_picker'),
+    url(r'^villains/(?P<villain>[-\w]+)/$', 'villain_picker', name='villain_picker'),
+    url(r'^villains/(?P<villain>[-\w]+)/(?P<level>[-\w]+)$',  'villain_picker', name='villain_picker'),
 )
