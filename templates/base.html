@@ -32,7 +32,19 @@
 			<ul>
 				<li><a href="/Home.php">DPoNI Home</a></li>
 				<li><a href="/Basics.php">The Rules</a></li>
-				<li><strong><a href="{% url page-detail 'home' %}">The Setting</a></strong></li>
+				<li
+				{% ifequal page.slug 'running-dino-pirates' %}
+				class="selected" 
+				{% else %}{% endifequal %}
+				{% if villain_name %} class="selected" {% endif %}
+				><a href="{% url page-detail 'running-dino-pirates' %}">The Tools</a></li>
+				<li 
+				{% ifequal page.slug 'running-dino-pirates' %}{% else %}
+				{% if not villain_name %}
+				class="selected" 
+				{% endif %}{% endifequal %}
+				>
+				<a href="{% url page-detail 'home' %}">The Setting</a></li>
 				<li>&nbsp;</li>
 				<li><a href="{% url island-canonical 'True' %}">Browse the Islands!</a></li>
 				<li>&nbsp;</li>
