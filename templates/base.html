@@ -36,11 +36,11 @@
 				{% ifequal page.slug 'running-dino-pirates' %}
 				class="selected" 
 				{% else %}{% endifequal %}
-				{% if villain_name %} class="selected" {% endif %}
+				{% if villain_role %} class="selected" {% endif %}
 				><a href="{% url page-detail 'running-dino-pirates' %}">The Tools</a></li>
 				<li 
 				{% ifequal page.slug 'running-dino-pirates' %}{% else %}
-				{% if not villain_name %}
+				{% if not villain_role %}
 				class="selected" 
 				{% endif %}{% endifequal %}
 				>
