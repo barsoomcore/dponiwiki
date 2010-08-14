@@ -160,7 +160,12 @@ class WikiComponent(models.Model):
 
 class Island(WikiComponent):
 	summary = models.TextField(blank=True)
-	components = models.ManyToManyField('IslandComponent', related_name='host_islands',blank=True, through='ComponentOrder')
+	components = models.ManyToManyField(
+		'IslandComponent', 
+		related_name='host_islands',
+		blank=True, 
+		through='ComponentOrder'
+	)
 	iscanonical = models.BooleanField(default=False, blank=True)
 	
 	@permalink
@@ -240,7 +245,15 @@ class ChangeSet(models.Model):
 		if not source_item:
 			source_item = IslandComponent.objects.filter(slug=self.component.slug)
 		type = source_item[0].__class__.__name__
-		return ('wiki_changeset', (), {'type': type, 'slug': self.component.slug, 'revision': self.revision})
+		return (
+			'wiki_changeset', 
+			(), 
+			{
+				'type': type, 
+				'slug': self.component.slug, 
+				'revision': self.revision
+			}
+		)
 
 
 	def is_anonymous_change(self):
