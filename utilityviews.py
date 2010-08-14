@@ -57,6 +57,11 @@ def canonical(request, canonicity):
 	
 def search(request, type):
 	''' Returns a list of either islands or components based on search string '''
+	heading = 'Nothing found to match that.'
+	islands = ''
+	components = ''
+	term = ''
+	
 	if 'q' in request.GET:
 		term = request.GET['q']
 		
@@ -65,28 +70,28 @@ def search(request, type):
 		except KeyError:
 			return HttpResponseNotFound
 		
-		islands = ''
-		components = ''
-		
 		if class_type == Island:
 			island_list = class_type.objects.filter(Q(name__icontains=term) | Q(summary__icontains=term))
 			
 			islands = paginate(request, island_list)
-				
+			
+			if islands.object_list:
+				heading = "Search Results: All Islands containing the term \"" + term + "\""
+							
 		elif class_type == IslandComponent:
 			component_list = class_type.objects.filter(Q(name__contains=term) | Q(content__contains=term))
-			type = "Island Component"
 			
 			components = paginate(request, component_list)
-		
-		heading = "Search Results: All " + type + "s containing the term \"" + term + "\""
-		
-		template_params = { 
-			'heading': heading, 
-			'islands': islands, 
-			'components': components, 
-			'term': term 
-		}
+			
+			if components.object_list:
+				heading = "Search Results: All Island Components containing the term \"" + term + "\""
+			
+	template_params = { 
+		'heading': heading, 
+		'islands': islands, 
+		'components': components, 
+		'term': term 
+	}
 			
 	return render_to_response(
 		"templates/island_list.html", 
@@ -97,6 +102,7 @@ def search(request, type):
 
 def by_user(request, user=None):
 	''' Returns both islands and components owned by supplied user. '''
+	
 	if 'q' in request.GET:
 		owner = request.GET['q']
 	elif user:
