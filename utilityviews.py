@@ -64,7 +64,8 @@ def search(request, type):
 	
 	if 'q' in request.GET:
 		term = request.GET['q']
-		
+	
+	if term:		
 		try:
 			class_type = globals()[type]
 		except KeyError:
@@ -100,34 +101,36 @@ def search(request, type):
 	)
 
 
-def by_user(request, user=None):
+def by_owner(request, owner=None):
 	''' Returns both islands and components owned by supplied user. '''
 	
+	heading = 'Nothing found to match that'
+	islands = ''
+	components = ''
 	if 'q' in request.GET:
 		owner = request.GET['q']
-	elif user:
-		owner = user
 	
-	island_list = Island.objects.filter(owner__username__exact=owner)
-	component_list = IslandComponent.objects.filter(owner__username__exact=owner)
-	
-	islands = paginate(request, island_list, 15)
-	components = paginate(request, component_list, 15)
-	
-	island_header = ''
-	component_header = ''
-	conjunction = ''
-	if island_list:
-		island_header = "Islands"
-	if component_list:
-		component_header = "Components"
-	if component_header and island_header:
-		conjunction = " and "
-	
-	if not component_header and not island_header:
-		heading = owner + " hasn't created any islands or components yet."
-	else:
-		heading = "All " + island_header + conjunction + component_header + " Owned By \"" + owner + "\""
+	if owner:
+		island_list = Island.objects.filter(owner__username__exact=owner)
+		component_list = IslandComponent.objects.filter(owner__username__exact=owner)
+		
+		islands = paginate(request, island_list, 15)
+		components = paginate(request, component_list, 15)
+		
+		island_header = ''
+		component_header = ''
+		conjunction = ''
+		if island_list:
+			island_header = "Islands"
+		if component_list:
+			component_header = "Components"
+		if component_header and island_header:
+			conjunction = " and "
+		
+		if not component_header and not island_header:
+			heading = owner + " hasn't created any islands or components yet."
+		else:
+			heading = "All " + island_header + conjunction + component_header + " Owned By \"" + owner + "\""
 	
 	template_params = {
 		'heading': heading, 
@@ -206,12 +209,11 @@ def revert_to_revision(request, slug, type):
 		revision = int(request.POST['revision'])
 
 		item.revert_to(revision, request.user)
-        
-        # obviously this is a terrible solution
-        
-		url = '/dponiwiki/' + type + '/history/' + slug
-        
-		return HttpResponseRedirect(url)
+		
+		return HttpResponseRedirect(reverse(
+			'item_history', 
+			kwargs={ 'type': type, 'slug': slug }
+		))
 
 	return HttpResponseNotAllowed(['GET'])
 
@@ -219,10 +221,6 @@ def revert_to_revision(request, slug, type):
 def view_changeset(request, type, slug, revision, *args, **kw):
 	''' Returns the diff-ed version of the item. '''
 	if request.method == "GET":
-    
-		# no idea why this is being done this way
-		# don't really know what's happening so leave 
-		# it until I have time to review
 
 		component_args = {'component__slug': slug}
 

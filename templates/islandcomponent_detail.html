@@ -21,7 +21,7 @@
 			<a href="#disqus_block">
 				<img src="{{ MEDIA_URL }}images/Comments.png" title="View the comments on this component" />
 			</a></p>
-			<p>Owner: <a href="{% url user component.owner.username %}">{{component.owner}}</a></p>
+			<p>Owner: <a href="{% url owner component.owner.username %}">{{component.owner}}</a></p>
 	</div>
 	<h1>{{ component.name }}</h1>
 	<p class="updated">Updated: {{ component.modified|date:"N d, P" }}</p>
