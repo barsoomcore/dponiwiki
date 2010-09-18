@@ -6,7 +6,13 @@
 {% endblock %}
 
 {% block content %}
-	<h1> <a href="{% url island-detail slug %}"> {{ component_name }} </a> </h1>
+	<h1> {% ifequal type 'IslandComponent' %}
+			<a href="{% url component-detail component.slug %}">
+		 {% endifequal %}
+		 {% ifequal type 'Island' %}
+			<a href="{% url island-detail component.slug %}">
+		 {% endifequal %}
+		 {{ component.name }}</a> </h1>
     {% if changeset.old_title %}
         <h2> {{ changeset.old_title }} </h2>
     {% endif %}

@@ -232,9 +232,7 @@ def view_changeset(request, type, slug, revision, *args, **kw):
 		component = changeset.component
 
 		template_params = {'component': component,
-                           'component_name': component.name,
                            'changeset': changeset,
-                           'slug': slug,
                            'type': type
         }
 		
