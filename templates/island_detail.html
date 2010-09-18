@@ -26,9 +26,9 @@
 	<h1>{{ island.name }}</h1>
 	<p class="updated">Updated: {{ island.modified|date:"N d, P" }}</p>
 	{% if island.iscanonical %}
-		<p id="canonicitynote">This island is a canonical part of the DINO-PIRATES OF NINJA ISLAND setting. You can still edit it, but aware that the admins may revert your changes if they don't align with the overall vision of the setting.</p>
+		<p id="canonicitynote">This island is <a href="{% url page-detail 'what-does-canonical-mean' %}">a canonical part of the DINO-PIRATES OF NINJA ISLAND setting</a>. You can still edit it, but aware that the admins may revert your changes if they don't align with the overall vision of the setting.</p>
 	{% else %}
-		<p id="canonicitynote">NOTE: This island is not a "canonical" part of the DINO-PIRATES OF NINJA ISLAND setting. That means it doesn't show up on the main page of the setting. But it DOES show up in searches and in the "Assigned-To" lists for components. If you think this island SHOULD be canonical, please contact the setting administrators and maybe they'll agree with you.<p> 
+		<p id="canonicitynote">NOTE: This island is NOT <a href="{% url page-detail 'what-does-canonical-mean' %}">a canonical part of the DINO-PIRATES OF NINJA ISLAND setting</a>. That means it doesn't show up on the main page of the setting. But it DOES show up in searches and in the "Assigned-To" lists for components. If you think this island SHOULD be canonical, please contact the setting administrators and maybe they'll agree with you.<p> 
 	{% endif %}
 	<div id="island-body">
 		{% if island.summary %}

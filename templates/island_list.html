@@ -11,7 +11,7 @@
 		<p id="canonicitynote">These islands are <a href="{% url page-detail 'what-does-canonical-mean' %}">a canonical part of the DINO-PIRATES OF NINJA ISLAND setting</a>. While you can still edit them, keep in mind that the admins may revert your changes if they don't align with the overall setting vision. Want to see some <a href="{% url island-canonical 'False' %}">non-canonical islands</a>?</p>
 	{% endifequal %}
 	{% ifequal canonicity "Non-Canonical" %}
-		<p id="canonicitynote">These islands are NOT a canonical part of the DINO-PIRATES OF NINJA ISLAND setting.  That doesn't mean you can't use them, but they won't show up in some parts of the site.  If you think this island SHOULD be canonical, please contact the setting administrators and maybe they'll agree with you. Want to see some <a href="{% url island-canonical 'True' %}">canonical islands</a>?</p>
+		<p id="canonicitynote">These islands are NOT <a href="{% url page-detail 'what-does-canonical-mean' %}">a canonical part of the DINO-PIRATES OF NINJA ISLAND setting</a>.  That doesn't mean you can't use them, but they won't show up in some parts of the site.  If you think this island SHOULD be canonical, please contact the setting administrators and maybe they'll agree with you. Want to see some <a href="{% url island-canonical 'True' %}">canonical islands</a>?</p>
 	{% endifequal %}
 	
 	{% if islands %}
