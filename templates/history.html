@@ -19,7 +19,7 @@
 					{{ change.modified|date:"M d, Y" }}</a>
 				</td>
 				<td>
-					{{ change.owner }}
+					<a href="{% url owner change.owner %}">{{ change.owner }}</a>
 				</td>
 				<td>
 					{% if change.comment %}<i>'{{ change.comment}}'</i> {% endif %}
