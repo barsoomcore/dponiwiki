@@ -39,7 +39,7 @@
 		{% ifequal "natives" page.slug %}
 			<h4>Native sights and personalities:</h4>
 			<ul id="tagged-component-list">
-			{% tagged_objects 'ninja' in dponiwiki.IslandComponent as tagged_components %}
+			{% tagged_objects 'native' in dponiwiki.IslandComponent as tagged_components %}
 			{% for component in tagged_components %}
 				<li class="{% cycle 'tbeven' 'tbodd' %}"><a href="{{ component.get_absolute_url }}">{{ component.name }}</a></li>
 			{% endfor %}
