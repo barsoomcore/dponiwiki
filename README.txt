@@ -29,6 +29,11 @@ ROOT_URLCONF = 'dponisetting.urls'
 
 LOGIN_URL = '/dponiwiki/accounts/login/'
 
+COMPONENT_TAGS = ( 
+	# a list of strings with which to build TOC's in the island summaries
+	# if blank, no TOC will show up (see islandviews.displayisland)
+)
+
 TEMPLATE_DIRS = (
 	# Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
 	# Always use forward slashes, even on Windows.

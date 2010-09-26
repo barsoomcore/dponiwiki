@@ -5,9 +5,11 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from tagging.models import Tag
 
 from forms import IslandForm
 from models import Island, IslandComponent, ComponentOrder
+from dponisetting import settings
 
 def display_island(request, slug, *args, **kwargs):
 	# this wrapper gets the ordered list of components for the island and passes it 
@@ -17,7 +19,11 @@ def display_island(request, slug, *args, **kwargs):
 	if island.components:
 		components = island.components.all()
 		ordered_components = []
+		tags = []
 		for component in components:
+			component_tags = Tag.objects.get_for_object(component)
+			for tag in component_tags:
+			 	tags.append(tag.name)
 			order = ComponentOrder.objects.filter(island__exact=island, component__exact=component)[0]
 			setattr(component, 'order', order.order)
 			ordered_components.append(component)
@@ -28,7 +34,16 @@ def display_island(request, slug, *args, **kwargs):
 			for component in ordered_components:
 				reorder_list[component.order] = component.name[0:12]
 		
-	extra_context={'components': ordered_components, 'reorder_list': sorted(reorder_list.items())}
+		unique_tags = set(tags)
+		valid_tags = set(settings.COMPONENT_TAGS)
+		unique_tags = unique_tags & valid_tags
+		
+	extra_context={
+		'components': ordered_components, 
+		'reorder_list': sorted(reorder_list.items()),
+		'component_tags': unique_tags
+	}
+	
 	queryset = Island.objects.all()
 	
 	return object_detail(request, 

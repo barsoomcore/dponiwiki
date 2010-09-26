@@ -35,6 +35,24 @@
 		<div id="island-summary">
 			<h4>Summary</h4>
 			{{ island.summary|dinostyle }}
+			{% if components %}
+			{% if component_tags %}
+				<h5>Components in this Island</h5>
+				{% for tag_type in component_tags %}
+					<h6>{{ tag_type|capfirst }}</h6>
+					<ul class="tagged_toc">
+					{% for component in components %}
+					{% tags_for_object component as tags %}
+						{% for tag in tags %}
+							{% ifequal tag.name tag_type %}
+								<li><a href="{% url component-detail component.slug %}">{{ component.name }}</a></li>
+							{% endifequal %}
+						{% endfor %}
+					{% endfor %}
+					</ul>
+				{% endfor %}
+			{% endif %}
+			{% endif %}
 		</div>
 		{% endif %}
 		{{ island.content|dinostyle }}
