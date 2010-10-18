@@ -2,7 +2,27 @@
 {% block title %}Whoops!{% endblock %}
 {% block content %}
 
-<h1>Not Found</h1>
-<p>Your request for {{ request_path }} did not match anything we know about. Sorry!</p>
+<h1>This Is Not The Page You're Looking For</h1>
+<img src="{{ MEDIA_URL }}images/CaptainSungThumb.png" style="float:left"><p>We looked everywhere. Seriously.</p>
+
+<p>We searched the ruins of <a href="{% url component-detail 'the-city-of-refuge' %}">the City of Refuge</a>.</p>
+
+<p>We went through the great underground markets of <a href="{% url island-detail 'vargas' %}">Vargas</a>.</p>
+
+<p>We slipped into the headquarters of <a href="{% url component-detail 'gilded-fang-cult' %}">the Gilded Fang Cult</a>.</p>
+
+<p>The loathsome taverns of <a href="{% url island-detail 'desperation-reef' %}">Desperation Reef</a>? Yep, went through those.</p>
+
+<p>It wasn't amongst the tidal pools and terrestial eels of <a href="{% url island-detail 'lohtaid' %}">Lohtaid</a>.</p>
+
+<p>We sent a party to investigate <a href="{% url island-detail 'the-island-of-the-slave-queen' %}">the island of the SLAVE QUEEN</a>, but they never returned.</p>
+
+<p>A crew of specially-trained monkeys made it through the hellish temples and sacrifical altars of <a href="{% url island-detail 'impsala' %}">Impsala</a>.</p>
+
+<p><a href="{% url component-detail 'captain-sung' %}">Captain Sung</a> let us search the secret compartments in his notorious smuggling ship <em>The Horizon Star</em>.</p>
+
+<p>And nobody will believe us, but honestly, we even found ways to get into the training complexes of <a href="{% url island-detail 'ninja-island' %}">Ninja Island</a>. It wasn't easy, believe us, but you asked, so that's what we did.</p>
+
+<p>But whatever it is you're looking for, it's not here. Your request for <span style='font-family: Courier;'>{{ request_path }}</span> did not match anything we know about. Sorry!</p>
 
 {% endblock %}
