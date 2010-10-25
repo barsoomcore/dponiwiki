@@ -2,25 +2,11 @@ import re
 from django import template
 from django.db.models import Q
 from django.template.defaultfilters import slugify
-from markup import textile
+import textile
 
 from dponisetting.dponiwiki.models import Island, IslandComponent
 
 register = template.Library()
-
-@register.filter
-def isabsent(item, list1):
-	if item not in list1:
-		return True
-	else:
-		return False
-
-@register.filter
-def matches(list1, list2):
-	if set(list1) == set(list2):
-		return True
-	else:
-		return False
 
 def custom_link(match):
 	'''This is called in dinostyle and finds Islands or Components
@@ -52,4 +38,4 @@ def dinostyle(content):
 	pattern = re.compile(r'\[\[(?P<name>[^\]\]]*)\]\]')
 	linked_content = pattern.sub(custom_link, content)
 	
-	return textile(linked_content)
+	return textile.textile(linked_content)

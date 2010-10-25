@@ -1,6 +1,5 @@
 {% extends "templates/base.html" %}
 {% load tagging_tags %}
-{% load taggingextras %}
 {% block title %}Components...{% endblock %}
 {% block content %}
 	{% if heading %}
@@ -16,10 +15,10 @@
 	{% for component in components.object_list %}
 		<li class="{% cycle 'tbeven' 'tbodd'%}"><a href=" {{ component.get_absolute_url }}">{{ component.name }}</a>
 		{% tags_for_object component as component_tags %}
-			{% if not component_tags|matches:tags %}
+			{% if component_tags not in tags %}
 				<span class="drill-down"> (other tags: 
 				{% for component_tag in component_tags %}
-					{% if component_tag|isabsent:tags %}
+					{% if component_tag not in tags %}
 						<a href="/dponiwiki/components/tag/{{tags|join:'/'}}/{{component_tag}}/ ">
 							{{component_tag}}</a>
 					{% endif %}

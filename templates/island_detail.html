@@ -34,7 +34,7 @@
 		{% if island.summary %}
 		<div id="island-summary">
 			<h4>Summary</h4>
-			{{ island.summary|dinostyle }}
+			{{ island.summary|dinostyle|safe }}
 			{% if components %}
 			{% if component_tags %}
 				<h5>Components in this Island</h5>
@@ -55,7 +55,7 @@
 			{% endif %}
 		</div>
 		{% endif %}
-		{{ island.content|dinostyle }}
+		{{ island.content|dinostyle|safe }}
 	</div>
 	<div id="island-components">
 		{% for component in components %}
@@ -67,7 +67,7 @@
 			<h3 class="component-title"><a href="{% url component-detail component.slug %}">{{ component.name }}</a></h3>
 			<p class="component-owner">Owner: <a href="{% url owner component.owner.username %}">{{ component.owner }}</a></p>
 			<div class="islandcomponent-body">
-				{{ component.content|dinostyle }}
+				{{ component.content|dinostyle|safe }}
 			</div>
 			<div class="component-footer">
 				<div class="functions">

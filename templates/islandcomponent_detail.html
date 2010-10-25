@@ -26,7 +26,7 @@
 	<h1>{{ component.name }}</h1>
 	<p class="updated">Updated: {{ component.modified|date:"N d, P" }}</p>
 	<div class="islandcomponent-body">
-		{{ component.content|dinostyle }}		
+		{{ component.content|dinostyle|safe }}		
 	</div>
 	<div class="component-footer">
 		<p class="component-tags">Tags: 
