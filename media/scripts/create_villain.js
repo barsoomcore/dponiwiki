@@ -1,13 +1,16 @@
-function create_villain(select, role_name, role_slug, statblock_div_id){
+function create_villain(select, role_name, role_slug){
 	// this gets the JSON of the villain data (including skills) and then generates
 	// lists of stuff like abilities and skills that aren't exactly level-based
 	// and then creates and displays a DPoNIStatblock object
 	
-	$.getJSON('../../villains/villain_data_json/' + role_slug + '/', function(villain_json_data){
+	//var level;
+	
+	$.getJSON('../../villains/villain_data_json/' + role_slug + '/', return_JSON);
 		
+	function return_JSON(villain_json_data){
 		for (var i = 0; i < villain_json_data[0].length; i++){
 			if (villain_json_data[0][i].fields.level == select){
-				var selected_level = villain_json_data[0][i].fields;
+				level = villain_json_data[0][i].fields;
 				
 				// create a list of all abilities up to and including the 
 				// selected level
@@ -24,7 +27,7 @@ function create_villain(select, role_name, role_slug, statblock_div_id){
 				abilities_list = total_abilities.join(', ').replace(/ ,/g, '');
 				abilities_list = abilities_list.replace(/^, /, '');
 				abilities_list = abilities_list.replace(/,\s*$/, '');
-				selected_level.abilities = abilities_list;
+				level.abilities = abilities_list;
 				
 				// create the skills list -- setting the value for each using level
 				// and key ability, and applying a smaller value for a couple of skills
@@ -54,7 +57,7 @@ function create_villain(select, role_name, role_slug, statblock_div_id){
 					}
 					skill_list.push(this_skill.join(':&nbsp;'));
 				}
-				selected_level.skills = skill_list.join('; ');
+				level.skills = skill_list.join('; ');
 				
 				// set the Reputation
 				
@@ -63,14 +66,36 @@ function create_villain(select, role_name, role_slug, statblock_div_id){
 				if (role_name == 'WarLeader'){
 					Reputation = Reputation + 3;
 				}
-				selected_level.reputation = Reputation;
+				level.reputation = Reputation;
 				
-				// create the new DPoNIStatblock object and display
+				// now do all the simple calculations
+								
+				level.fortitude = level.fortitude + level.constitution;
+				level.reflex = level.reflex + level.dexterity;
+				level.will = level.will + level.wisdom;
+				level.toughness = level.toughness + level.constitution;
+
+				level.primary_attack = level.base_combat_bonus + level.dexterity;
+				level.mb = level.base_combat_bonus + level.strength;
+				level.full_damage = level.damage + level.strength;
+				level.base_defense = level.base_combat_bonus + 10;
+				level.dodge = level.base_defense + level.dexterity;
+				level.parry = level.base_defense + level.strength;
 				
-				new_villain = new DPoNIStatblock(selected_level, role_name, statblock_div_id);
+				level.secondary_attack = level.secondary_combat_bonus + level.dexterity;
+				level.secondary_defense = level.secondary_combat_bonus + 10;
+				level.secondary_dodge = level.secondary_defense + level.dexterity;
+				level.secondary_parry = level.secondary_defense + level.strength;
+				/*
+				return level;
+				*/
+				
+				new_villain = new DPoNIStatblock(level, role_name, "#StatBlock");
 				new_villain.display();
 				$("title").html(new_villain.make_ordinal(new_villain.Level) + ' Level ' + role_name);
+				
+				
 			}
 		}
-	});
+	};
 };
