@@ -1,7 +1,9 @@
 function DPoNIStatblock(level, role_name, statblock_div_id, npc_name){
-	if (npc_name) { this.Name = npc_name; }
-	else { this.Name = '' }
-		
+	if (npc_name) { this.name = npc_name; }
+	else { this.name = '' }
+	this.role_name = role_name;
+	this.level = level;
+	
 	// got this function from the good folks at Shopify
 	// http://forums.shopify.com/categories/2/posts/29259
 	this.make_ordinal = function(source) {
@@ -26,8 +28,8 @@ function DPoNIStatblock(level, role_name, statblock_div_id, npc_name){
 	
 	this.display = function(){
 		this.format_numbers();
-		$(statblock_div_id).html('<table id="statblocktable"><tr><td>Name:</td><td colspan="4">' + this.Name + '</td></tr></table>');
-		$("#statblocktable tr:last").append('<td colspan="4"><strong>(' + this.make_ordinal(level.level) + ' Level ' + role_name + ')</td>');
+		$(statblock_div_id).html('<table id="statblocktable"><tr><td>Name:</td><td colspan="4">' + this.name + '</td></tr></table>');
+		$("#statblocktable tr:last").append('<td colspan="4"><strong>(' + this.make_ordinal(level.level) + ' Level ' + this.role_name + ')</td>');
 		$("#statblocktable tr:last").append('<td colspan="2" class="stat_name">Reputation:</td><td class="statvalue">' + level.reputation + '</td></tr>');
 		$("#statblocktable").append('<tr class="titlebar"><td colspan="12">Abilities</td></tr><tr>' + ability_cell_open + 'STR' + ability_cell_close + level.strength + '</td>');
 		$("#statblocktable tr:last").append(ability_cell_open + 'DEX' + ability_cell_close + level.dexterity + '</td>');
