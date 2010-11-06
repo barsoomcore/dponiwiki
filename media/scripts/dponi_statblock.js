@@ -15,9 +15,11 @@ function DPoNIStatblock(level, role_name, statblock_div_id, npc_name){
 	
 	this.format_numbers = function() {
 		var numbers = new Array();
-		numbers = ['bcb', 'primary_attack', 'secondary_attack', 'fortitude', 'reflex', 'will', 'damage', 'toughness', 'strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma', 'mb', 'full_damage', 'reputation'];
+		var characters = new Array();
+		numbers = ['bcb', 'primary_attack', 'secondary_attack', 'secondary_damage', 'fortitude', 'reflex', 'will', 'damage', 'toughness', 'strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma', 'mb', 'full_damage', 'reputation'];
+		characters = ['-', '<'];
 		for (var i = 0; i <= numbers.length; i++){
-			if (String(level[numbers[i]]).charAt(0) != '-'){
+			if (characters.indexOf(String(level[numbers[i]]).charAt(0)) == -1){
 				level[numbers[i]] = '+' + level[numbers[i]];
 			}
 		}
@@ -25,12 +27,17 @@ function DPoNIStatblock(level, role_name, statblock_div_id, npc_name){
 	
 	var ability_cell_open = '<td width="8%" class="stat_name" style="text-align:center">';
 	var ability_cell_close = '</td><td width="9%" class="statvalue">';
-	
+		
 	this.display = function(){
 		this.format_numbers();
 		$(statblock_div_id).html('<table id="statblocktable"><tr><td>Name:</td><td colspan="4">' + this.name + '</td></tr></table>');
-		$("#statblocktable tr:last").append('<td colspan="4"><strong>(' + this.make_ordinal(level.level) + ' Level ' + this.role_name + ')</td>');
-		$("#statblocktable tr:last").append('<td colspan="2" class="stat_name">Reputation:</td><td class="statvalue">' + level.reputation + '</td></tr>');
+		if (level.reputation != "--") {
+			$("#statblocktable tr:last").append('<td colspan="4"><strong>(' + this.make_ordinal(level.level) + ' Level ' + this.role_name + ')</td>');
+			$("#statblocktable tr:last").append('<td colspan="2" class="stat_name">Reputation:</td><td class="statvalue">' + level.reputation + '</td></tr>');
+		}
+		else {
+			$("#statblocktable tr:last").append('<td colspan="7"><strong>(' + this.make_ordinal(level.level) + ' Level ' + this.role_name + ')</td></tr>');
+		}
 		$("#statblocktable").append('<tr class="titlebar"><td colspan="12">Abilities</td></tr><tr>' + ability_cell_open + 'STR' + ability_cell_close + level.strength + '</td>');
 		$("#statblocktable tr:last").append(ability_cell_open + 'DEX' + ability_cell_close + level.dexterity + '</td>');
 		$("#statblocktable tr:last").append(ability_cell_open + 'CON' + ability_cell_close + level.constitution + '</td>');
@@ -52,8 +59,9 @@ function DPoNIStatblock(level, role_name, statblock_div_id, npc_name){
 		$("#statblocktable tr:last").append('<td class="stat_name" colspan="2">Damage:</td><td colspan="2" class="statvalue">' + level.full_damage + '</td></tr>');
 		$("#statblocktable").append('<tr><td class="stat_name">Maneuver:</td><td colspan="2" class="statvalue">' + level.mb + '</td>');
 		$("#statblocktable tr:last").append('<td colspan="9" id="Secondary_Attack"></td></tr>');
-		if (role_name == 'Artillery' || role_name == 'Skirmisher') {
-			$("#Secondary_Attack").replaceWith('<td colspan="3" class="stat_name">Secondary Attack:</td><td colspan="2" class="statvalue">' + level.secondary_attack + '</td>	<td class="stat_name" colspan="2">Damage:</td><td colspan="2" class="statvalue">' + level.damage + '</td>');
+		if (level.secondary_attack != "+undefined") {
+			if (level.secondary_damage == "+undefined") { level.secondary_damage = level.full_damage; }
+			$("#Secondary_Attack").replaceWith('<td colspan="3" class="stat_name">Secondary Attack:</td><td colspan="2" class="statvalue">' + level.secondary_attack + '</td>	<td class="stat_name" colspan="2">Damage:</td><td colspan="2" class="statvalue">' + level.secondary_damage + '</td>');
 		}
 		$("#statblocktable").append('<tr><td colspan="2" class="stat_name" style="font-style:italic; text-align:center">Defense</td><td class="stat_name" colspan="2">Flat-Footed:</td><td colspan="2" class="statvalue">' + level.base_defense + '<span class="Second_Defense"></span></td>');
 		$("#statblocktable tr:last").append('<td class="stat_name">Dodge:</td><td colspan="2" class="statvalue">' + level.dodge + '<span class="Second_Dodge"></span></td>');
