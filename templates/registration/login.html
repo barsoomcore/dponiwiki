@@ -9,6 +9,7 @@
   {% endif %}
 
   <form action='./?next={{ redirect_to }}' method='post' id="register">
+  	{% csrf_token %}
     <p><label for="username">User name:</label> <input type="text" name="username" value="" id="username"></p>
     <p><label for="password">Password:</label> <input type="password" name="password" value="" id="password"></p>
     <p><a href="{% url password_reset %}">Forgot your password?</a></p>
