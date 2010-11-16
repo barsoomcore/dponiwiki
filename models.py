@@ -65,7 +65,7 @@ class WikiComponent(models.Model):
 	def __unicode__(self):
 		return u'%s' % (self.name)
 	
-	def save(self, latest_comment=None, editor=None):
+	def save(self, latest_comment=None, editor=None, *args, **kwargs):
 	
 		# first capture data from the previous version so as to make revisions possible
 		
@@ -101,7 +101,7 @@ class WikiComponent(models.Model):
 		
 		while True:
 			try:
-				super(WikiComponent, self).save()
+				super(WikiComponent, self).save(*args, **kwargs)
 			except IntegrityError:
 				matches = re.match(r'^(.*)-(\d+)$', self.slug)
 				if matches:
@@ -290,7 +290,7 @@ class ChangeSet(models.Model):
 
 		self.save()
 
-	def save(self, force_insert=False, force_update=False):
+	def save(self, force_insert=False, force_update=False, *args, **kwargs):
 		""" Saves the component with a new revision."""
 		
 		if self.id is None:
@@ -300,7 +300,7 @@ class ChangeSet(models.Model):
 				self.revision = latest_revision.revision + 1
 			except IndexError:
 				self.revision = 1
-		super(ChangeSet, self).save(force_insert, force_update)
+		super(ChangeSet, self).save(force_insert, force_update, *args, **kwargs)
 
 	def display_diff(self):
 		''' Returns a HTML representation of the diff.'''
