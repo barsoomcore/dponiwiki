@@ -2,11 +2,19 @@
 
 {% block content %}
 
-	<h1>Log In!</h1>
-
   {% if form.errors %}
-    <p class="error">Sorry, that's not a valid username or password</p>
+  
+  	<h1>Who Are YOU?</h1>
+    <p class="error">Seriously, we have no idea who you are. Are you SURE that's the right username and password? Really sure? Maybe check that again, okay?</p>
+    
+    <h2>One More Time:</h2>
+  
+  {% else %}
+  
+	<h1>Log In!</h1>
+  
   {% endif %}
+
 
   <form action='./?next={{ redirect_to }}' method='post' id="register">
   	{% csrf_token %}
