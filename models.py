@@ -5,12 +5,15 @@ from django.db import models, IntegrityError
 from django.db.models import permalink
 import datetime
 import re
+import operator
 from django.template.defaultfilters import slugify
 from django.db.models.query import QuerySet
 from django.db.models.signals import post_save
 
 from tagging.fields import TagField
 from tagging.models import Tag
+
+from dponisetting import settings
 
 # Google Diff Match Patch library
 # http://code.google.com/p/google-diff-match-patch
@@ -168,6 +171,32 @@ class Island(WikiComponent):
 	)
 	iscanonical = models.BooleanField(default=False, blank=True)
 	
+	def get_unique_tags(self):
+		components = self.components.all()
+		tags = []
+		for component in components:
+			component_tags = Tag.objects.get_for_object(component)
+			for tag in component_tags:
+			 	tags.append(tag.name)
+		return set(tags) & set(settings.COMPONENT_TAGS)
+		
+	def get_ordered_components(self):
+		components = self.components.all()
+		ordered_components = []
+		for component in components:
+			order = ComponentOrder.objects.filter(island__exact=self, component__exact=component)[0]
+			setattr(component, 'order', order.order)
+			ordered_components.append(component)
+		ordered_components.sort(key=operator.attrgetter('order'))
+		return ordered_components
+	
+	def get_reorder_list(self):
+		reorder_list = {}
+		if len(self.get_ordered_components()) > 1:
+			for component in self.get_ordered_components():
+				reorder_list[component.order] = component.name[0:12]
+		return sorted(reorder_list.items())
+	
 	@permalink
 	def get_absolute_url(self):
 		return('island-detail', (), {'slug': self.slug})
@@ -189,9 +218,67 @@ class IslandComponent(WikiComponent):
 				island_names = island_names + ", " + object.name
 		return island_names
 	
+	def add_component_to_end(self, island, request):
+		current_order = ComponentOrder.objects.filter(island__exact=island).order_by('order')
+		new_order_order = 1
+		if current_order:
+			for item in current_order:
+				if item.order == new_order_order:
+					new_order_order = new_order_order + 1
+		
+		new_order = ComponentOrder(island=island, component=self, order=new_order_order)
+		new_order.save()
+		island.save(latest_comment="Added Component " + self.name, editor=request.user)
+	
+	def save(self, editor, *args, **kwargs):
+		host_islands = self.host_islands.all()
+		latest_changeset = self.latest_changeset()
+		for host_island in host_islands:
+			host_island.save(
+				latest_comment="Updated " + self.name + ": " + latest_changeset.comment, 
+				editor=editor
+			)
+		super(IslandComponent, self).save(*args, **kwargs)
+	
 	@permalink
 	def get_absolute_url(self):
 		return("component-detail", (), {'slug': self.slug})
+
+
+class NPCComponent(IslandComponent):
+
+	role_name = models.CharField(max_length=100)
+	level = models.CharField(max_length=5)
+	strength = models.CharField(max_length=5)
+	dexterity  = models.CharField(max_length=5)
+	constitution = models.CharField(max_length=5)
+	intelligence = models.CharField(max_length=5)
+	wisdom = models.CharField(max_length=5)
+	charisma = models.CharField(max_length=5)
+	
+	reputation = models.CharField(max_length=5)
+	
+	toughness = models.CharField(max_length=5)
+	fortitude = models.CharField(max_length=5)
+	reflex = models.CharField(max_length=5)
+	will = models.CharField(max_length=5)
+	
+	primary_attack = models.CharField(max_length=5)
+	full_damage = models.CharField(max_length=5)
+	secondary_attack = models.CharField(max_length=5)
+	secondary_damage = models.CharField(max_length=5)
+	mb = models.CharField(max_length=5)
+	
+	base_defense = models.CharField(max_length=5)
+	dodge = models.CharField(max_length=5)
+	parry = models.CharField(max_length=5)
+	secondary_defense = models.CharField(max_length=5)
+	secondary_dodge = models.CharField(max_length=5)
+	secondary_parry = models.CharField(max_length=5)
+	
+	skills = models.TextField()
+	abilities = models.TextField()
+	
 
 
 class ComponentOrder(models.Model):

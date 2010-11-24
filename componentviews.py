@@ -45,16 +45,7 @@ def assign_component(request, slug):
 		for new_island in request.POST.values():
 			new_island = Island.objects.get(slug__exact=new_island)
 			if not new_island in host_islands_list:
-				current_order = ComponentOrder.objects.filter(island__exact=new_island).order_by('order')
-				new_order_order = 1
-				if current_order:
-					for item in current_order:
-						if item.order == new_order_order:
-							new_order_order = new_order_order + 1
-						
-				new_order = ComponentOrder(island=new_island, component=component, order=new_order_order)
-				new_order.save()
-				new_island.save(latest_comment="Added Component " + component.name, editor=request.user)
+				component.add_component_to_end(new_island, request)
 	
 	host_islands_list = component.host_islands.all()[:10]
 	paginator = Paginator(islands_list, 15)
@@ -96,28 +87,10 @@ def update_component(request, islandslug=None, componentslug=None):
 				component.owner = request.user
 			component.save(editor=request.user)
 			
-			host_islands = component.host_islands.all()
-			latest_changeset = component.latest_changeset()
-			for host_island in host_islands:
-				host_island.save(
-					latest_comment="Updated " + 
-						component.name + ": " + 
-						latest_changeset.comment, 
-					editor=request.user)
-			
 			if island:
-				if component not in island.components.all():
-					current_order = ComponentOrder.objects.filter(island__exact=island).order_by('order')
-					new_order_order = 1
-					if current_order:
-						for item in current_order:
-							if item.order == new_order_order:
-								new_order_order = new_order_order + 1
+				if component not in island.components.all():					
+					component.add_component_to_end(island, request)
 					
-					new_order = ComponentOrder(island=island, component=component, order=new_order_order)
-					new_order.save()
-					island.save(latest_comment="Added Component " + component.name, editor=request.user)
-				
 				return HttpResponseRedirect(island.get_absolute_url())
 			
 			else:

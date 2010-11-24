@@ -6,7 +6,8 @@ from dponiwiki.forms import IslandForm, IslandComponentForm
 from dponiwiki.feeds import LatestEntries, IslandFeed, IslandComponentFeed
 
 island_dict = { 
-	'queryset': Island.objects.all(), 
+	'queryset': Island.objects.all(),
+	'template_name': 'templates/island_detail.html', 
 	'template_object_name': 'island' 
 }
 
@@ -30,6 +31,10 @@ urlpatterns = patterns('',
     url(r'^accounts/', include('dponisetting.dponiwiki.urls_registration')),
     url(r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
     url(r'^page/', include('dponisetting.dponiwiki.urls_static')),
+	url(r'^Island/(?P<slug>[-\w]+)/$', 
+			'django.views.generic.list_detail.object_detail', 
+			island_dict, 
+			name='island-detail'),
 )
 
 urlpatterns += patterns('dponisetting.dponiwiki.utilityviews',
@@ -73,7 +78,6 @@ urlpatterns += patterns('dponisetting.dponiwiki.componentviews',
 )
 
 urlpatterns += patterns('dponisetting.dponiwiki.islandviews',
-	url(r'^Island/(?P<slug>[-\w]+)/$', 'display_island', island_dict, name='island-detail'),
 	url(r'^create-island/$', 'update_island', name='create-island'),
 	url(r'^update-island/(?P<slug>[-\w]+)/$', 'update_island', name='update-island' ),
 )

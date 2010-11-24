@@ -35,13 +35,13 @@
 		<div id="island-summary">
 			<h4>Summary</h4>
 			{{ island.summary|dinostyle|safe }}
-			{% if components %}
-			{% if component_tags %}
+			{% if island.components.all %}
+			{% if island.get_unique_tags %}
 				<h5>Components in this Island</h5>
-				{% for tag_type in component_tags %}
+				{% for tag_type in island.get_unique_tags %}
 					<h6>{{ tag_type|capfirst }}</h6>
 					<ul class="tagged_toc">
-					{% for component in components %}
+					{% for component in island.get_ordered_components %}
 					{% tags_for_object component as tags %}
 						{% for tag in tags %}
 							{% ifequal tag.name tag_type %}
@@ -58,7 +58,7 @@
 		{{ island.content|dinostyle|safe }}
 	</div>
 	<div id="island-components">
-		{% for component in components %}
+		{% for component in island.get_ordered_components %}
 		{% if component.is_box %}
 			<div class="box">
 		{% else %}
@@ -81,10 +81,10 @@
 					<a href="{% url remove_component island.slug, component.slug %}">
 						<img src="{{MEDIA_URL}}images/Remove.png" title="Remove this component from this island">
 					</a>
-					{% if reorder_list %}
+					{% if island.get_reorder_list %}
 						<div class="move-box">
 							<select name="order_change">
-							{% for component_order, component_name in reorder_list %}
+							{% for component_order, component_name in island.get_reorder_list %}
 								<option value="{{ component_order }}" label="{{ component_name }}" />
 							{% endfor %}
 							</select>
