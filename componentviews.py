@@ -11,30 +11,17 @@ from models import Island, IslandComponent, ComponentOrder
 
 def display_component(request, slug):
 	
-	component = get_object_or_404(IslandComponent, slug=slug)
-	islands_list = component.host_islands.all()
-	paginator = Paginator(islands_list, 15)
+	component = get_object_or_404(IslandComponent, slug__exact=slug)
+
+	islands = component.get_host_islands_paginated(request)
 	
-	try:
-		page = int(request.GET.get('page', '1'))
-	except ValueError:
-		page = 1
-	
-	try:
-		islands = paginator.page(page)
-	except (EmptyPage, InvalidPage):
-		islands = paginator.page(paginator.num_pages)
-	
-	extra_context = { 'islands':islands }
-	queryset = IslandComponent.objects.all()
-	
-	return object_detail(request,
-						queryset,
-						template_name = 'templates/islandcomponent_detail.html',
-						template_object_name = 'component',
-						extra_context = extra_context,
-						slug = slug
-						)
+	template_params = {'component': component, 'islands': islands}
+
+	return render_to_response(
+		'templates/islandcomponent_detail.html',
+		template_params,
+		context_instance=RequestContext(request)
+	)
 
 @login_required
 def assign_component(request, slug):
@@ -45,7 +32,7 @@ def assign_component(request, slug):
 		for new_island in request.POST.values():
 			new_island = Island.objects.get(slug__exact=new_island)
 			if not new_island in host_islands_list:
-				component.add_component_to_end(new_island, request)
+				component.add_component_to_end(request, new_island)
 	
 	host_islands_list = component.host_islands.all()[:10]
 	paginator = Paginator(islands_list, 15)

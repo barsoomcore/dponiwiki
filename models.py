@@ -1,15 +1,17 @@
-from django.conf import settings
-from django.contrib import admin
-from django.contrib.auth.models import User
-from django.db import models, IntegrityError
-from django.db.models import permalink
 import datetime
 import re
 import operator
-from django.template.defaultfilters import slugify
+
+from django.conf import settings
+from django.contrib import admin
+from django.contrib.auth.models import User
+from django.core import serializers
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.db import models, IntegrityError
+from django.db.models import permalink
 from django.db.models.query import QuerySet
 from django.db.models.signals import post_save
-
+from django.template.defaultfilters import slugify
 from tagging.fields import TagField
 from tagging.models import Tag
 
@@ -218,20 +220,24 @@ class IslandComponent(WikiComponent):
 				island_names = island_names + ", " + object.name
 		return island_names
 	
-	def add_component_to_end(self, island, request):
+	def add_component_to_end(self, request, island=None):
 		current_order = ComponentOrder.objects.filter(island__exact=island).order_by('order')
 		new_order_order = 1
 		if current_order:
-			for item in current_order:
-				if item.order == new_order_order:
-					new_order_order = new_order_order + 1
+			if self not in island.components.all():
+				for item in current_order:
+					if item.order == new_order_order:
+						new_order_order = new_order_order + 1
 		
 		new_order = ComponentOrder(island=island, component=self, order=new_order_order)
 		new_order.save()
 		island.save(latest_comment="Added Component " + self.name, editor=request.user)
 	
-	def save(self, editor, *args, **kwargs):
-		host_islands = self.host_islands.all()
+	def save(self, editor=None, *args, **kwargs):
+		try:
+			host_islands = self.host_islands.all()
+		except ValueError:
+			host_islands = []
 		latest_changeset = self.latest_changeset()
 		for host_island in host_islands:
 			host_island.save(
@@ -239,47 +245,26 @@ class IslandComponent(WikiComponent):
 				editor=editor
 			)
 		super(IslandComponent, self).save(*args, **kwargs)
+		
+	def get_host_islands_paginated(self, request):
+		
+		paginator = Paginator(self.host_islands.all(), 15)
+		
+		try:
+			page = int(request.GET.get('page', '1'))
+		except ValueError:
+			page = 1
+		
+		try:
+			islands = paginator.page(page)
+		except (EmptyPage, InvalidPage):
+			islands = paginator.page(paginator.num_pages)
+			
+		return islands
 	
 	@permalink
 	def get_absolute_url(self):
 		return("component-detail", (), {'slug': self.slug})
-
-
-class NPCComponent(IslandComponent):
-
-	role_name = models.CharField(max_length=100)
-	level = models.CharField(max_length=5)
-	strength = models.CharField(max_length=5)
-	dexterity  = models.CharField(max_length=5)
-	constitution = models.CharField(max_length=5)
-	intelligence = models.CharField(max_length=5)
-	wisdom = models.CharField(max_length=5)
-	charisma = models.CharField(max_length=5)
-	
-	reputation = models.CharField(max_length=5)
-	
-	toughness = models.CharField(max_length=5)
-	fortitude = models.CharField(max_length=5)
-	reflex = models.CharField(max_length=5)
-	will = models.CharField(max_length=5)
-	
-	primary_attack = models.CharField(max_length=5)
-	full_damage = models.CharField(max_length=5)
-	secondary_attack = models.CharField(max_length=5)
-	secondary_damage = models.CharField(max_length=5)
-	mb = models.CharField(max_length=5)
-	
-	base_defense = models.CharField(max_length=5)
-	dodge = models.CharField(max_length=5)
-	parry = models.CharField(max_length=5)
-	secondary_defense = models.CharField(max_length=5)
-	secondary_dodge = models.CharField(max_length=5)
-	secondary_parry = models.CharField(max_length=5)
-	
-	skills = models.TextField()
-	abilities = models.TextField()
-	
-
 
 class ComponentOrder(models.Model):
 	island = models.ForeignKey(Island)

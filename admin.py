@@ -14,6 +14,10 @@ class IslandComponentAdmin(admin.ModelAdmin):
 	list_filter = ('created',)
 	prepopulated_fields = {'slug': ('name',)}
 	
+	def save_model(self, request, obj, form, change):
+		obj.owner = request.user
+		obj.save()
+	
 class StaticPageAdmin(admin.ModelAdmin):
 	list_display = ('name', 'created', 'modified', 'owner')
 	search_fields = ('name',)

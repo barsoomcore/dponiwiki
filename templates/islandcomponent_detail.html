@@ -3,6 +3,25 @@
 {% load taggingextras %}
 {% load tagging_tags %}
 {% block title %}{{ component.name }}{% endblock %}
+{% block head %}
+
+	{% if component.role_name %}
+		<script type="text/javascript">
+		$(document).ready(function(){
+			var npc_json = JSON.parse('{{ component.as_json|safe }}');
+			var npc_json_fields = npc_json[0][0].fields;
+			var role_name = '{{ component.role_name }}';
+			var npc_name = '{{ component.name }}';
+			
+			statblock = new DPoNIStatblock(npc_json_fields, role_name, '#npc_statblock', npc_name);
+			statblock.display();
+		
+		});
+			
+		</script>
+	{% endif %}
+
+{% endblock %}
 {% block content %}
 	<div class="functions">
 			<p>
@@ -26,7 +45,8 @@
 	<h1>{{ component.name }}</h1>
 	<p class="updated">Updated: {{ component.modified|date:"N d, P" }}</p>
 	<div class="islandcomponent-body">
-		{{ component.content|dinostyle|safe }}		
+		{{ component.content|dinostyle|safe }}
+		<div id="npc_statblock" style="display:none"></div>
 	</div>
 	<div class="component-footer">
 		<p class="component-tags">Tags: 
@@ -40,7 +60,7 @@
 	{% if component.host_islands.all %}
 		<h3>Islands this component is used in:</h3>
 		<ul id="island-list">
-			{% for island in component.host_islands.all %}
+			{% for island in islands.object_list %}
 			<li class="{% cycle 'tbeven' 'tbodd' %}"><a href="{{ island.get_absolute_url}}">{{ island.name }}</a></li>
 			{% endfor %}
 		</ul>

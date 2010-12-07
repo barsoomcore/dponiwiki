@@ -7,7 +7,7 @@ function DPoNIStatblock(level, role_name, statblock_div_id, npc_name){
 	// got this function from the good folks at Shopify
 	// http://forums.shopify.com/categories/2/posts/29259
 	this.make_ordinal = function(source) {
-		var n = source;
+		var n = parseInt(source);
 		var s=["th","st","nd","rd"],
 		   v=n%100;
 		return n+(s[(v-20)%10]||s[v]||s[0]);
@@ -16,7 +16,7 @@ function DPoNIStatblock(level, role_name, statblock_div_id, npc_name){
 	this.format_numbers = function() {
 		var numbers = new Array();
 		var characters = new Array();
-		numbers = ['bcb', 'primary_attack', 'secondary_attack', 'secondary_damage', 'fortitude', 'reflex', 'will', 'damage', 'toughness', 'strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma', 'mb', 'full_damage', 'reputation'];
+		numbers = ['primary_attack', 'secondary_attack', 'secondary_damage', 'fortitude', 'reflex', 'will', 'damage', 'toughness', 'strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma', 'mb', 'full_damage', 'reputation'];
 		characters = ['-', '<'];
 		for (var i = 0; i <= numbers.length; i++){
 			if (characters.indexOf(String(level[numbers[i]]).charAt(0)) == -1){
