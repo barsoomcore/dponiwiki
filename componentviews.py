@@ -8,20 +8,7 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 from forms import IslandComponentForm
 from models import Island, IslandComponent, ComponentOrder
-
-def display_component(request, slug):
-	
-	component = get_object_or_404(IslandComponent, slug__exact=slug)
-
-	islands = component.get_host_islands_paginated(request)
-	
-	template_params = {'component': component, 'islands': islands}
-
-	return render_to_response(
-		'templates/islandcomponent_detail.html',
-		template_params,
-		context_instance=RequestContext(request)
-	)
+from utilityviews import paginate
 
 @login_required
 def assign_component(request, slug):
@@ -35,17 +22,8 @@ def assign_component(request, slug):
 				component.add_component_to_end(request, new_island)
 	
 	host_islands_list = component.host_islands.all()[:10]
-	paginator = Paginator(islands_list, 15)
 	
-	try:
-		page = int(request.GET.get('page', '1'))
-	except ValueError:
-		page = 1
-	
-	try:
-		islands = paginator.page(page)
-	except (EmptyPage, InvalidPage):
-		islands = paginator.page(paginator.num_pages)
+	islands = paginate(request, islands_list)
 	
 	template_params = {'component': component, 'islands_list': islands, 'host_islands_list': host_islands_list }
 	

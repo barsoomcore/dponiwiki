@@ -7,8 +7,14 @@ from dponiwiki.feeds import LatestEntries, IslandFeed, IslandComponentFeed
 
 island_dict = { 
 	'queryset': Island.objects.all(),
-	'template_name': 'templates/island_detail.html', 
+	'template_name': 'templates/island_detail.html',
 	'template_object_name': 'island' 
+}
+
+island_component_dict = {
+	'queryset': IslandComponent.objects.all(),
+	'template_name': 'templates/islandcomponent_detail.html',
+	'template_object_name': 'component',
 }
 
 feeds = {
@@ -32,9 +38,15 @@ urlpatterns = patterns('',
     url(r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
     url(r'^page/', include('dponisetting.dponiwiki.urls_static')),
 	url(r'^Island/(?P<slug>[-\w]+)/$', 
-			'django.views.generic.list_detail.object_detail', 
-			island_dict, 
-			name='island-detail'),
+		'django.views.generic.list_detail.object_detail', 
+		island_dict, 
+		name='island-detail'
+	),
+	url(r'^IslandComponent/(?P<slug>[-\w]+)/$',
+		'django.views.generic.list_detail.object_detail',
+		island_component_dict,
+		name='component-detail'
+	),
 )
 
 urlpatterns += patterns('dponisetting.dponiwiki.utilityviews',
@@ -57,7 +69,6 @@ urlpatterns += patterns('dponisetting.dponiwiki.utilityviews',
 
 urlpatterns += patterns('dponisetting.dponiwiki.componentviews',
 	url(r'^create-component/$', 'update_component', name='create-component',),
-	url(r'^IslandComponent/(?P<slug>[-\w]+)/$', 'display_component', name='component-detail'), 
 	url(r'^Island/(?P<islandslug>[-\w]+)/create-component/$', 
 		'update_component', 
 		name='create-component-island', 
