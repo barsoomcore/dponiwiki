@@ -81,7 +81,11 @@ def search(request, type):
 			if islands.object_list:
 				heading = "Search Results: All Islands containing the term \"" + term + "\""
 			else:
-				raise Http404
+				return render_to_response(
+					'templates/404.html',
+					{'term': term},
+					context_instance = (RequestContext(request))
+				)
 							
 		elif class_type == IslandComponent:
 			component_list = class_type.objects.filter(Q(name__contains=term) | Q(content__contains=term))
@@ -91,7 +95,11 @@ def search(request, type):
 			if components.object_list:
 				heading = "Search Results: All Island Components containing the term \"" + term + "\""
 			else:
-				raise Http404
+				return render_to_response(
+					'templates/404.html',
+					{'term': term},
+					context_instance = (RequestContext(request))
+				)
 			
 	template_params = { 
 		'heading': heading, 
