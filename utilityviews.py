@@ -1,6 +1,6 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.db.models import Q
-from django.http import HttpResponseRedirect, HttpResponseNotAllowed, HttpResponseNotFound
+from django.http import HttpResponseRedirect, HttpResponseNotAllowed, HttpResponseNotFound, Http404
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
@@ -58,12 +58,14 @@ def canonical(request, canonicity):
 def search(request, type):
 	''' Returns a list of either islands or components based on search string '''
 	heading = 'Nothing found to match that.'
+	title = 'Search Results'
 	islands = ''
 	components = ''
 	term = ''
 	
 	if 'q' in request.GET:
 		term = request.GET['q']
+		heading = 'Nothing found that matches \"' + term + '\"'
 	
 	if term:		
 		try:
@@ -78,6 +80,8 @@ def search(request, type):
 			
 			if islands.object_list:
 				heading = "Search Results: All Islands containing the term \"" + term + "\""
+			else:
+				raise Http404
 							
 		elif class_type == IslandComponent:
 			component_list = class_type.objects.filter(Q(name__contains=term) | Q(content__contains=term))
@@ -86,12 +90,15 @@ def search(request, type):
 			
 			if components.object_list:
 				heading = "Search Results: All Island Components containing the term \"" + term + "\""
+			else:
+				raise Http404
 			
 	template_params = { 
 		'heading': heading, 
 		'islands': islands, 
 		'components': components, 
-		'term': term 
+		'term': term,
+		'title': title
 	}
 			
 	return render_to_response(
@@ -107,10 +114,13 @@ def by_owner(request, owner=None):
 	heading = 'Nothing found to match that'
 	islands = ''
 	components = ''
+	title = ''
+	
 	if 'q' in request.GET:
 		owner = request.GET['q']
 	
 	if owner:
+		title = owner + '\'s Stuff'
 		island_list = Island.objects.filter(owner__username__exact=owner)
 		component_list = IslandComponent.objects.filter(owner__username__exact=owner)
 		
@@ -136,7 +146,8 @@ def by_owner(request, owner=None):
 		'heading': heading, 
 		'islands': islands, 
 		'components': components, 
-		'term': owner
+		'term': owner,
+		'title': title
 	}
 	
 	return render_to_response(

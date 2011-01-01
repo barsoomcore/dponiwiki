@@ -1,5 +1,9 @@
 {% extends "templates/base.html" %}
-{% block title %}Some of the Islands...{% endblock %}
+{% block title %}
+{% if title %}
+{{ title }}
+{% else %}
+Some of the Islands...{% endif %}{% endblock %}
 {% block content %}
 	{% if heading %}
 		<h2>{{ heading }}</h2>
