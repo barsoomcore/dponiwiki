@@ -7,19 +7,19 @@
 	<div class="functions">
 			<p>
 			<a href="{% url assign-component component.slug %}">
-				<img src="{{ MEDIA_URL }}images/Assign.png" title="Assign this component to other islands">
+				<img src="{{ MEDIA_URL }}buttons/Assign.png" title="Assign this component to other islands">
 			</a>
 			<a href="{% url update-component 'None', component.slug %}">
-				<img src="{{MEDIA_URL}}images/Edit.png" title="Edit this component">
+				<img src="{{MEDIA_URL}}buttons/Edit.png" title="Edit this component">
 			</a>
 			<a href="{% url item_history type='IslandComponent' slug=component.slug %}">
-				<img src="{{MEDIA_URL}}images/History.png" title="View this component's history">
+				<img src="{{MEDIA_URL}}buttons/History.png" title="View this component's history">
 			</a>
 			<a href="/feeds/IslandComponent/{{ component.slug }}">
-				<img src="{{ MEDIA_URL }}images/Feed.png" title="Subscribe to this component's updates via RSS" />
+				<img src="{{ MEDIA_URL }}buttons/Feed.png" title="Subscribe to this component's updates via RSS" />
 			</a>
 			<a href="#disqus_block">
-				<img src="{{ MEDIA_URL }}images/Comments.png" title="View the comments on this component" />
+				<img src="{{ MEDIA_URL }}buttons/Comments.png" title="View the comments on this component" />
 			</a></p>
 			<p>Owner: <a href="{% url owner component.owner.username %}">{{component.owner}}</a></p>
 	</div>

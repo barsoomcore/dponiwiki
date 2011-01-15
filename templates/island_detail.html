@@ -7,19 +7,19 @@
 {% block content %}
 	<div class="functions">
 		<a href="{% url update-island island.slug %}">
-			<img src="{{MEDIA_URL}}images/Edit.png" title="Edit this island">
+			<img src="{{MEDIA_URL}}buttons/Edit.png" title="Edit this island">
 		</a>
 		<a href="{% url create-component-island island.slug %}">
-			<img src="{{MEDIA_URL}}images/Add.png" title="Add a new component to this island">
+			<img src="{{MEDIA_URL}}buttons/Add.png" title="Add a new component to this island">
 		</a>
 		<a href="{% url item_history type="Island" slug=island.slug %}">
-			<img src="{{MEDIA_URL}}images/History.png" title="View this island's history">
+			<img src="{{MEDIA_URL}}buttons/History.png" title="View this island's history">
 		</a>
 		<a href="/feeds/Island/{{ island.slug }}">
-			<img src="{{ MEDIA_URL }}images/Feed.png" title="Subscribe to this island's updates via RSS" />
+			<img src="{{ MEDIA_URL }}buttons/Feed.png" title="Subscribe to this island's updates via RSS" />
 		</a>
 		<a href="#disqus_block">
-			<img src="{{ MEDIA_URL }}images/Comments.png" title="View the comments on this island" />
+			<img src="{{ MEDIA_URL }}buttons/Comments.png" title="View the comments on this island" />
 		</a>
 		<p>Owner: <a href="{% url owner island.owner.username %}">{{ island.owner }}</a></p>
 	</div>
@@ -73,13 +73,13 @@
 				<div class="functions">
 					<form style="display: inline" action="{% url move_component island.slug component.slug %}" method="POST">
 					<a href="{% url assign-component component.slug %}">
-						<img src="{{ MEDIA_URL }}images/Assign.png" title="Assign this component to other islands">
+						<img src="{{ MEDIA_URL }}buttons/Assign.png" title="Assign this component to other islands">
 					</a>
 					<a href="{% url update-component island.slug, component.slug %}">
-						<img src="{{MEDIA_URL}}images/Edit.png" title="Edit this component">
+						<img src="{{MEDIA_URL}}buttons/Edit.png" title="Edit this component">
 					</a>
 					<a href="{% url remove_component island.slug, component.slug %}">
-						<img src="{{MEDIA_URL}}images/Remove.png" title="Remove this component from this island">
+						<img src="{{MEDIA_URL}}buttons/Remove.png" title="Remove this component from this island">
 					</a>
 					{% if island.get_reorder_list %}
 						<div class="move-box">
@@ -89,7 +89,7 @@
 							{% endfor %}
 							</select>
 							<button type="submit" value="Move" class="move-button" >
-								<img src="{{MEDIA_URL}}images/Move.png"title="Move this component above the selected component" />
+								<img src="{{MEDIA_URL}}buttons/Move.png"title="Move this component above the selected component" />
 							</button>
 						</div>
 					{% endif %}
