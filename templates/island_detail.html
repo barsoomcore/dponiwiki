@@ -35,7 +35,6 @@
 		<div id="island-summary">
 			<h4>Summary</h4>
 			{{ island.summary|dinostyle|safe }}
-			{% if island.components.all %}
 			{% if island.get_unique_tags %}
 				<h5>Components in this Island</h5>
 				{% for tag_type in island.get_unique_tags %}
@@ -51,7 +50,6 @@
 					{% endfor %}
 					</ul>
 				{% endfor %}
-			{% endif %}
 			{% endif %}
 		</div>
 		{% endif %}
