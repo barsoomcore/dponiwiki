@@ -59,52 +59,52 @@
 	</div>
 	<div id="island-components">
 		{% for component in island.get_ordered_components %}
-		{% if component.is_box %}
+			{% if component.is_box %}
 			<div class="box">
-		{% else %}
+			{% else %}
 			<div class="flow">
-		{% endif %}
-			<h3 class="component-title"><a href="{% url component-detail component.slug %}">{{ component.name }}</a></h3>
-			<p class="component-owner">Owner: <a href="{% url owner component.owner.username %}">{{ component.owner }}</a></p>
-			<div class="islandcomponent-body">
-				{{ component.content|dinostyle|safe }}
-			</div>
-			<div class="component-footer">
-				<div class="functions">
-					<form style="display: inline" action="{% url move_component island.slug component.slug %}" method="POST">
-					<a href="{% url assign-component component.slug %}">
-						<img src="{{ MEDIA_URL }}buttons/Assign.png" title="Assign this component to other islands">
-					</a>
-					<a href="{% url update-component island.slug, component.slug %}">
-						<img src="{{MEDIA_URL}}buttons/Edit.png" title="Edit this component">
-					</a>
-					<a href="{% url remove_component island.slug, component.slug %}">
-						<img src="{{MEDIA_URL}}buttons/Remove.png" title="Remove this component from this island">
-					</a>
-					{% if island.get_reorder_list %}
-						<div class="move-box">
-							<select name="order_change">
-							{% for component_order, component_name in island.get_reorder_list %}
-								<option value="{{ component_order }}" label="{{ component_name }}" />
-							{% endfor %}
-							</select>
-							<button type="submit" value="Move" class="move-button" >
-								<img src="{{MEDIA_URL}}buttons/Move.png"title="Move this component above the selected component" />
-							</button>
-						</div>
-					{% endif %}
-					</form>
+			{% endif %}
+				<h3 class="component-title"><a href="{% url component-detail component.slug %}">{{ component.name }}</a></h3>
+				<p class="component-owner">Owner: <a href="{% url owner component.owner.username %}">{{ component.owner }}</a></p>
+				<div class="islandcomponent-body">
+					{{ component.content|dinostyle|safe }}
 				</div>
-				<p class="component-tags">Tags: 
-					{% tags_for_object component as tags %}
-					{% for tag in tags %}
-						<em><a href="{% url component_tag_detail tag %}">
-							{{ tag }}
-						</a></em>
-					{% endfor %}
-				</p>
+				<div class="component-footer">
+					<div class="functions">
+						<form style="display: inline" action="{% url move_component island.slug component.slug %}" method="POST">
+						<a href="{% url assign-component component.slug %}">
+							<img src="{{ MEDIA_URL }}buttons/Assign.png" title="Assign this component to other islands">
+						</a>
+						<a href="{% url update-component island.slug, component.slug %}">
+							<img src="{{MEDIA_URL}}buttons/Edit.png" title="Edit this component">
+						</a>
+						<a href="{% url remove_component island.slug, component.slug %}">
+							<img src="{{MEDIA_URL}}buttons/Remove.png" title="Remove this component from this island">
+						</a>
+						{% if island.get_reorder_list %}
+							<div class="move-box">
+								<select name="order_change">
+								{% for component_order, component_name in island.get_reorder_list %}
+									<option value="{{ component_order }}" label="{{ component_name }}" />
+								{% endfor %}
+								</select>
+								<button type="submit" value="Move" class="move-button" >
+									<img src="{{MEDIA_URL}}buttons/Move.png"title="Move this component above the selected component" />
+								</button>
+							</div>
+						{% endif %}
+						</form>
+					</div>
+					<p class="component-tags">Tags: 
+						{% tags_for_object component as tags %}
+						{% for tag in tags %}
+							<em><a href="{% url component_tag_detail tag %}">
+								{{ tag }}
+							</a></em>
+						{% endfor %}
+					</p>
+				</div>
 			</div>
-		</div>
 		{% endfor %}
 		
 		<a name="disqus_block"><div id="disqus_thread"></div></a>
