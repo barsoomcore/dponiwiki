@@ -1,3 +1,5 @@
+import cgi
+
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
@@ -14,6 +16,11 @@ class WikiComponentForm(forms.ModelForm):
 				widget=forms.TextInput(attrs={'size':'50'}))
 	class Meta:
 		model = WikiComponent
+	
+	def clean_content(self):
+		data = self.cleaned_data['content']
+		data = cgi.escape(data)
+		return data
 
 class IslandForm(WikiComponentForm):
 	summary = forms.CharField(
@@ -21,6 +28,11 @@ class IslandForm(WikiComponentForm):
 	class Meta:
 		model = Island
 		exclude = ('slug', 'created', 'modified', 'components', 'iscanonical')
+	
+	def clean_summary(self):
+		data = self.cleaned_data['summary']
+		data = cgi.escape(data)
+		return data
 
 class IslandComponentForm(WikiComponentForm):
 	tags = TagField(
