@@ -220,7 +220,7 @@ class IslandComponent(WikiComponent):
 				island_names = island_names + ", " + object.name
 		return island_names
 	
-	def add_component_to_end(self, request, island=None):
+	def add_component_to_end(self, editor=None, island=None):
 		current_order = ComponentOrder.objects.filter(island__exact=island).order_by('order')
 		new_order_order = 1
 		if current_order:
@@ -231,7 +231,7 @@ class IslandComponent(WikiComponent):
 		
 		new_order = ComponentOrder(island=island, component=self, order=new_order_order)
 		new_order.save()
-		island.save(latest_comment="Added Component " + self.name, editor=request.user)
+		island.save(latest_comment="Added Component " + self.name, editor=editor)
 	
 	def save(self, editor=None, *args, **kwargs):
 		try:
@@ -245,22 +245,6 @@ class IslandComponent(WikiComponent):
 				editor=editor
 			)
 		super(IslandComponent, self).save(*args, **kwargs)
-		
-	def get_host_islands_paginated(self, request):
-		
-		paginator = Paginator(self.host_islands.all(), 15)
-		
-		try:
-			page = int(request.GET.get('page', '1'))
-		except ValueError:
-			page = 1
-		
-		try:
-			islands = paginator.page(page)
-		except (EmptyPage, InvalidPage):
-			islands = paginator.page(paginator.num_pages)
-			
-		return islands
 	
 	@permalink
 	def get_absolute_url(self):

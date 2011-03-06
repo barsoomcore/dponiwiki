@@ -15,17 +15,24 @@ def assign_component(request, slug):
 	component = get_object_or_404(IslandComponent, slug__exact=slug)
 	islands_list = Island.objects.filter(owner__exact=component.owner).exclude(components__id__exact=component.id)
 	host_islands_list = component.host_islands.all()
+	new_islands_list = []
 	if request.method == "POST":
-		for new_island in request.POST.values():
-			new_island = Island.objects.get(slug__exact=new_island)
+		for island in request.POST.values():
+			new_island = Island.objects.get(slug__exact=island)
 			if not new_island in host_islands_list:
-				component.add_component_to_end(request, new_island)
+				new_islands_list.append(new_island)
+				component.add_component_to_end(request.user, new_island)
 	
 	host_islands_list = component.host_islands.all()[:10]
 	
 	islands = paginate(request, islands_list)
 	
-	template_params = {'component': component, 'islands_list': islands, 'host_islands_list': host_islands_list }
+	template_params = {
+		'component': component, 
+		'islands_list': islands, 
+		'host_islands_list': host_islands_list,
+		'new_islands_list': new_islands_list
+	}
 	
 	return render_to_response(
 		"templates/islandcomponent_assign.html", 
@@ -54,7 +61,7 @@ def update_component(request, islandslug=None, componentslug=None):
 			
 			if island:
 				if component not in island.components.all():					
-					component.add_component_to_end(island, request)
+					component.add_component_to_end(request.user, island)
 					
 				return HttpResponseRedirect(island.get_absolute_url())
 			
@@ -64,7 +71,11 @@ def update_component(request, islandslug=None, componentslug=None):
 	else:
 		form = IslandComponentForm(instance=component)
 	
-	return render_to_response('templates/islandcomponent_form.html', locals(), context_instance=RequestContext(request))
+	return render_to_response(
+		'templates/islandcomponent_form.html', 
+		locals(), 
+		context_instance=RequestContext(request)
+	)
 
 @login_required
 def move_component(request, islandslug, componentslug):
