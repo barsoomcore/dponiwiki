@@ -83,7 +83,7 @@
 							<div class="move-box">
 								<select name="order_change">
 								{% for component_order, component_name in island.get_reorder_list %}
-									<option value="{{ component_order }}" label="{{ component_name }}" />
+									<option value="{{ component_order }}" >{{ component_name }}</option>
 								{% endfor %}
 								</select>
 								<button type="submit" value="Move" class="move-button" >
