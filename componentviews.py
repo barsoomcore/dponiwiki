@@ -23,14 +23,12 @@ def assign_component(request, slug):
 				new_islands_list.append(new_island)
 				component.add_component_to_end(request.user, new_island)
 	
-	host_islands_list = component.host_islands.all()[:10]
-	
 	islands = paginate(request, islands_list)
 	
 	template_params = {
 		'component': component, 
 		'islands_list': islands, 
-		'host_islands_list': host_islands_list,
+		'host_islands_list': host_islands_list[:10],
 		'new_islands_list': new_islands_list
 	}
 	
