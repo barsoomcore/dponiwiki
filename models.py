@@ -14,6 +14,7 @@ from django.db.models.signals import post_save
 from django.template.defaultfilters import slugify
 from tagging.fields import TagField
 from tagging.models import Tag
+from autoslug.fields import AutoSlugField
 
 from dponisetting import settings
 
@@ -57,7 +58,7 @@ class StaticPage(models.Model):
 
 class WikiComponent(models.Model):
 	name = models.CharField(max_length = 100)
-	slug = models.SlugField(max_length = 100, unique=True)
+	slug = AutoSlugField(populate_from='name', unique=True, editable=False)
 	owner = models.ForeignKey(User, editable=False)
 	content = models.TextField()
 	created = models.DateTimeField(auto_now_add=True, blank=True)
@@ -70,10 +71,10 @@ class WikiComponent(models.Model):
 	def __unicode__(self):
 		return u'%s' % (self.name)
 	
-	def save(self, latest_comment=None, editor=None, *args, **kwargs):
+	def save(self, editor, latest_comment=None, *args, **kwargs):
 	
 		# first capture data from the previous version so as to make revisions possible
-		
+
 		try:
 			old_version = WikiComponent.objects.filter(slug= self.slug)[0]
 			old_content = old_version.content
@@ -88,9 +89,6 @@ class WikiComponent(models.Model):
 		self.comment = ''
 		latest_comment = latest_comment[0:49]
 		
-		if editor == None:
-			editor = self.owner
-		
 		# now we want to reset the order of the components so the values don't keep getting bigger
 		
 		current_order = ComponentOrder.objects.filter(island__exact=self).order_by('order')
@@ -98,26 +96,8 @@ class WikiComponent(models.Model):
 		for index, item in enumerate(current_order):
 			item.order = index
 			item.save()
-		        
-        # code below from:
-        # http://www.revolunet.com/snippets/snippet/automatic-and-unique-slug-field
-		if not self.slug:
-			self.slug = slugify(self.name)
 		
-		while True:
-			try:
-				super(WikiComponent, self).save(*args, **kwargs)
-			except IntegrityError:
-				matches = re.match(r'^(.*)-(\d+)$', self.slug)
-				if matches:
-					current = int(matches .group(2)) + 1
-					self.slug = matches .group(1) + '-' + str(current)
-				else:
-					self.slug += '-2'
-			else:
-				break
-		# thanks!
-		#
+		super(WikiComponent, self).save(*args, **kwargs)
 		
 		try:
 			latest_change = ChangeSet.objects.filter(component=self).order_by('-revision')[0]
@@ -135,7 +115,7 @@ class WikiComponent(models.Model):
 		)
 		this_change.save()
 
-# the next batch of functions are taken from the Wiki-App project
+	# the next batch of functions are taken from the Wiki-App project
 	def latest_changeset(self):
 		try:
 			return self.changeset_set.filter(
@@ -162,6 +142,7 @@ class WikiComponent(models.Model):
 		""" Revert the article to a previous state, by revision number."""
 		changeset = self.changeset_set.get(revision=revision)
 		changeset.reapply(owner)
+		
 
 class Island(WikiComponent):
 	summary = models.TextField(blank=True)
