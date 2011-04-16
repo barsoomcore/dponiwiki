@@ -71,7 +71,10 @@ class WikiComponent(models.Model):
 	def __unicode__(self):
 		return u'%s' % (self.name)
 	
-	def save(self, editor, latest_comment=None, *args, **kwargs):
+	def save(self, editor=None, latest_comment=None, *args, **kwargs):
+	
+		if not editor:
+			editor = self.owner
 	
 		# first capture data from the previous version so as to make revisions possible
 
