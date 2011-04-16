@@ -1,3 +1,5 @@
+import ast
+
 from django.shortcuts import render_to_response, get_object_or_404
 from django.db.models import Q
 from django.http import HttpResponseRedirect, HttpResponseNotAllowed, HttpResponseNotFound, Http404
@@ -31,13 +33,10 @@ def paginate(request, input_list, per_page=25):
 def canonical(request, canonicity):
 	'''	Returns a list of islands matching the supplied canonicity '''
 	
-	if canonicity == "True":
-		canonicity = "Canonical"
-		island_list = Island.objects.filter(iscanonical__exact=True).order_by('name')
-	else:
-		canonicity = "Non-Canonical"
-		island_list = Island.objects.filter(iscanonical__exact=False).order_by('name')
+	canonicity = ast.literal_eval(canonicity)
 	
+	island_list = Island.objects.filter(iscanonical__exact=canonicity).order_by('name')
+			
 	heading = 'Some islands to explore...'
 	
 	islands = paginate(request, island_list)
