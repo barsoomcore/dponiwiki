@@ -1,3 +1,87 @@
+function DPoNIVillain(role, selected_level, role_name){
+	
+	var raw_level = role[0][selected_level-1].fields;
+	this.level = raw_level;
+	
+	// create a list of all abilities up to and including the 
+	// selected level
+	
+	var abilities_list = new String();
+	var total_abilities = new Array();
+	for (var j = 0; j < selected_level; j++){
+		for (var m = 0; m < role[0].length; m++) {
+			if (role[0][m].fields.level == j+1) {
+				total_abilities[j] = role[0][j].fields.abilities;
+			}
+		}
+	}	
+	abilities_list = total_abilities.join(', ').replace(/ ,/g, '');
+	abilities_list = abilities_list.replace(/^, /, '');
+	abilities_list = abilities_list.replace(/,\s*$/, '');
+	this.level.abilities = abilities_list;
+	
+	// create the skills list -- setting the value for each using level
+	// and key ability, and applying a smaller value for a couple of skills
+	// for Artillery and War Leader
+	
+	var skill_list = new Array();
+	for (var k = 0; k < role[1].length; k++) {				
+		var key_ability = role[1][k].fields.key_ability;
+		var this_skill = new Array();
+		this_skill[0] = role[1][k].pk;
+		this_skill[1] = 3 + selected_level + role[0][selected_level-1].fields[key_ability];
+		if (role_name == 'Artillery') {
+			var Level_Skills = ['Acrobatics', 'Climb', 'Jump', 'Swim'];
+			for (var n = 0; n <= Level_Skills.length; n++) {
+				if (this_skill[0] == Level_Skills[n]) {
+					this_skill[1] = this_skill[1] - 3;
+				}
+			}
+		}
+		if (role_name == 'War Leader') {
+			if (this_skill[0] == 'Notice') {
+				this_skill[1] = this_skill[1] - 3;
+			}
+		}
+		if (String(this_skill[1]).charAt(0) != '-'){
+			this_skill[1] = '+' + this_skill[1];
+		}
+		skill_list.push(this_skill.join(':&nbsp;'));
+	}
+	this.level.skills = skill_list.join('; ');
+	
+	
+	// set the Reputation
+	
+	var Reputation = (selected_level/5).toPrecision(1);
+	if (Reputation < 1) { Reputation = 0 };
+	if (role_name == 'WarLeader'){
+		Reputation = Reputation + 3;
+	}
+	this.level.reputation = Reputation;
+	
+	// now do all the simple calculations
+					
+	this.level.fortitude = raw_level.fortitude + raw_level.constitution;
+	this.level.reflex = raw_level.reflex + raw_level.dexterity;
+	this.level.will = raw_level.will + raw_level.wisdom;
+	this.level.toughness = raw_level.toughness + raw_level.constitution;
+
+	this.level.primary_attack = raw_level.base_combat_bonus + raw_level.dexterity;
+	this.level.mb = raw_level.base_combat_bonus + raw_level.strength;
+	this.level.full_damage = raw_level.damage + raw_level.strength;
+	this.level.base_defense = raw_level.base_combat_bonus + 10;
+	this.level.dodge = raw_level.base_defense + raw_level.dexterity;
+	this.level.parry = raw_level.base_defense + raw_level.strength;
+	
+	this.level.secondary_attack = raw_level.secondary_combat_bonus + raw_level.dexterity;
+	this.level.secondary_defense = raw_level.secondary_combat_bonus + 10;
+	this.level.secondary_dodge = raw_level.secondary_defense + raw_level.dexterity;
+	this.level.secondary_parry = raw_level.secondary_defense + raw_level.strength;
+				
+};
+
+
 function DPoNIStatblock(level, role_name, statblock_div_id, npc_name){
 	if (npc_name) { this.name = npc_name; }
 	else { this.name = '' }
@@ -74,5 +158,27 @@ function DPoNIStatblock(level, role_name, statblock_div_id, npc_name){
 			$(".Second_Parry").html(' (' + this.level.secondary_parry + ')');
 		}
 		$(statblock_div_id).show();
+	};
+};
+
+
+function RandomMonster(){
+	this.attribute = ["Abominable", "Cunning", "Oozing", "Hulking", "Twisted", "Daring", "Bloodthirsty", "Menacing", "Honor-Bound", "Persuasive", "Fickle", "Clueless", "Soulless", "Pustulent", "Cowardly", "Foolish", "Zealous", "Slumbering", "Mysterious", "Beautiful"];
+	this.ability = ["Flying", "Invisible", "Wish-Granting", "Far-Seeing", "Wall-Climbing", "Shape-Shifting", "Camouflaged", "Many-Armed", "Gelatinous", "Dimension-Jumping", "Scent-Following", "Leaping", "Demon-Calling", "Laughing", "Fortune-Telling", "Many-Legged", "Dead-Raising", "Magic-Eating", "Illusion-Weaving", "Insubstantial"];
+	this.type = ["Undead", "Lesser", "Half", "Elder", "Purple", "Greater", "Eldritch", "Feral", "Dire", "Nocturnal", "Cyclopic", "Dark", "Clockwork", "Draconic", "Elemental", "Incorporeal", "Common", "Aquatic", "Immortal", "Heavenly"];
+	this.name1 = ["Shark", "Death", "Temple", "Demon", "Battle", "Slug", "Monkey", "Desert", "Slime", "Insect", "Cave", "Giant", "Swamp", "Bird", "Hell", "Spirit", "Nightmare", "Spider", "Grave", "Thunder"];
+	this.name2 = ["Golem", "Behemoth", "Stalker", "Beast", "God", "Mage", "Lord", "Fiend", "Bees", "Servant", "Slime", "Tyrant", "Knight", "Monkey", "Devourer", "Shark", "Lich", "kin", "Spawn", "Genius"];
+	this.attack_adjective = ["Hypnotizing", "Poisonous", "Crushing", "Divine", "Necrotic", "Elemental", "Vengeful", "Shielding", "Ensnaring", "Warding", "Exploding", "Enervating", "Enslaving", "Ichorus", "Love-Kindling", "Hallucinogenic", "Stunning", "Psychic", "Healing", "Terrifying"];
+	this.attack = ["Bite", "Breath", "Song", "Gaze", "Venom", "Tentacles", "Claws", "Secrets", "Slime", "Charge", "Frenzy", "Blades", "Blast", "Ninjas", "Aura", "Webs", "Spores", "Flatulence", "Spines", "Glyphs"];
+	this.d20 = function(){
+		return Math.floor(Math.random() * (19 - 0 + 1)) + 0;
+	};
+	this.display = function(monsterDivId){
+		$(monsterDivId).html("The " + 
+		this.attribute[this.d20()] + " " + 
+		this.ability[this.d20()] + " " + 
+		this.type[this.d20()] + " " + 
+		this.name1[this.d20()] + " " + 
+		this.name2[this.d20()] + " with " + this.attack_adjective[this.d20()] + " " + this.attack[this.d20()]);
 	};
 };
