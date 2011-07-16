@@ -51,15 +51,6 @@ function DPoNIVillain(role, selected_level, role_name){
 	this.level.skills = skill_list.join('; ');
 	
 	
-	// set the Reputation
-	
-	var Reputation = (selected_level/5).toPrecision(1);
-	if (Reputation < 1) { Reputation = 0 };
-	if (role_name == 'WarLeader'){
-		Reputation = Reputation + 3;
-	}
-	this.level.reputation = Reputation;
-	
 	// now do all the simple calculations
 					
 	this.level.fortitude = raw_level.fortitude + raw_level.constitution;
@@ -100,7 +91,7 @@ function DPoNIStatblock(level, role_name, statblock_div_id, npc_name){
 	this.format_numbers = function() {
 		var numbers = new Array();
 		var characters = new Array();
-		numbers = ['primary_attack', 'secondary_attack', 'secondary_damage', 'fortitude', 'reflex', 'will', 'damage', 'toughness', 'strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma', 'mb', 'full_damage', 'reputation'];
+		numbers = ['primary_attack', 'secondary_attack', 'secondary_damage', 'fortitude', 'reflex', 'will', 'damage', 'toughness', 'strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma', 'mb', 'full_damage'];
 		characters = ['-', '<'];
 		for (var i = 0; i <= numbers.length; i++){
 			if (characters.indexOf(String(this.level[numbers[i]]).charAt(0)) == -1){
@@ -179,6 +170,8 @@ function RandomMonster(){
 		this.ability[this.d20()] + " " + 
 		this.type[this.d20()] + " " + 
 		this.name1[this.d20()] + " " + 
-		this.name2[this.d20()] + " with " + this.attack_adjective[this.d20()] + " " + this.attack[this.d20()]);
+		this.name2[this.d20()] + " with " +
+		this.attack_adjective[this.d20()] + " " +
+		this.attack[this.d20()]);
 	};
 };
