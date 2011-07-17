@@ -1,12 +1,17 @@
 function DPoNIVillain(role, selected_level, role_name){
+
+	// this object provides all the stats for a villian of the indicated role
+	// and level. 'role' is a json array with two items -- the former being an
+	// array of all the levels for the villain role and the fields for each,
+	// and the latter being an array of all the skills for the role, along with
+	// the key ability for each. You can see an example of the json in the
+	// DPoNI Villain pages.
 	
-	var raw_level = role[0][selected_level-1].fields;
-	this.level = raw_level;
+	this.level = role[0][selected_level-1].fields;
 	
 	// create a list of all abilities up to and including the 
 	// selected level
 	
-	var abilities_list = new String();
 	var total_abilities = new Array();
 	for (var j = 0; j < selected_level; j++){
 		for (var m = 0; m < role[0].length; m++) {
@@ -15,10 +20,9 @@ function DPoNIVillain(role, selected_level, role_name){
 			}
 		}
 	}	
-	abilities_list = total_abilities.join(', ').replace(/ ,/g, '');
-	abilities_list = abilities_list.replace(/^, /, '');
-	abilities_list = abilities_list.replace(/,\s*$/, '');
-	this.level.abilities = abilities_list;
+	this.level.abilities = total_abilities.join(', ').replace(/ ,/g, '');
+	this.level.abilities = this.level.abilities.replace(/^, /, '');
+	this.level.abilities = this.level.abilities.replace(/,\s*$/, '');
 	
 	// create the skills list -- setting the value for each using level
 	// and key ability, and applying a smaller value for a couple of skills
@@ -51,29 +55,33 @@ function DPoNIVillain(role, selected_level, role_name){
 	this.level.skills = skill_list.join('; ');
 	
 	
-	// now do all the simple calculations
+	// now do all the simple calculations and your object is ready to use
 					
-	this.level.fortitude = raw_level.fortitude + raw_level.constitution;
-	this.level.reflex = raw_level.reflex + raw_level.dexterity;
-	this.level.will = raw_level.will + raw_level.wisdom;
-	this.level.toughness = raw_level.toughness + raw_level.constitution;
+	this.level.fortitude = this.level.fortitude + this.level.constitution;
+	this.level.reflex = this.level.reflex + this.level.dexterity;
+	this.level.will = this.level.will + this.level.wisdom;
+	this.level.toughness = this.level.toughness + this.level.constitution;
 
-	this.level.primary_attack = raw_level.base_combat_bonus + raw_level.dexterity;
-	this.level.mb = raw_level.base_combat_bonus + raw_level.strength;
-	this.level.full_damage = raw_level.damage + raw_level.strength;
-	this.level.base_defense = raw_level.base_combat_bonus + 10;
-	this.level.dodge = raw_level.base_defense + raw_level.dexterity;
-	this.level.parry = raw_level.base_defense + raw_level.strength;
+	this.level.primary_attack = this.level.base_combat_bonus + this.level.dexterity;
+	this.level.mb = this.level.base_combat_bonus + this.level.strength;
+	this.level.full_damage = this.level.damage + this.level.strength;
+	this.level.base_defense = this.level.base_combat_bonus + 10;
+	this.level.dodge = this.level.base_defense + this.level.dexterity;
+	this.level.parry = this.level.base_defense + this.level.strength;
 	
-	this.level.secondary_attack = raw_level.secondary_combat_bonus + raw_level.dexterity;
-	this.level.secondary_defense = raw_level.secondary_combat_bonus + 10;
-	this.level.secondary_dodge = raw_level.secondary_defense + raw_level.dexterity;
-	this.level.secondary_parry = raw_level.secondary_defense + raw_level.strength;
+	this.level.secondary_attack = this.level.secondary_combat_bonus + this.level.dexterity;
+	this.level.secondary_defense = this.level.secondary_combat_bonus + 10;
+	this.level.secondary_dodge = this.level.secondary_defense + this.level.dexterity;
+	this.level.secondary_parry = this.level.secondary_defense + this.level.strength;
 				
 };
 
 
 function DPoNIStatblock(level, role_name, statblock_div_id, npc_name){
+	
+	// given a DPoNIVillain object, displays a printable statblock including
+	// damage track and space for a name
+	
 	if (npc_name) { this.name = npc_name; }
 	else { this.name = '' }
 	this.role_name = role_name;
@@ -87,6 +95,8 @@ function DPoNIStatblock(level, role_name, statblock_div_id, npc_name){
 		   v=n%100;
 		return n+(s[(v-20)%10]||s[v]||s[0]);
 	};
+	
+	// some numbers ought to have a '+' in front of them
 	
 	this.format_numbers = function() {
 		var numbers = new Array();
@@ -154,6 +164,11 @@ function DPoNIStatblock(level, role_name, statblock_div_id, npc_name){
 
 
 function RandomMonster(){
+	
+	// based on the great work by Esoteric at the Old School Hack Forums
+	// (forums.oldschoolhack.net) -- this just creates little text descriptions
+	// of improbable beasties
+	
 	this.attribute = ["Abominable", "Cunning", "Oozing", "Hulking", "Twisted", "Daring", "Bloodthirsty", "Menacing", "Honor-Bound", "Persuasive", "Fickle", "Clueless", "Soulless", "Pustulent", "Cowardly", "Foolish", "Zealous", "Slumbering", "Mysterious", "Beautiful"];
 	this.ability = ["Flying", "Invisible", "Wish-Granting", "Far-Seeing", "Wall-Climbing", "Shape-Shifting", "Camouflaged", "Many-Armed", "Gelatinous", "Dimension-Jumping", "Scent-Following", "Leaping", "Demon-Calling", "Laughing", "Fortune-Telling", "Many-Legged", "Dead-Raising", "Magic-Eating", "Illusion-Weaving", "Insubstantial"];
 	this.type = ["Undead", "Lesser", "Half", "Elder", "Purple", "Greater", "Eldritch", "Feral", "Dire", "Nocturnal", "Cyclopic", "Dark", "Clockwork", "Draconic", "Elemental", "Incorporeal", "Common", "Aquatic", "Immortal", "Heavenly"];
