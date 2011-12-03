@@ -33,7 +33,10 @@ def paginate(request, input_list, per_page=25):
 def canonical(request, canonicity):
 	'''	Returns a list of islands matching the supplied canonicity '''
 	
-	canonicity = ast.literal_eval(canonicity)
+	try:
+		canonicity = ast.literal_eval(canonicity.capitalize())
+	except ValueError:
+		canonicity = True
 	
 	island_list = Island.objects.filter(iscanonical__exact=canonicity).order_by('name')
 			
